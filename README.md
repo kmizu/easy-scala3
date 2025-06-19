@@ -1,0 +1,176 @@
+# やさしいScala 3入門 - Easy Scala 3
+
+プログラミング初心者のための完全ガイド
+
+## 概要
+
+本プロジェクトは、プログラミング経験がまったくない方でも、Scala 3という素晴らしい言語を通じて、プログラミングの楽しさと可能性を発見できるように設計された書籍です。
+
+### 特徴
+
+- 🎯 **完全初心者対応**: プログラミング経験ゼロから始められます
+- 🚀 **Java知識不要**: Scalaから直接学習を開始できます  
+- 📚 **段階的学習**: 基礎から実践まで、無理のないペースで進めます
+- 💻 **豊富な例**: REPLを使った実践的な例題が満載です
+- 🔧 **実用的内容**: 学んだことをすぐに活用できる実践的な内容です
+
+## 内容
+
+全37章 + 6つの付録で構成されています：
+
+- 第I部：プログラミングの世界へようこそ（第0-2章）
+- 第II部：データと型の基本を理解しよう（第3-7章）
+- 第III部：型を意識してデータをまとめよう（第8-13章）
+- 第IV部：プログラムに判断力を持たせよう（第14-19章）
+- 第V部：非同期処理とエラーハンドリング（第20-21章）
+- 第VI部：型で設計するデータ構造（第22-24章）
+- 第VII部：関数型プログラミングの基礎（第25-30章）
+- 第VIII部：コレクションの使いこなし（第31-33章）
+- 第IX部：実用的なプログラミング技術（第34-37章）
+
+付録：
+- A：よくあるエラーメッセージ完全ガイド
+- B：REPL完全活用法
+- C：便利なメソッド・関数リファレンス
+- D：開発環境カスタマイズガイド
+- E：練習問題解答集
+- F：次に読むべき書籍・資料
+
+## セットアップ方法
+
+### 方法1: Pythonパッケージとしてインストール（推奨）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/example/easy-scala3.git
+cd easy-scala3
+
+# 依存関係をインストール
+pip install -e .
+
+# 開発用サーバーを起動
+easy-scala3-serve
+
+# 静的サイトをビルド
+easy-scala3-build
+```
+
+### 方法2: MkDocsを直接使用
+
+```bash
+# 依存関係をインストール
+pip install -r requirements.txt
+
+# 開発用サーバーを起動（localhost:8000）
+mkdocs serve
+
+# 静的サイトをビルド
+mkdocs build
+```
+
+## ビルド方法
+
+### 前提条件
+
+- Python 3.8以上
+- pip
+
+### 開発環境のセットアップ
+
+```bash
+# 仮想環境を作成（推奨）
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 開発用依存関係も含めてインストール
+pip install -e .[dev]
+```
+
+### HTMLサイトの生成
+
+```bash
+# 静的サイトを生成
+easy-scala3-build
+# または
+mkdocs build
+
+# 生成されたファイルは site/ ディレクトリに保存されます
+```
+
+### 開発用サーバーの起動
+
+```bash
+# ライブリロード付きで開発サーバーを起動
+easy-scala3-serve
+# または
+mkdocs serve
+
+# ブラウザで http://127.0.0.1:8000 を開く
+```
+
+### Docker を使用（オプション）
+
+```bash
+# Dockerイメージをビルド
+docker build -t easy-scala3 .
+
+# コンテナを起動
+docker run -p 8000:8000 easy-scala3
+```
+
+### 利用可能なコマンド
+
+```bash
+# CLIヘルプを表示
+python -m easy_scala3.cli --help
+
+# 開発サーバーを起動
+python -m easy_scala3.cli serve
+
+# 静的サイトをビルド
+python -m easy_scala3.cli build
+```
+
+### ディレクトリ構成
+
+```
+easy-scala3/
+├── docs/                # マークダウンファイル
+│   ├── index.md        # トップページ
+│   ├── part1/          # 第I部
+│   ├── part2/          # 第II部
+│   ├── ...
+│   └── appendix/       # 付録
+├── src/                # Pythonパッケージ
+│   └── easy_scala3/
+│       ├── __init__.py
+│       └── cli.py      # CLIツール
+├── site/               # ビルド出力（自動生成）
+├── mkdocs.yml          # MkDocs設定
+├── pyproject.toml      # Pythonプロジェクト設定
+├── requirements.txt    # 依存関係
+└── README.md           # このファイル
+```
+
+## ライセンス
+
+本書はCreative Commons Attribution 4.0 International License (CC BY 4.0)の下で公開されています。
+
+## 貢献
+
+本書への貢献を歓迎します！
+
+- 誤字脱字の修正
+- 説明の改善
+- 新しい例の追加
+- 練習問題の追加
+
+GitHubのIssueまたはPull Requestでお知らせください。
+
+## 作者
+
+Scala学習コミュニティ
+
+## フィードバック
+
+本書に関するご意見、ご感想、誤りの指摘などは、GitHubリポジトリのIssueにてお寄せください。

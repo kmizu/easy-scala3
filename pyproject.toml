@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "easy-scala3"
+version = "1.0.0"
+description = "やさしいScala 3入門 - プログラミング完全初心者のためのScala 3入門書"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "Scala 3入門編集部", email = "info@example.com"},
+]
+keywords = ["scala", "programming", "tutorial", "japanese", "beginner"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Topic :: Documentation",
+    "Topic :: Education",
+    "Topic :: Software Development :: Documentation",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Natural Language :: Japanese",
+]
+dependencies = [
+    "mkdocs>=1.5.0,<2.0.0",
+    "mkdocs-material>=9.0.0,<10.0.0",
+    "pymdown-extensions>=10.0.0,<11.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/example/easy-scala3"
+Documentation = "https://example.github.io/easy-scala3"
+Repository = "https://github.com/example/easy-scala3"
+Issues = "https://github.com/example/easy-scala3/issues"
+
+[project.scripts]
+easy-scala3-serve = "easy_scala3.cli:serve"
+easy-scala3-build = "easy_scala3.cli:build"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+easy_scala3 = ["docs/**/*", "mkdocs.yml"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503"]

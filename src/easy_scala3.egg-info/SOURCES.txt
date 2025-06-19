@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+setup.py
+src/easy_scala3/__init__.py
+src/easy_scala3/cli.py
+src/easy_scala3.egg-info/PKG-INFO
+src/easy_scala3.egg-info/SOURCES.txt
+src/easy_scala3.egg-info/dependency_links.txt
+src/easy_scala3.egg-info/entry_points.txt
+src/easy_scala3.egg-info/requires.txt
+src/easy_scala3.egg-info/top_level.txt

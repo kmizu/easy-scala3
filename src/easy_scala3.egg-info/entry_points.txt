@@ -1,0 +1,3 @@
+[console_scripts]
+easy-scala3-build = easy_scala3.cli:build
+easy-scala3-serve = easy_scala3.cli:serve

@@ -1,0 +1,45 @@
+# sbt
+target/
+lib_managed/
+project/target/
+project/project/
+.history
+.cache
+.lib/
+
+# Scala
+*.class
+*.log
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+.metals/
+.bloop/
+.bsp/
+
+# Mac
+.DS_Store
+
+# Laika output
+site/
+pdf/
+epub/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Test coverage
+coverage/
+.coverage
+
+# Environment files
+.env
+.env.local

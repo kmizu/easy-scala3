@@ -1,0 +1,113 @@
+site_name: やさしいScala 3入門
+site_description: プログラミング完全初心者のためのScala 3入門書
+site_author: Scala 3入門編集部
+site_url: https://example.com/easy-scala3
+
+theme:
+  name: material
+  language: ja
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.integrate
+    - search.highlight
+    - search.share
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: ダークモードに切り替え
+    - scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: ライトモードに切り替え
+
+plugins:
+  - search:
+      lang: ja
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - pymdownx.highlight:
+      use_pygments: true
+      linenums: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - ホーム: index.md
+  - 第I部 プログラミングの世界へようこそ:
+    - 第0章 プログラミングをはじめる前に: part1/chapter00.md
+    - 第1章 Scalaと出会おう: part1/chapter01.md
+    - 第2章 数値で遊んでみよう: part1/chapter02.md
+  - 第II部 データと型の基本を理解しよう:
+    - 第3章 値と変数の基本: part2/chapter03.md
+    - 第4章 いろいろな種類のデータ: part2/chapter04.md
+    - 第5章 型って何だろう？（型の基礎編）: part2/chapter05.md
+    - 第6章 型推論の魔法: part2/chapter06.md
+    - 第7章 文字列を自由自在に: part2/chapter07.md
+  - 第III部 型を意識してデータをまとめよう:
+    - 第8章 型安全なコレクション（基礎編）: part3/chapter08.md
+    - 第9章 リストで同じデータを並べる: part3/chapter09.md
+    - 第10章 型安全なタプル: part3/chapter10.md
+    - 第11章 タプルで違うデータをまとめる: part3/chapter11.md
+    - 第12章 型安全なマップ: part3/chapter12.md
+    - 第13章 マップで関連付けて保存: part3/chapter13.md
+  - 第IV部 プログラムに判断力を持たせよう:
+    - 第14章 条件分岐の基本: part4/chapter14.md
+    - 第15章 パターンマッチングの威力: part4/chapter15.md
+    - 第16章 関数の定義と利用: part4/chapter16.md
+    - 第17章 関数の引数をもっと賢く: part4/chapter17.md
+    - 第18章 高階関数とは何か: part4/chapter18.md
+    - 第19章 OptionとEitherで安全に: part4/chapter19.md
+  - 第V部 非同期処理とエラーハンドリング:
+    - 第20章 Future[T]で非同期処理: part5/chapter20.md
+    - 第21章 Try[T]で例外を扱う: part5/chapter21.md
+  - 第VI部 型で設計するデータ構造:
+    - 第22章 ケースクラスの便利さ: part6/chapter22.md
+    - 第23章 シールドトレイトで網羅的に: part6/chapter23.md
+    - 第24章 イミュータブルなデータ設計: part6/chapter24.md
+  - 第VII部 関数型プログラミングの基礎:
+    - 第25章 関数合成で処理を組み立てる: part7/chapter25.md
+    - 第26章 型パラメータ入門: part7/chapter26.md
+    - 第27章 境界と変位指定: part7/chapter27.md
+    - 第28章 暗黙の引数とは: part7/chapter28.md
+    - 第29章 型クラスパターン: part7/chapter29.md
+    - 第30章 for式の内部動作: part7/chapter30.md
+  - 第VIII部 コレクションの使いこなし:
+    - 第31章 コレクションの選び方: part8/chapter31.md
+    - 第32章 効率的なコレクション操作: part8/chapter32.md
+    - 第33章 並行プログラミング入門: part8/chapter33.md
+  - 第IX部 実用的なプログラミング技術:
+    - 第34章 スレッドセーフを意識する: part9/chapter34.md
+    - 第35章 アクターモデル入門: part9/chapter35.md
+    - 第36章 テストを書こう: part9/chapter36.md
+    - 第37章 ビルドツールと依存性管理: part9/chapter37.md
+  - 付録:
+    - 付録A よくあるエラーメッセージ完全ガイド: appendix/appendixA.md
+    - 付録B REPL完全活用法: appendix/appendixB.md
+    - 付録C 便利なメソッド・関数リファレンス: appendix/appendixC.md
+    - 付録D 開発環境カスタマイズガイド: appendix/appendixD.md
+    - 付録E 練習問題解答集: appendix/appendixE.md
+    - 付録F 次に読むべき書籍・資料: appendix/appendixF.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/example/easy-scala3
+
+copyright: Copyright &copy; 2024 Scala 3入門編集部
