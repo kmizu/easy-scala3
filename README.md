@@ -38,7 +38,30 @@
 
 ## セットアップ方法
 
-### 方法1: Pythonパッケージとしてインストール（推奨）
+### 🚀 方法1: 自動セットアップスクリプト（最も簡単）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/example/easy-scala3.git
+cd easy-scala3
+
+# Linux/macOS
+./setup.sh --serve
+
+# Windows (コマンドプロンプト)
+setup.bat --serve
+
+# Windows (PowerShell)
+.\setup.ps1 -Serve
+```
+
+**利用可能なオプション:**
+- `--serve` / `-Serve`: ビルド後に開発サーバーを自動起動
+- `--build-only` / `-BuildOnly`: ビルドのみ実行
+- `--clean` / `-Clean`: 既存の仮想環境を削除してクリーンインストール
+- `--help` / `-Help`: ヘルプを表示
+
+### 方法2: Pythonパッケージとしてインストール
 
 ```bash
 # リポジトリをクローン
@@ -55,7 +78,7 @@ easy-scala3-serve
 easy-scala3-build
 ```
 
-### 方法2: MkDocsを直接使用
+### 方法3: MkDocsを直接使用
 
 ```bash
 # 依存関係をインストール

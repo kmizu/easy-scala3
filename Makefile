@@ -1,11 +1,13 @@
 # やさしいScala 3入門 - Makefile
 
-.PHONY: help install dev serve build clean test docker-build docker-run lint format
+.PHONY: help install dev serve build clean test docker-build docker-run lint format setup setup-serve
 
 # デフォルトターゲット
 help:
 	@echo "やさしいScala 3入門 - 利用可能なコマンド:"
 	@echo ""
+	@echo "  setup       - 自動セットアップ（仮想環境作成+ビルド）"
+	@echo "  setup-serve - 自動セットアップ後にサーバーも起動"
 	@echo "  install     - 依存関係をインストール"
 	@echo "  dev         - 開発環境をセットアップ"
 	@echo "  serve       - 開発サーバーを起動"
@@ -84,3 +86,13 @@ update:
 	@echo "📝 依存関係を更新中..."
 	pip install --upgrade pip
 	pip install --upgrade -r requirements.txt
+
+# 自動セットアップ
+setup:
+	@echo "🚀 自動セットアップを開始..."
+	./setup.sh
+
+# 自動セットアップ後にサーバー起動
+setup-serve:
+	@echo "🚀 自動セットアップ後にサーバー起動..."
+	./setup.sh --serve

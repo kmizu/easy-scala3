@@ -105,7 +105,19 @@ This is a Scala 3 book writing project named "easy-scala3" - creating a beginner
 
 ### ビルド & 出版コマンド
 
-TBD（mkdocsを使う）
+```bash
+# 🚀 自動セットアップ（推奨）
+./setup.sh --serve
+
+# 🐳 Docker使用
+make docker-build && make docker-run
+
+# 📚 通常のビルド
+mkdocs build
+
+# 🌐 開発サーバー
+mkdocs serve
+```
 
 ### 開発環境
 - Scala 3.3.1
