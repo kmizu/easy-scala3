@@ -1,0 +1,2981 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="プログラミング完全初心者のためのScala 3入門書">
+      
+      
+        <meta name="author" content="Scala 3入門編集部">
+      
+      
+        <link rel="canonical" href="https://example.com/easy-scala3/part3/chapter11/">
+      
+      
+        <link rel="prev" href="../chapter10/">
+      
+      
+        <link rel="next" href="../chapter12/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>第11章 タプルで違うデータをまとめる - やさしいScala 3入門</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="ヘッダー">
+    <a href="../.." title="やさしいScala 3入門" class="md-header__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            やさしいScala 3入門
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第11章 タプルで違うデータをまとめる
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ダークモードに切り替え"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ライトモードに切り替え"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="検索">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="共有" aria-label="共有" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            検索を初期化
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="やさしいScala 3入門" class="md-nav__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    やさしいScala 3入門
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ホーム
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第I部 プログラミングの世界へようこそ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            第I部 プログラミングの世界へようこそ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第0章 プログラミングをはじめる前に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第2章 数値で遊んでみよう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第II部 データと型の基本を理解しよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            第II部 データと型の基本を理解しよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第3章 値と変数の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第4章 いろいろな種類のデータ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第5章 型って何だろう？（型の基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第6章 型推論の魔法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第7章 文字列を自由自在に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第III部 型を意識してデータをまとめよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            第III部 型を意識してデータをまとめよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第8章 型安全なコレクション（基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第9章 リストで同じデータを並べる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第10章 型安全なタプル
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめに
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      タプルって何だろう？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="タプルって何だろう？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      お弁当箱で考えてみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      もっと身近な例
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      タプルの作り方
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="タプルの作り方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      基本の作り方
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      矢印を使った書き方（ペアのみ）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      タプルの中身を取り出す
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="タプルの中身を取り出す">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1-_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      番号で取り出す（._1, ._2, ...）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      分解して取り出す（おすすめ！）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      実践的な使い方
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="実践的な使い方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      関数から複数の値を返す
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      エラー処理での活用
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      データの整理
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      タプルの便利な機能
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="タプルの便利な機能">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#swap2" class="md-nav__link">
+    <span class="md-ellipsis">
+      swap（2要素タプルのみ）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      リストとタプルの変換
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      よくある間違いと対処法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="よくある間違いと対処法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      間違い1：番号を間違える
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      間違い2：型を間違える
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      間違い3：要素数を間違える
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習してみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="練習してみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習1：座標計算
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習2：成績管理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習3：買い物計算
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      この章のまとめ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この章のまとめ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      できるようになったこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      タプルを使うべき場面
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      次の章では...
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      最後に
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第13章 マップで関連付けて保存
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IV部 プログラムに判断力を持たせよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            第IV部 プログラムに判断力を持たせよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第14章 条件分岐の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第15章 パターンマッチングの威力
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第16章 関数の定義と利用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第17章 関数の引数をもっと賢く
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第18章 高階関数とは何か
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第19章 OptionとEitherで安全に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第V部 非同期処理とエラーハンドリング
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            第V部 非同期処理とエラーハンドリング
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第20章 Future[T]で非同期処理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第21章 Try[T]で例外を扱う
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VI部 型で設計するデータ構造
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            第VI部 型で設計するデータ構造
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第22章 ケースクラスの便利さ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第23章 シールドトレイトで網羅的に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第24章 イミュータブルなデータ設計
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VII部 関数型プログラミングの基礎
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            第VII部 関数型プログラミングの基礎
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第25章 関数合成で処理を組み立てる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第26章 型パラメータ入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第27章 境界と変位指定
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第29章 型クラスパターン
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第30章 for式の内部動作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VIII部 コレクションの使いこなし
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            第VIII部 コレクションの使いこなし
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第31章 コレクションの選び方
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第32章 効率的なコレクション操作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第33章 並行プログラミング入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IX部 実用的なプログラミング技術
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            第IX部 実用的なプログラミング技術
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第34章 スレッドセーフを意識する
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第35章 アクターモデル入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第36章 テストを書こう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    付録
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            付録
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録A よくあるエラーメッセージ完全ガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録B REPL完全活用法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録C 便利なメソッド・関数リファレンス
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録D 開発環境カスタマイズガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録E 練習問題解答集
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録F 次に読むべき書籍・資料
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="11">第11章 タプルで違うデータをまとめる<a class="headerlink" href="#11" title="Permanent link">&para;</a></h1>
+<h2 id="_1">はじめに<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>プログラミングをしていると、「名前と年齢」「緯度と経度」「成功・失敗とその理由」のように、違う種類のデータをセットで扱いたいことがよくあります。</p>
+<p>前の章では「同じ型のデータを並べる」リストを学びました。今回は「違う型のデータをまとめる」タプルを学びましょう！</p>
+<p>タプルは、日常生活でいえば「お弁当箱」のようなものです。ごはん、おかず、デザートなど、違うものを1つの箱にまとめて持ち運べますよね。</p>
+<h2 id="_2">タプルって何だろう？<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="_3">お弁当箱で考えてみよう<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// TupleLikeBento.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">tupleLikeBento</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// お弁当の中身（違うものが入っている）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">myBento</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;おにぎり&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;唐揚げ&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">//             ↑文字    ↑数  ↑文字   ↑真偽値</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;今日のお弁当: </span><span class="si">$</span><span class="n">myBento</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 何が入っているか確認</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;主食: </span><span class="si">${</span><span class="n">myBento</span><span class="p">.</span><span class="n">_1</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// 1番目</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;個数: </span><span class="si">${</span><span class="n">myBento</span><span class="p">.</span><span class="n">_2</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// 2番目</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;おかず: </span><span class="si">${</span><span class="n">myBento</span><span class="p">.</span><span class="n">_3</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// 3番目</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;デザート付き？: </span><span class="si">${</span><span class="n">myBento</span><span class="p">.</span><span class="n">_4</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// 4番目</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>タプルは「違う型のデータを、決まった順番で、決まった数だけ」まとめられます！</p>
+<h3 id="_4">もっと身近な例<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// DailyTuples.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">dailyTuples</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 人の情報（名前と年齢）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;田中太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">${</span><span class="n">person</span><span class="p">.</span><span class="n">_1</span><span class="si">}</span><span class="s">さんは</span><span class="si">${</span><span class="n">person</span><span class="p">.</span><span class="n">_2</span><span class="si">}</span><span class="s">歳です&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 場所の情報（地名と座標）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">tokyo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;東京&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">35.6762</span><span class="p">,</span><span class="w"> </span><span class="mf">139.6503</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">${</span><span class="n">tokyo</span><span class="p">.</span><span class="n">_1</span><span class="si">}</span><span class="s">の緯度: </span><span class="si">${</span><span class="n">tokyo</span><span class="p">.</span><span class="n">_2</span><span class="si">}</span><span class="s">, 経度: </span><span class="si">${</span><span class="n">tokyo</span><span class="p">.</span><span class="n">_3</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// テストの結果（科目と点数と合格？）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">testResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">testResult</span><span class="p">.</span><span class="n">_1</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">testResult</span><span class="p">.</span><span class="n">_2</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">testResult</span><span class="p">.</span><span class="n">_3</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">passed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">${</span><span class="n">subject</span><span class="si">}</span><span class="s">は</span><span class="si">${</span><span class="n">score</span><span class="si">}</span><span class="s">点で合格です！&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">${</span><span class="n">subject</span><span class="si">}</span><span class="s">は</span><span class="si">${</span><span class="n">score</span><span class="si">}</span><span class="s">点で不合格です...&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_5">タプルの作り方<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="_6">基本の作り方<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CreatingTuples.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">creatingTuples</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 2つの要素（ペア）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;りんご&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">pair</span><span class="s">&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// (りんご,100)</span>
+
+<span class="w">  </span><span class="c1">// 3つの要素（トリプル）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">triple</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;みかん&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">triple</span><span class="s">&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// (みかん,80,5)</span>
+
+<span class="w">  </span><span class="c1">// もっとたくさん（最大22個まで！）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;二&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;四&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;いろいろ: </span><span class="si">$</span><span class="n">many</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 型を明示することもできる</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">typed</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;型付き: </span><span class="si">$</span><span class="n">typed</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_7">矢印を使った書き方（ペアのみ）<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ArrowNotation.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">arrowNotation</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 2つの要素の時だけ使える特別な書き方</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">price1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">price2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;コーヒー&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span><span class="w">  </span><span class="c1">// 上と同じ意味！</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;矢印記法: </span><span class="si">$</span><span class="n">price1</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;普通の記法: </span><span class="si">$</span><span class="n">price2</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// マップを作るときによく使う</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">menu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;紅茶&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;メニュー: </span><span class="si">$</span><span class="n">menu</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_8">タプルの中身を取り出す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="_1-_2">番号で取り出す（._1, ._2, ...）<a class="headerlink" href="#_1-_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// AccessingTuples.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">accessingTuples</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">studentInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;山田花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;工学部&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">3.5</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 番号は1から始まる！（0からじゃない）</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;名前: </span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_1</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;年齢: </span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_2</span><span class="si">}</span><span class="s">歳&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;学部: </span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_3</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;GPA: </span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_4</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// こんな使い方も</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;</span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_1</span><span class="si">}</span><span class="s">さん（</span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_2</span><span class="si">}</span><span class="s">歳）は&quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s">s&quot;</span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_3</span><span class="si">}</span><span class="s">の学生で、GPAは</span><span class="si">${</span><span class="n">studentInfo</span><span class="p">.</span><span class="n">_4</span><span class="si">}</span><span class="s">です&quot;</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_9">分解して取り出す（おすすめ！）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// DestructuringTuples.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">destructuringTuples</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">studentInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;山田花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;工学部&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">3.5</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 一度に全部取り出す（これが便利！）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">department</span><span class="p">,</span><span class="w"> </span><span class="n">gpa</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">studentInfo</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;名前: </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;年齢: </span><span class="si">$</span><span class="n">age歳</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;学部: </span><span class="si">$</span><span class="n">department</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;GPA: </span><span class="si">$</span><span class="n">gpa</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 必要なものだけ取り出す（_で無視）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">studentName</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">studentDept</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">studentInfo</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">studentNameさんは</span><span class="si">$</span><span class="n">studentDept所属です</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 複数のタプルを処理</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;英語&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;理科&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">results</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">subject</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">subject</span><span class="s">: </span><span class="si">$</span><span class="n">score点</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_10">実践的な使い方<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<h3 id="_11">関数から複数の値を返す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ReturningMultipleValues.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">returningMultipleValues</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 割り算の商と余りを同時に返す</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">divideWithRemainder</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">quotient</span><span class="p">,</span><span class="w"> </span><span class="n">remainder</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">divideWithRemainder</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;17 ÷ 5 = </span><span class="si">$</span><span class="n">quotient</span><span class="s"> 余り </span><span class="si">$</span><span class="n">remainder</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 統計情報を返す</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">getStats</span><span class="p">(</span><span class="n">numbers</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Int</span><span class="p">]):</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">Double</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">sum</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">avg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="p">.</span><span class="n">toDouble</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">length</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">max</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">min</span>
+<span class="w">    </span><span class="p">(</span><span class="n">sum</span><span class="p">,</span><span class="w"> </span><span class="n">avg</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">min</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="n">average</span><span class="p">,</span><span class="w"> </span><span class="n">maximum</span><span class="p">,</span><span class="w"> </span><span class="n">minimum</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getStats</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;合計: </span><span class="si">$</span><span class="n">total</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;平均: </span><span class="si">$</span><span class="n">average</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;最大: </span><span class="si">$</span><span class="n">maximum</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;最小: </span><span class="si">$</span><span class="n">minimum</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_12">エラー処理での活用<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// TuplesForErrorHandling.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">tuplesForErrorHandling</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 成功・失敗と結果を一緒に返す</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">safeDivide</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="p">(</span><span class="nc">Boolean</span><span class="p">,</span><span class="w"> </span><span class="nc">Double</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">(</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ゼロで割ることはできません&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">(</span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">toDouble</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;計算成功&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 使ってみる</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">success1</span><span class="p">,</span><span class="w"> </span><span class="n">result1</span><span class="p">,</span><span class="w"> </span><span class="n">message1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">safeDivide</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">success1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;結果: </span><span class="si">$</span><span class="n">result1</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;エラー: </span><span class="si">$</span><span class="n">message1</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">success2</span><span class="p">,</span><span class="w"> </span><span class="n">result2</span><span class="p">,</span><span class="w"> </span><span class="n">message2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">safeDivide</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">success2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;結果: </span><span class="si">$</span><span class="n">result2</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;エラー: </span><span class="si">$</span><span class="n">message2</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_13">データの整理<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// OrganizingData.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">organizingData</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 商品情報（名前、価格、在庫数）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;ノート&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;ペン&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;消しゴム&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;定規&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 在庫が少ない商品を探す</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 在庫が少ない商品（30個以下）===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">products</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stock</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">name</span><span class="s">: 残り</span><span class="si">$</span><span class="n">stock個</span><span class="s">（</span><span class="si">${</span><span class="n">price</span><span class="si">}</span><span class="s">円）&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 売上計算（商品名、販売数）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;ノート&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;ペン&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;消しゴム&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 売上レポート ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">sales</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">productName</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="c1">// 商品情報から価格を探す</span>
+<span class="w">    </span><span class="n">products</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">_1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">productName</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">((</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">))</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">quantity</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">productName</span><span class="s">: </span><span class="si">${</span><span class="n">quantity</span><span class="si">}</span><span class="s">個 × </span><span class="si">${</span><span class="n">price</span><span class="si">}</span><span class="s">円 = </span><span class="si">${</span><span class="n">total</span><span class="si">}</span><span class="s">円&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">productName</span><span class="s">: 商品情報が見つかりません&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_14">タプルの便利な機能<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<h3 id="swap2">swap（2要素タプルのみ）<a class="headerlink" href="#swap2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// TupleSwap.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">tupleSwap</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">original</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;先&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;後&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">swapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">original</span><span class="p">.</span><span class="n">swap</span><span class="w">  </span><span class="c1">// 順番を入れ替える</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;元: </span><span class="si">$</span><span class="n">original</span><span class="s">&quot;</span><span class="p">)</span><span class="w">    </span><span class="c1">// (先,後)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;交換後: </span><span class="si">$</span><span class="n">swapped</span><span class="s">&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// (後,先)</span>
+
+<span class="w">  </span><span class="c1">// 実用例：キーと値を入れ替える</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 点数でソートしたい</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">sortedByScore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span>
+<span class="w">    </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">swap</span><span class="p">)</span><span class="w">           </span><span class="c1">// (85,太郎), (92,花子), (78,次郎)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">sorted</span><span class="w">                </span><span class="c1">// 数値でソート</span>
+<span class="w">    </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">swap</span><span class="p">)</span><span class="w">           </span><span class="c1">// 元に戻す</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;点数順（低い順）:&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">sortedByScore</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;  </span><span class="si">$</span><span class="n">name</span><span class="s">: </span><span class="si">$</span><span class="n">score点</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_15">リストとタプルの変換<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ListsAndTuples.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">listsAndTuples</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 2つのリストをタプルのリストに</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;次郎&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">ages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w"> </span><span class="mi">19</span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span><span class="p">.</span><span class="n">zip</span><span class="p">(</span><span class="n">ages</span><span class="p">)</span><span class="w">  </span><span class="c1">// zip = ジッパーのように組み合わせる</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;組み合わせ: </span><span class="si">$</span><span class="n">people</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// タプルのリストを2つのリストに</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">nameList</span><span class="p">,</span><span class="w"> </span><span class="n">ageList</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">people</span><span class="p">.</span><span class="n">unzip</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;名前: </span><span class="si">$</span><span class="n">nameList</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;年齢: </span><span class="si">$</span><span class="n">ageList</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// インデックス付きリスト</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">fruits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="s">&quot;りんご&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;オレンジ&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">indexed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fruits</span><span class="p">.</span><span class="n">zipWithIndex</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n果物リスト:&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">indexed</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">fruit</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;  </span><span class="si">${</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s">. </span><span class="si">$</span><span class="n">fruit</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_16">よくある間違いと対処法<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h2>
+<h3 id="1">間違い1：番号を間違える<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CommonMistakes1.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">commonMistakes1</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// よくある間違い</span>
+<span class="w">  </span><span class="c1">// val first = pair._0   // エラー！0番はない</span>
+<span class="w">  </span><span class="c1">// val third = pair._3   // エラー！2要素しかない</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">_1</span><span class="w">   </span><span class="c1">// OK</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">_2</span><span class="w">  </span><span class="c1">// OK</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;1番目: </span><span class="si">$</span><span class="n">first</span><span class="s">, 2番目: </span><span class="si">$</span><span class="n">second</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2">間違い2：型を間違える<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CommonMistakes2.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">commonMistakes2</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;年齢&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// よくある間違い</span>
+<span class="w">  </span><span class="c1">// val age: String = data._2  // エラー！Intなのに String として扱おうとしている</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">label</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">_1</span><span class="w">  </span><span class="c1">// OK</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">_2</span><span class="w">       </span><span class="c1">// OK</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">label</span><span class="s">: </span><span class="si">$</span><span class="n">age</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="3">間違い3：要素数を間違える<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CommonMistakes3.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">commonMistakes3</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">triple</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// よくある間違い</span>
+<span class="w">  </span><span class="c1">// val (a, b) = triple        // エラー！3要素なのに2つしか受け取っていない</span>
+<span class="w">  </span><span class="c1">// val (a, b, c, d) = triple  // エラー！3要素なのに4つ受け取ろうとしている</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">triple</span><span class="w">      </span><span class="c1">// OK：ちょうど3つ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">triple</span><span class="w">      </span><span class="c1">// OK：3つ目は無視</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;全部: </span><span class="si">$</span><span class="n">a</span><span class="s">, </span><span class="si">$</span><span class="n">b</span><span class="s">, </span><span class="si">$</span><span class="n">c</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;2つだけ: </span><span class="si">$</span><span class="n">x</span><span class="s">, </span><span class="si">$</span><span class="n">y</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_17">練習してみよう！<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h2>
+<h3 id="1_1">練習1：座標計算<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<p>2次元座標を表すタプル(Double, Double)を使って、2点間の距離を計算するプログラムを作ってください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice1</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">point1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">point2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここに距離を計算するコードを書いてください</span>
+<span class="w">  </span><span class="c1">// ヒント: 距離 = √((x2-x1)² + (y2-y1)²)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2_1">練習2：成績管理<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<p>生徒の成績データ（名前、数学、英語、理科）のタプルのリストから、3科目の平均点が最も高い生徒を見つけてください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice2</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">students</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;桜&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここにコードを書いてください</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="3_1">練習3：買い物計算<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h3>
+<p>商品名と単価のタプルのリストと、商品名と購入数のタプルのリストから、合計金額を計算してください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice3</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">prices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;りんご&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;オレンジ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">purchases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;りんご&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;オレンジ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここに合計金額を計算するコードを書いてください</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_18">この章のまとめ<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h2>
+<p>タプルについて、たくさんのことを学びましたね！</p>
+<h3 id="_19">できるようになったこと<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>タプルの基本</strong>
+- 違う型のデータをまとめられる
+- 最大22個まで要素を入れられる
+- 順番と個数が決まっている</p>
+<p>✅ <strong>タプルの作り方</strong>
+- 普通の書き方：<code>(要素1, 要素2, ...)</code>
+- 矢印記法（2要素のみ）：<code>要素1 -&gt; 要素2</code></p>
+<p>✅ <strong>要素の取り出し方</strong>
+- 番号で：<code>._1</code>, <code>._2</code>, ...（1から始まる）
+- 分解して：<code>val (a, b, c) = tuple</code>
+- 不要な要素は<code>_</code>で無視</p>
+<p>✅ <strong>実践的な使い方</strong>
+- 関数から複数の値を返す
+- 関連するデータをまとめる
+- リストと組み合わせて使う</p>
+<h3 id="_20">タプルを使うべき場面<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>少数の関連データ</strong></p>
+<ul>
+<li>名前と年齢</li>
+<li>緯度と経度</li>
+<li>成功/失敗と結果</li>
+</ul>
+</li>
+<li>
+<p><strong>一時的なデータの組み合わせ</strong></p>
+<ul>
+<li>計算の中間結果</li>
+<li>関数の戻り値</li>
+<li>ループ内での処理</li>
+</ul>
+</li>
+<li>
+<p><strong>型が違うデータを扱う</strong></p>
+<ul>
+<li>文字列と数値</li>
+<li>複数の異なる型の組み合わせ</li>
+</ul>
+</li>
+</ol>
+<h3 id="_21">次の章では...<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>タプルの応用編として、より実践的な使い方を学びます。特に、マップ（Map）と組み合わせた使い方を詳しく見ていきましょう！</p>
+<h3 id="_22">最後に<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<p>タプルは「データの小包」のようなものです。関連するものをまとめて、必要なときに取り出す。この考え方は、プログラミングのあらゆる場面で役立ちます。</p>
+<p>最初は<code>._1</code>や<code>._2</code>という書き方に違和感があるかもしれませんが、使っているうちに自然に書けるようになりますよ！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  ページトップへ戻る
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Scala 3入門編集部
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/example/easy-scala3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

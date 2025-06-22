@@ -1,0 +1,3013 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="プログラミング完全初心者のためのScala 3入門書">
+      
+      
+        <meta name="author" content="Scala 3入門編集部">
+      
+      
+        <link rel="canonical" href="https://example.com/easy-scala3/part7/chapter28/">
+      
+      
+        <link rel="prev" href="../chapter27/">
+      
+      
+        <link rel="next" href="../chapter29/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>第28章 暗黙の引数とは - やさしいScala 3入門</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#28" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="ヘッダー">
+    <a href="../.." title="やさしいScala 3入門" class="md-header__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            やさしいScala 3入門
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第28章 暗黙の引数とは
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ダークモードに切り替え"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ライトモードに切り替え"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="検索">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="共有" aria-label="共有" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            検索を初期化
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="やさしいScala 3入門" class="md-nav__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    やさしいScala 3入門
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ホーム
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第I部 プログラミングの世界へようこそ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            第I部 プログラミングの世界へようこそ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第0章 プログラミングをはじめる前に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第2章 数値で遊んでみよう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第II部 データと型の基本を理解しよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            第II部 データと型の基本を理解しよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第3章 値と変数の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第4章 いろいろな種類のデータ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第5章 型って何だろう？（型の基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第6章 型推論の魔法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第7章 文字列を自由自在に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第III部 型を意識してデータをまとめよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            第III部 型を意識してデータをまとめよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第8章 型安全なコレクション（基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第9章 リストで同じデータを並べる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第10章 型安全なタプル
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第13章 マップで関連付けて保存
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IV部 プログラムに判断力を持たせよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            第IV部 プログラムに判断力を持たせよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第14章 条件分岐の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第15章 パターンマッチングの威力
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第16章 関数の定義と利用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第17章 関数の引数をもっと賢く
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第18章 高階関数とは何か
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第19章 OptionとEitherで安全に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第V部 非同期処理とエラーハンドリング
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            第V部 非同期処理とエラーハンドリング
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第20章 Future[T]で非同期処理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第21章 Try[T]で例外を扱う
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VI部 型で設計するデータ構造
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            第VI部 型で設計するデータ構造
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第22章 ケースクラスの便利さ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第23章 シールドトレイトで網羅的に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第24章 イミュータブルなデータ設計
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VII部 関数型プログラミングの基礎
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            第VII部 関数型プログラミングの基礎
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第25章 関数合成で処理を組み立てる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第26章 型パラメータ入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第27章 境界と変位指定
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめに
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      暗黙の引数って何だろう？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="暗黙の引数って何だろう？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      基本的な使い方
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      コンテキストの提供
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      実践的な暗黙の引数
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="実践的な暗黙の引数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      設定の注入
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      型変換の自動化
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      暗黙の優先順位
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      実践例：依存性注入
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      暗黙の引数のベストプラクティス
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習してみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="練習してみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習1：ロギングシステム
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習2：単位変換
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習3：認証システム
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      この章のまとめ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この章のまとめ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      できるようになったこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      暗黙の引数を使うコツ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      次の章では...
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      最後に
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第29章 型クラスパターン
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第30章 for式の内部動作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VIII部 コレクションの使いこなし
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            第VIII部 コレクションの使いこなし
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第31章 コレクションの選び方
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第32章 効率的なコレクション操作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第33章 並行プログラミング入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IX部 実用的なプログラミング技術
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            第IX部 実用的なプログラミング技術
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第34章 スレッドセーフを意識する
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第35章 アクターモデル入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第36章 テストを書こう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    付録
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            付録
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録A よくあるエラーメッセージ完全ガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録B REPL完全活用法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録C 便利なメソッド・関数リファレンス
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録D 開発環境カスタマイズガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録E 練習問題解答集
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録F 次に読むべき書籍・資料
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="28">第28章 暗黙の引数とは<a class="headerlink" href="#28" title="Permanent link">&para;</a></h1>
+<h2 id="_1">はじめに<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>レストランで「いつもの」と言えば、お気に入りの料理が出てきますよね。毎回「カツ丼の大盛りで、味噌汁は豆腐で」と言わなくても、店員さんが覚えていてくれます。</p>
+<p>Scalaの暗黙の引数（implicit parameters）も同じです。よく使う値を「いつもの」として登録しておけば、毎回書かなくても自動的に使ってくれるんです！</p>
+<h2 id="_2">暗黙の引数って何だろう？<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="_3">基本的な使い方<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ImplicitParametersBasics.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">implicitParametersBasics</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 通常の引数（毎回指定が必要）</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="s">s&quot;</span><span class="si">$</span><span class="n">greeting</span><span class="s">, </span><span class="si">$</span><span class="n">name</span><span class="s">!&quot;</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">greet</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;こんにちは&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">greet</span><span class="p">(</span><span class="s">&quot;花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;こんにちは&quot;</span><span class="p">))</span><span class="w">  </span><span class="c1">// 毎回「こんにちは」を書くのは面倒...</span>
+
+<span class="w">  </span><span class="c1">// 暗黙の引数を使った改良版</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">greetImplicit</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="s">s&quot;</span><span class="si">$</span><span class="n">greeting</span><span class="s">, </span><span class="si">$</span><span class="n">name</span><span class="s">!&quot;</span>
+
+<span class="w">  </span><span class="c1">// 暗黙の値を定義</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">defaultGreeting</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;こんにちは&quot;</span>
+
+<span class="w">  </span><span class="c1">// 暗黙の引数は省略できる！</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">greetImplicit</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">))</span><span class="w">  </span><span class="c1">// &quot;こんにちは&quot;が自動的に使われる</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">greetImplicit</span><span class="p">(</span><span class="s">&quot;花子&quot;</span><span class="p">))</span>
+
+<span class="w">  </span><span class="c1">// 明示的に指定することも可能</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">greetImplicit</span><span class="p">(</span><span class="s">&quot;ジョン&quot;</span><span class="p">)(</span><span class="s">&quot;Hello&quot;</span><span class="p">))</span>
+
+<span class="w">  </span><span class="c1">// スコープを変えて別の暗黙の値を定義</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">englishContext</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">englishGreeting</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="n">greetImplicit</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">))</span><span class="w">  </span><span class="c1">// このスコープでは&quot;Hello&quot;が使われる</span>
+
+<span class="w">  </span><span class="n">englishContext</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_4">コンテキストの提供<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ContextProviding.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">contextProviding</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 実行コンテキスト</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">(</span>
+<span class="w">    </span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">requestId</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">timestamp</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ログ出力（コンテキストが必要）</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">f&quot;[</span><span class="si">${</span><span class="n">ctx</span><span class="p">.</span><span class="n">timestamp</span><span class="si">}</span><span class="s">%tT] [</span><span class="si">${</span><span class="n">ctx</span><span class="p">.</span><span class="n">requestId</span><span class="si">}</span><span class="s">] [</span><span class="si">${</span><span class="n">ctx</span><span class="p">.</span><span class="n">userId</span><span class="si">}</span><span class="s">] </span><span class="si">$</span><span class="n">message</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// データベース操作（コンテキストが必要）</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">log</span><span class="p">(</span><span class="s">s&quot;ユーザー保存開始: </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">// 実際の保存処理...</span>
+<span class="w">    </span><span class="n">log</span><span class="p">(</span><span class="s">s&quot;ユーザー保存完了: </span><span class="si">$</span><span class="n">name</span><span class="s"> (</span><span class="si">$</span><span class="n">email</span><span class="s">)&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">updateEmail</span><span class="p">(</span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">newEmail</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">log</span><span class="p">(</span><span class="s">s&quot;メール更新開始: </span><span class="si">$</span><span class="n">userId</span><span class="s"> → </span><span class="si">$</span><span class="n">newEmail</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">// 実際の更新処理...</span>
+<span class="w">    </span><span class="n">log</span><span class="p">(</span><span class="s">s&quot;メール更新完了&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// サービスクラス</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">UserService</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">registerUser</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">saveUser</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">)</span><span class="w">  </span><span class="c1">// ctxは自動的に渡される</span>
+<span class="w">      </span><span class="n">updateEmail</span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="n">userId</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">)</span>
+<span class="w">      </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;登録処理完了&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 使用例</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">(</span>
+<span class="w">    </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;user123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;req-456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">UserService</span>
+<span class="w">  </span><span class="n">service</span><span class="p">.</span><span class="n">registerUser</span><span class="p">(</span><span class="s">&quot;田中太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tanaka@example.com&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 別のコンテキストで実行</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">anotherUserContext</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">ExecutionContext</span><span class="p">(</span>
+<span class="w">      </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;req-789&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="n">service</span><span class="p">.</span><span class="n">registerUser</span><span class="p">(</span><span class="s">&quot;管理者&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;admin@example.com&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nc">Thread</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="w">  </span><span class="n">anotherUserContext</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_5">実践的な暗黙の引数<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="_6">設定の注入<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ConfigurationInjection.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">configurationInjection</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// アプリケーション設定</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">(</span>
+<span class="w">    </span><span class="n">apiUrl</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">timeout</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">retryCount</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span>
+<span class="w">    </span><span class="n">debugMode</span><span class="p">:</span><span class="w"> </span><span class="nc">Boolean</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// APIクライアント</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiClient</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">debugMode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;[DEBUG] GET </span><span class="si">${</span><span class="n">config</span><span class="p">.</span><span class="n">apiUrl</span><span class="si">}$</span><span class="n">path</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="s">s&quot;Response from </span><span class="si">${</span><span class="n">config</span><span class="p">.</span><span class="n">apiUrl</span><span class="si">}$</span><span class="n">path</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">debugMode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;[DEBUG] POST </span><span class="si">${</span><span class="n">config</span><span class="p">.</span><span class="n">apiUrl</span><span class="si">}$</span><span class="n">path</span><span class="s"> with </span><span class="si">$</span><span class="n">data</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="s">s&quot;Posted to </span><span class="si">${</span><span class="n">config</span><span class="p">.</span><span class="n">apiUrl</span><span class="si">}$</span><span class="n">path</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// サービスクラス</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">UserApiService</span><span class="p">(</span><span class="n">client</span><span class="p">:</span><span class="w"> </span><span class="nc">ApiClient</span><span class="p">):</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">getUser</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">s&quot;/users/</span><span class="si">$</span><span class="n">id</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">createUser</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">config</span><span class="p">:</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">client</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">s&quot;&quot;&quot;{&quot;name&quot;: &quot;</span><span class="si">$</span><span class="n">name</span><span class="s">&quot;}&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 本番環境の設定</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">productionConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">(</span>
+<span class="w">    </span><span class="n">apiUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span>
+<span class="w">    </span><span class="n">retryCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">debugMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">ApiClient</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">userService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">UserApiService</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 本番環境 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">userService</span><span class="p">.</span><span class="n">getUser</span><span class="p">(</span><span class="s">&quot;123&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">userService</span><span class="p">.</span><span class="n">createUser</span><span class="p">(</span><span class="s">&quot;新規ユーザー&quot;</span><span class="p">))</span>
+
+<span class="w">  </span><span class="c1">// 開発環境の設定</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">developmentEnvironment</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">devConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">AppConfig</span><span class="p">(</span>
+<span class="w">      </span><span class="n">apiUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;http://localhost:8080&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30000</span><span class="p">,</span>
+<span class="w">      </span><span class="n">retryCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="n">debugMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 開発環境 ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="n">userService</span><span class="p">.</span><span class="n">getUser</span><span class="p">(</span><span class="s">&quot;456&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="n">userService</span><span class="p">.</span><span class="n">createUser</span><span class="p">(</span><span class="s">&quot;テストユーザー&quot;</span><span class="p">))</span>
+
+<span class="w">  </span><span class="n">developmentEnvironment</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_7">型変換の自動化<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ImplicitConversions.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">implicitConversions</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// JSONライクなデータ構造</span>
+<span class="w">  </span><span class="k">sealed</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JsonString</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JsonNumber</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Double</span><span class="p">)</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JsonBoolean</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Boolean</span><span class="p">)</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JsonArray</span><span class="p">(</span><span class="n">values</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">JsonValue</span><span class="p">])</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JsonObject</span><span class="p">(</span><span class="n">fields</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">JsonValue</span><span class="p">])</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="nc">JsonNull</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">JsonValue</span>
+
+<span class="w">  </span><span class="c1">// JSON変換用の型クラス</span>
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">]:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span>
+
+<span class="w">  </span><span class="k">object</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="c1">// 基本型のエンコーダー（暗黙の値として定義）</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">stringEncoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">String</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonString</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">intEncoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Int</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Int</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonNumber</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">toDouble</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">doubleEncoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Double</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Double</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Double</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonNumber</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">booleanEncoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Boolean</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Boolean</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Boolean</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonBoolean</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c1">// リストのエンコーダー</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">listEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="k">implicit</span><span class="w"> </span><span class="n">encoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">]]:</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">values</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span>
+<span class="w">          </span><span class="nc">JsonArray</span><span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">encoder</span><span class="p">.</span><span class="n">encode</span><span class="p">))</span>
+
+<span class="w">    </span><span class="c1">// オプションのエンコーダー</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">optionEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="k">implicit</span><span class="w"> </span><span class="n">encoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Option</span><span class="p">[</span><span class="nc">A</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">Option</span><span class="p">[</span><span class="nc">A</span><span class="p">]]:</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">encoder</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="w">          </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">JsonNull</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// JSONに変換する関数</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">toJson</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">encoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">encoder</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 使用例</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 基本型の変換 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="mf">3.14</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="kc">true</span><span class="p">))</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== コレクションの変換 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="nc">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="nc">List</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="p">)))</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== オプションの変換 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;値あり&quot;</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="nc">None</span><span class="p">:</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">String</span><span class="p">]))</span>
+
+<span class="w">  </span><span class="c1">// カスタム型のエンコーダー</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">String</span><span class="p">])</span>
+
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">userEncoder</span><span class="p">:</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">User</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">JsonEncoder</span><span class="p">[</span><span class="nc">User</span><span class="p">]:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="n">user</span><span class="p">:</span><span class="w"> </span><span class="nc">User</span><span class="p">):</span><span class="w"> </span><span class="nc">JsonValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">JsonObject</span><span class="p">(</span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">toJson</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">),</span>
+<span class="w">      </span><span class="s">&quot;age&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">toJson</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">age</span><span class="p">),</span>
+<span class="w">      </span><span class="s">&quot;email&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">toJson</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">email</span><span class="p">)</span>
+<span class="w">    </span><span class="p">))</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;taro@example.com&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;\n=== カスタム型の変換 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">toJson</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_8">暗黙の優先順位<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ImplicitPriority.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">implicitPriority</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">A</span><span class="p">]:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span>
+
+<span class="w">  </span><span class="c1">// 低優先度の暗黙の値（トレイト内）</span>
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">LowPriorityImplicits</span><span class="p">:</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">defaultPrinter</span><span class="p">[</span><span class="nc">A</span><span class="p">]:</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">A</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">A</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;デフォルト: </span><span class="si">$</span><span class="n">value</span><span class="s">&quot;</span>
+
+<span class="w">  </span><span class="c1">// 通常優先度の暗黙の値（オブジェクト内）</span>
+<span class="w">  </span><span class="k">object</span><span class="w"> </span><span class="nc">Printer</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">LowPriorityImplicits</span><span class="p">:</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">stringPrinter</span><span class="p">:</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">String</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;文字列: &#39;</span><span class="si">$</span><span class="n">value</span><span class="s">&#39;&quot;</span>
+
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">intPrinter</span><span class="p">:</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">Int</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">Int</span><span class="p">]:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;整数: </span><span class="si">$</span><span class="n">value</span><span class="s">&quot;</span>
+
+<span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nc">Printer</span><span class="p">.</span><span class="n">_</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">prettyPrint</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">printer</span><span class="p">:</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">A</span><span class="p">]):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">printer</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 特定の型には専用のプリンターが使われる</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">prettyPrint</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">))</span><span class="w">      </span><span class="c1">// 文字列プリンター</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">prettyPrint</span><span class="p">(</span><span class="mi">42</span><span class="p">))</span><span class="w">           </span><span class="c1">// 整数プリンター</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">prettyPrint</span><span class="p">(</span><span class="mf">3.14</span><span class="p">))</span><span class="w">         </span><span class="c1">// デフォルトプリンター</span>
+
+<span class="w">  </span><span class="c1">// ローカルスコープの暗黙の値が最優先</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">customIntPrinter</span><span class="p">:</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">Int</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Printer</span><span class="p">[</span><span class="nc">Int</span><span class="p">]:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s&quot;カスタム整数: [</span><span class="si">$</span><span class="n">value</span><span class="s">]&quot;</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">prettyPrint</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span><span class="w">          </span><span class="c1">// カスタムプリンター</span>
+
+<span class="w">  </span><span class="c1">// 暗黙の値の探索順序</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 暗黙の値の探索順序 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;1. ローカルスコープ&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;2. インポートされた暗黙の値&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;3. コンパニオンオブジェクト&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;4. 継承された暗黙の値&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;5. パッケージオブジェクト&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_9">実践例：依存性注入<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// DependencyInjection.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">dependencyInjection</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// サービスのインターフェース</span>
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">findById</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span>
+
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">EmailService</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="n">to</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">subject</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span>
+
+<span class="w">  </span><span class="k">trait</span><span class="w"> </span><span class="nc">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span>
+
+<span class="w">  </span><span class="c1">// 実装</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">InMemoryUserRepository</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">:</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">]()</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">findById</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ConsoleEmailService</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">EmailService</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="n">to</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">subject</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;📧 To: </span><span class="si">$</span><span class="n">to</span><span class="s">\n   Subject: </span><span class="si">$</span><span class="n">subject</span><span class="s">\n   Body: </span><span class="si">$</span><span class="n">body</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ConsoleLogger</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nc">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;[INFO] </span><span class="si">$</span><span class="n">message</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;[ERROR] </span><span class="si">$</span><span class="n">message</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ビジネスロジック（依存性は暗黙の引数）</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">UserService</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">registerUser</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="k">implicit</span><span class="w"> </span><span class="n">repo</span><span class="p">:</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                     </span><span class="n">emailService</span><span class="p">:</span><span class="w"> </span><span class="nc">EmailService</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">logger</span><span class="p">:</span><span class="w"> </span><span class="nc">Logger</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">s&quot;ユーザー登録開始: </span><span class="si">$</span><span class="n">id</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">      </span><span class="n">repo</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">          </span><span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="s">s&quot;ユーザーID </span><span class="si">$</span><span class="n">id</span><span class="s"> は既に存在します&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">          </span><span class="n">repo</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="w">          </span><span class="n">emailService</span><span class="p">.</span><span class="n">send</span><span class="p">(</span>
+<span class="w">            </span><span class="n">email</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;登録完了のお知らせ&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">s&quot;</span><span class="si">$</span><span class="n">name</span><span class="s"> 様、ご登録ありがとうございます！&quot;</span>
+<span class="w">          </span><span class="p">)</span>
+<span class="w">          </span><span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">s&quot;ユーザー登録完了: </span><span class="si">$</span><span class="n">id</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">getUser</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">repo</span><span class="p">:</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">,</span><span class="w"> </span><span class="n">logger</span><span class="p">:</span><span class="w"> </span><span class="nc">Logger</span><span class="p">):</span><span class="w"> </span><span class="nc">Option</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">s&quot;ユーザー検索: </span><span class="si">$</span><span class="n">id</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">repo</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 依存性の注入</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">userRepo</span><span class="p">:</span><span class="w"> </span><span class="nc">UserRepository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">InMemoryUserRepository</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">emailService</span><span class="p">:</span><span class="w"> </span><span class="nc">EmailService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">ConsoleEmailService</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">logger</span><span class="p">:</span><span class="w"> </span><span class="nc">Logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">ConsoleLogger</span>
+
+<span class="w">  </span><span class="c1">// 使用（依存性は自動的に注入される）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">userService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">UserService</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== ユーザー登録 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">userService</span><span class="p">.</span><span class="n">registerUser</span><span class="p">(</span><span class="s">&quot;001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;田中太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tanaka@example.com&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== ユーザー検索 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">userService</span><span class="p">.</span><span class="n">getUser</span><span class="p">(</span><span class="s">&quot;001&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;見つかりました: </span><span class="si">$</span><span class="n">name</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;見つかりません&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// テスト環境では別の実装を注入</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">testEnvironment</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">testLogger</span><span class="p">:</span><span class="w"> </span><span class="nc">Logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Logger</span><span class="p">:</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w">  </span><span class="c1">// ログを出力しない</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;[TEST ERROR] </span><span class="si">$</span><span class="n">message</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== テスト環境 ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">userService</span><span class="p">.</span><span class="n">registerUser</span><span class="p">(</span><span class="s">&quot;001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;重複テスト&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test@example.com&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_10">暗黙の引数のベストプラクティス<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ImplicitBestPractices.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">implicitBestPractices</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 1. 明確な型名を使う</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DatabaseConnection</span><span class="p">(</span><span class="n">url</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">(</span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">permissions</span><span class="p">:</span><span class="w"> </span><span class="nc">Set</span><span class="p">[</span><span class="nc">String</span><span class="p">])</span>
+
+<span class="w">  </span><span class="c1">// 良い例：型から用途が明確</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)(</span><span class="k">implicit</span><span class="w"> </span><span class="n">db</span><span class="p">:</span><span class="w"> </span><span class="nc">DatabaseConnection</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="s">s&quot;Executing on </span><span class="si">${</span><span class="n">db</span><span class="p">.</span><span class="n">url</span><span class="si">}</span><span class="s">: </span><span class="si">$</span><span class="n">query</span><span class="s">&quot;</span>
+
+<span class="w">  </span><span class="c1">// 2. 暗黙の引数は最後の引数リストに</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">processData</span><span class="p">[</span><span class="nc">A</span><span class="p">](</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">A</span><span class="p">])(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">):</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">String</span><span class="p">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="n">permissions</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;READ&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">data</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nc">List</span><span class="p">(</span><span class="s">&quot;アクセス拒否&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 3. デフォルト値を提供する</span>
+<span class="w">  </span><span class="k">object</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">:</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">defaultContext</span><span class="p">:</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">      </span><span class="nc">SecurityContext</span><span class="p">(</span><span class="s">&quot;anonymous&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Set</span><span class="p">(</span><span class="s">&quot;READ&quot;</span><span class="p">))</span>
+
+<span class="w">  </span><span class="c1">// 4. スコープを適切に管理</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SecureService</span><span class="p">:</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">adminOperation</span><span class="p">()(</span><span class="k">implicit</span><span class="w"> </span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">):</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="n">permissions</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;ADMIN&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s">&quot;管理者操作を実行&quot;</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="s">&quot;権限がありません&quot;</span>
+
+<span class="w">  </span><span class="c1">// 使用例</span>
+<span class="w">  </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">DatabaseConnection</span><span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/mydb&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== デフォルトコンテキスト ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">.</span><span class="n">defaultContext</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">executeQuery</span><span class="p">(</span><span class="s">&quot;SELECT * FROM users&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">processData</span><span class="p">(</span><span class="nc">List</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">))(</span><span class="n">_</span><span class="p">.</span><span class="n">toString</span><span class="p">))</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">SecureService</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">service</span><span class="p">.</span><span class="n">adminOperation</span><span class="p">())</span>
+
+<span class="w">  </span><span class="c1">// 管理者コンテキスト</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">adminContext</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">implicit</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">adminCtx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">SecurityContext</span><span class="p">(</span><span class="s">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Set</span><span class="p">(</span><span class="s">&quot;READ&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;WRITE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ADMIN&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 管理者コンテキスト ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="n">service</span><span class="p">.</span><span class="n">adminOperation</span><span class="p">())</span>
+
+<span class="w">  </span><span class="n">adminContext</span><span class="p">()</span>
+
+<span class="w">  </span><span class="c1">// 5. 暗黙の引数の確認</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">checkImplicits</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SELECT * FROM products&quot;</span>
+
+<span class="w">    </span><span class="c1">// 明示的に暗黙の値を確認</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 暗黙の値の確認 ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;使用中のDB: </span><span class="si">${</span><span class="n">implicitly</span><span class="p">[</span><span class="nc">DatabaseConnection</span><span class="p">]</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;使用中のセキュリティ: </span><span class="si">${</span><span class="n">implicitly</span><span class="p">[</span><span class="nc">SecurityContext</span><span class="p">]</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c1">// implicitlyは暗黙の値を明示的に取得する</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">currentDb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">implicitly</span><span class="p">[</span><span class="nc">DatabaseConnection</span><span class="p">]</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;URL: </span><span class="si">${</span><span class="n">currentDb</span><span class="p">.</span><span class="n">url</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">checkImplicits</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_11">練習してみよう！<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<h3 id="1">練習1：ロギングシステム<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>暗黙の引数を使ったロギングシステムを作ってください：
+- ログレベル（DEBUG, INFO, WARN, ERROR）
+- ログ出力先（コンソール、ファイル）
+- タイムスタンプとコンテキスト情報</p>
+<h3 id="2">練習2：単位変換<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>暗黙の引数で単位変換を実装してください：
+- 長さ（m, km, mile）
+- 重さ（g, kg, pound）
+- 温度（℃, ℉, K）</p>
+<h3 id="3">練習3：認証システム<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p>暗黙の引数を使った認証システムを作ってください：
+- ユーザー情報
+- 権限チェック
+- 操作の記録</p>
+<h2 id="_12">この章のまとめ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<p>暗黙の引数の便利さを学びました！</p>
+<h3 id="_13">できるようになったこと<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>暗黙の引数の基本</strong>
+- implicit キーワード
+- 自動的な値の解決
+- 明示的な指定も可能</p>
+<p>✅ <strong>実践的な使い方</strong>
+- コンテキストの伝播
+- 設定の注入
+- 依存性注入</p>
+<p>✅ <strong>優先順位の理解</strong>
+- スコープのルール
+- 探索順序
+- 競合の解決</p>
+<p>✅ <strong>ベストプラクティス</strong>
+- 明確な型名
+- 適切なスコープ管理
+- デフォルト値の提供</p>
+<h3 id="_14">暗黙の引数を使うコツ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>明確さを保つ</strong></p>
+<ul>
+<li>何が暗黙的か分かりやすく</li>
+<li>型から用途が推測できる</li>
+<li>必要に応じて明示的に</li>
+</ul>
+</li>
+<li>
+<p><strong>スコープ管理</strong></p>
+<ul>
+<li>影響範囲を限定</li>
+<li>インポートの活用</li>
+<li>競合を避ける</li>
+</ul>
+</li>
+<li>
+<p><strong>デバッグしやすく</strong></p>
+<ul>
+<li>implicitlyで確認</li>
+<li>明示的な指定でテスト</li>
+<li>エラーメッセージを理解</li>
+</ul>
+</li>
+</ol>
+<h3 id="_15">次の章では...<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>型クラスパターンについて学びます。暗黙の引数を使った、より高度な抽象化の技法を習得しましょう！</p>
+<h3 id="_16">最後に<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>暗黙の引数は「文脈を理解する賢い助手」のようなものです。いちいち説明しなくても、状況に応じて適切な値を選んでくれる。この便利さを活かせば、より簡潔で、それでいて柔軟なコードが書けるようになります。ただし、使いすぎには注意。明示的であることも、時には大切です！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  ページトップへ戻る
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Scala 3入門編集部
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/example/easy-scala3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

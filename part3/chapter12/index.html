@@ -1,0 +1,3277 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="プログラミング完全初心者のためのScala 3入門書">
+      
+      
+        <meta name="author" content="Scala 3入門編集部">
+      
+      
+        <link rel="canonical" href="https://example.com/easy-scala3/part3/chapter12/">
+      
+      
+        <link rel="prev" href="../chapter11/">
+      
+      
+        <link rel="next" href="../chapter13/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>第12章 型安全なマップ - やさしいScala 3入門</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#12" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="ヘッダー">
+    <a href="../.." title="やさしいScala 3入門" class="md-header__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            やさしいScala 3入門
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第12章 型安全なマップ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ダークモードに切り替え"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ライトモードに切り替え"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="検索">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="共有" aria-label="共有" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            検索を初期化
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="やさしいScala 3入門" class="md-nav__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    やさしいScala 3入門
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ホーム
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第I部 プログラミングの世界へようこそ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            第I部 プログラミングの世界へようこそ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第0章 プログラミングをはじめる前に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第2章 数値で遊んでみよう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第II部 データと型の基本を理解しよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            第II部 データと型の基本を理解しよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第3章 値と変数の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第4章 いろいろな種類のデータ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第5章 型って何だろう？（型の基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第6章 型推論の魔法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第7章 文字列を自由自在に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第III部 型を意識してデータをまとめよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            第III部 型を意識してデータをまとめよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第8章 型安全なコレクション（基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第9章 リストで同じデータを並べる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第10章 型安全なタプル
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめに
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップって何だろう？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="マップって何だろう？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      身近な例で考えてみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      もっと実用的な例
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップの作り方
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="マップの作り方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      基本の作り方
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      型を明示する
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      値を取り出す
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="値を取り出す">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      基本的な取り出し方
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      便利な取り出し方
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップの更新
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="マップの更新">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      イミュータブルマップの更新
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      ミュータブルマップ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      実践的な使い方
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="実践的な使い方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      在庫管理システム
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      成績管理と分析
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      単語カウンター
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップの便利な操作
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="マップの便利な操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      フィルタリングと変換
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップの結合
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      よくある間違いと対処法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="よくある間違いと対処法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      間違い1：存在しないキー
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      間違い2：型の不一致
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習してみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="練習してみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習1：メニュー計算機
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習2：投票集計
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習3：在庫チェック
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      この章のまとめ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この章のまとめ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      できるようになったこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      マップを使うべき場面
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      次の章では...
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      最後に
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第13章 マップで関連付けて保存
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IV部 プログラムに判断力を持たせよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            第IV部 プログラムに判断力を持たせよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第14章 条件分岐の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第15章 パターンマッチングの威力
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第16章 関数の定義と利用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第17章 関数の引数をもっと賢く
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第18章 高階関数とは何か
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第19章 OptionとEitherで安全に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第V部 非同期処理とエラーハンドリング
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            第V部 非同期処理とエラーハンドリング
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第20章 Future[T]で非同期処理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第21章 Try[T]で例外を扱う
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VI部 型で設計するデータ構造
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            第VI部 型で設計するデータ構造
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第22章 ケースクラスの便利さ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第23章 シールドトレイトで網羅的に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第24章 イミュータブルなデータ設計
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VII部 関数型プログラミングの基礎
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            第VII部 関数型プログラミングの基礎
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第25章 関数合成で処理を組み立てる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第26章 型パラメータ入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第27章 境界と変位指定
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第29章 型クラスパターン
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第30章 for式の内部動作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VIII部 コレクションの使いこなし
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            第VIII部 コレクションの使いこなし
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第31章 コレクションの選び方
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第32章 効率的なコレクション操作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第33章 並行プログラミング入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IX部 実用的なプログラミング技術
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            第IX部 実用的なプログラミング技術
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第34章 スレッドセーフを意識する
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第35章 アクターモデル入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第36章 テストを書こう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    付録
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            付録
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録A よくあるエラーメッセージ完全ガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録B REPL完全活用法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録C 便利なメソッド・関数リファレンス
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録D 開発環境カスタマイズガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録E 練習問題解答集
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録F 次に読むべき書籍・資料
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="12">第12章 型安全なマップ<a class="headerlink" href="#12" title="Permanent link">&para;</a></h1>
+<h2 id="_1">はじめに<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>「辞書」を使ったことはありますか？単語を調べると、その意味が出てきますよね。プログラミングの「マップ（Map）」も同じような仕組みです。</p>
+<p>「キー（鍵）」を使って「値」を取り出す、まるで宝箱のようなデータ構造です。この章では、Scalaの型安全なマップについて、楽しく学んでいきましょう！</p>
+<h2 id="_2">マップって何だろう？<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="_3">身近な例で考えてみよう<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MapLikeDictionary.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mapLikeDictionary</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 電話帳のようなマップ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">phoneBook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;田中太郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;090-1234-5678&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;山田花子&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;080-9876-5432&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;佐藤次郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;070-1111-2222&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 名前（キー）で電話番号（値）を調べる</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;田中太郎の電話番号: </span><span class="si">${</span><span class="n">phoneBook</span><span class="p">(</span><span class="s">&quot;田中太郎&quot;</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 英和辞典のようなマップ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">dictionary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;apple&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;りんご&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;banana&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;orange&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;オレンジ&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;appleの意味: </span><span class="si">${</span><span class="n">dictionary</span><span class="p">(</span><span class="s">&quot;apple&quot;</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>マップは「何か」と「何か」を結びつける、便利な道具です！</p>
+<h3 id="_4">もっと実用的な例<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// PracticalMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practicalMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 商品と価格</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">prices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;紅茶&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;サンドイッチ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">350</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== カフェメニュー ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">prices</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">item</span><span class="s">: </span><span class="si">${</span><span class="n">price</span><span class="si">}</span><span class="s">円&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 学生と成績</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">grades</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;A001&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;A002&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;A003&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;A004&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">88</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== 成績一覧 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">grades</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;学籍番号</span><span class="si">$</span><span class="n">id</span><span class="s">: </span><span class="si">$</span><span class="n">score点</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_5">マップの作り方<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="_6">基本の作り方<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CreatingMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">creatingMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 方法1：矢印記法（おすすめ！）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">fruits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;apple&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;りんご&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;banana&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;バナナ&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;grape&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;ぶどう&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 方法2：タプルを使う</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;one&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;two&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s">&quot;three&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 方法3：空のマップから始める</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">emptyMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">]()</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">withOne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emptyMap</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;first&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">withTwo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withOne</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;果物: </span><span class="si">$</span><span class="n">fruits</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;数字: </span><span class="si">$</span><span class="n">numbers</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;追加後: </span><span class="si">$</span><span class="n">withTwo</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_7">型を明示する<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// TypedMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">typedMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 型を明示的に指定</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">ages</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;太郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;花子&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;次郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 型推論に任せる（通常はこれでOK）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">cities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;東京&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;日本&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ニューヨーク&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;アメリカ&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ロンドン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;イギリス&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 複雑な型のマップ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">studentInfo</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;A001&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;工学部&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="s">&quot;A002&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="mi">21</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;理学部&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="s">&quot;A003&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;文学部&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">studentInfo</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">dept</span><span class="p">))</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">id</span><span class="s">: </span><span class="si">${</span><span class="n">age</span><span class="si">}</span><span class="s">歳, </span><span class="si">$</span><span class="n">dept</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_8">値を取り出す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h3 id="_9">基本的な取り出し方<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// GettingValues.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">gettingValues</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ペン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ノート&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;消しゴム&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 直接取り出す（キーが必ず存在する場合）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">penCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inventory</span><span class="p">(</span><span class="s">&quot;ペン&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;ペンの在庫: </span><span class="si">$</span><span class="n">penCount個</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 存在しないキーを指定するとエラー！</span>
+<span class="w">  </span><span class="c1">// val rulerCount = inventory(&quot;定規&quot;)  // エラー！</span>
+
+<span class="w">  </span><span class="c1">// 安全に取り出す（getメソッド）</span>
+<span class="w">  </span><span class="n">inventory</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;ノート&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;ノートの在庫: </span><span class="si">${</span><span class="n">count</span><span class="si">}</span><span class="s">個&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;ノートは在庫にありません&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">inventory</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;定規&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;定規の在庫: </span><span class="si">${</span><span class="n">count</span><span class="si">}</span><span class="s">個&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;定規は在庫にありません&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_10">便利な取り出し方<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ConvenientGetters.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">convenientGetters</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;fontSize&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;theme&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;dark&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;autoSave&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// デフォルト値を指定して取得</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">fontSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">settings</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;fontSize&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">lineHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">settings</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;lineHeight&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w">  </span><span class="c1">// 存在しない</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;フォントサイズ: </span><span class="si">$</span><span class="n">fontSize</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;行の高さ: </span><span class="si">$</span><span class="n">lineHeight</span><span class="s">（デフォルト値）&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// キーの存在確認</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">settings</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;theme&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;テーマ設定: </span><span class="si">${</span><span class="n">settings</span><span class="p">(</span><span class="s">&quot;theme&quot;</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;テーマは未設定です&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// すべてのキーと値を取得</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n=== すべての設定 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;キー一覧: </span><span class="si">${</span><span class="n">settings</span><span class="p">.</span><span class="n">keys</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;値一覧: </span><span class="si">${</span><span class="n">settings</span><span class="p">.</span><span class="n">values</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_11">マップの更新<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<h3 id="_12">イミュータブルマップの更新<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// UpdatingMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">updatingMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">originalPrices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;紅茶&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">250</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 要素を追加（新しいマップを作成）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">withCake</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">originalPrices</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 複数追加</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">fullMenu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">originalPrices</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;サンドイッチ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">350</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 値を更新（同じキーで上書き）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">newPrices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">originalPrices</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">350</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 要素を削除</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">withoutTea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fullMenu</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="s">&quot;紅茶&quot;</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;元の価格: </span><span class="si">$</span><span class="n">originalPrices</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;ケーキ追加: </span><span class="si">$</span><span class="n">withCake</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;フルメニュー: </span><span class="si">$</span><span class="n">fullMenu</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;値上げ後: </span><span class="si">$</span><span class="n">newPrices</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;紅茶なし: </span><span class="si">$</span><span class="n">withoutTea</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_13">ミュータブルマップ<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MutableMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mutableMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nn">scala</span><span class="p">.</span><span class="nn">collection</span><span class="p">.</span><span class="n">mutable</span>
+
+<span class="w">  </span><span class="c1">// ミュータブルマップの作成</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutable</span><span class="p">.</span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;太郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;花子&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">85</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 直接更新できる</span>
+<span class="w">  </span><span class="n">scores</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">90</span><span class="w">  </span><span class="c1">// 更新</span>
+<span class="w">  </span><span class="n">scores</span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">75</span><span class="w">  </span><span class="c1">// 追加</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;更新後: </span><span class="si">$</span><span class="n">scores</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 削除</span>
+<span class="w">  </span><span class="n">scores</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&quot;花子&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;花子を削除: </span><span class="si">$</span><span class="n">scores</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 一括更新</span>
+<span class="w">  </span><span class="n">scores</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;桜&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;健太&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">92</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;複数追加: </span><span class="si">$</span><span class="n">scores</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_14">実践的な使い方<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
+<h3 id="_15">在庫管理システム<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// InventorySystem.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">inventorySystem</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 商品の在庫管理</span>
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ペン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ノート&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;消しゴム&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;定規&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 在庫を表示</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">showInventory</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 現在の在庫 ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">inventory</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;⚠️ 在庫少&quot;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s">&quot;✓&quot;</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">f&quot;</span><span class="si">$</span><span class="n">item</span><span class="s">%-10s: </span><span class="si">$</span><span class="n">count</span><span class="s">%3d個 </span><span class="si">$</span><span class="n">status</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 商品を販売</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">sell</span><span class="p">(</span><span class="n">item</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">inventory</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">quantity</span><span class="p">))</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;✓ </span><span class="si">$</span><span class="n">item</span><span class="s"> を</span><span class="si">${</span><span class="n">quantity</span><span class="si">}</span><span class="s">個販売しました&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;❌ 在庫不足！</span><span class="si">${</span><span class="n">item</span><span class="si">}</span><span class="s">は</span><span class="si">${</span><span class="n">current</span><span class="si">}</span><span class="s">個しかありません&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;❌ </span><span class="si">${</span><span class="n">item</span><span class="si">}</span><span class="s">は取り扱っていません&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 在庫を補充</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">restock</span><span class="p">(</span><span class="n">item</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inventory</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">quantity</span><span class="p">))</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;✓ </span><span class="si">$</span><span class="n">item</span><span class="s"> を</span><span class="si">${</span><span class="n">quantity</span><span class="si">}</span><span class="s">個補充しました&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 使ってみる</span>
+<span class="w">  </span><span class="n">showInventory</span><span class="p">()</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n--- 販売処理 ---&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">sell</span><span class="p">(</span><span class="s">&quot;ペン&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span>
+<span class="w">  </span><span class="n">sell</span><span class="p">(</span><span class="s">&quot;ノート&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">)</span><span class="w">  </span><span class="c1">// 在庫不足</span>
+<span class="w">  </span><span class="n">sell</span><span class="p">(</span><span class="s">&quot;はさみ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">   </span><span class="c1">// 存在しない</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;\n--- 補充処理 ---&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">restock</span><span class="p">(</span><span class="s">&quot;ノート&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">  </span><span class="n">restock</span><span class="p">(</span><span class="s">&quot;はさみ&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span><span class="w">  </span><span class="c1">// 新商品</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">()</span>
+<span class="w">  </span><span class="n">showInventory</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_16">成績管理と分析<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// GradeAnalysis.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">gradeAnalysis</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 学生の成績（学籍番号 -&gt; (名前, 点数のマップ)）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">students</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;S001&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;田中太郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;英語&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;理科&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">92</span><span class="p">)),</span>
+<span class="w">    </span><span class="s">&quot;S002&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;山田花子&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;英語&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;理科&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">85</span><span class="p">)),</span>
+<span class="w">    </span><span class="s">&quot;S003&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;佐藤次郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;英語&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;理科&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">80</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 個人成績表</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">showStudentGrades</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">students</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">((</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">grades</span><span class="p">))</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;=== </span><span class="si">$</span><span class="n">name</span><span class="s"> さんの成績 ===&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="n">grades</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">subject</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">          </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">subject</span><span class="s">: </span><span class="si">$</span><span class="n">score点</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">          </span><span class="n">total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">score</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">.</span><span class="n">toDouble</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">grades</span><span class="p">.</span><span class="n">size</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">f&quot;平均: </span><span class="si">$</span><span class="n">average</span><span class="s">%.1f点&quot;</span><span class="p">)</span>
+
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;学籍番号 </span><span class="si">$</span><span class="n">id</span><span class="s"> の学生は見つかりません&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 科目別統計</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">subjectStats</span><span class="p">(</span><span class="n">subject</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;\n=== </span><span class="si">$</span><span class="n">subject</span><span class="s"> の統計 ===&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">students</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">flatMap</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">grades</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="n">grades</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}.</span><span class="n">toList</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">scores</span><span class="p">.</span><span class="n">nonEmpty</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">average</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">sum</span><span class="p">.</span><span class="n">toDouble</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">length</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">max</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">min</span>
+
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">f&quot;平均点: </span><span class="si">$</span><span class="n">average</span><span class="s">%.1f&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;最高点: </span><span class="si">$</span><span class="n">max</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;最低点: </span><span class="si">$</span><span class="n">min</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 使ってみる</span>
+<span class="w">  </span><span class="n">showStudentGrades</span><span class="p">(</span><span class="s">&quot;S001&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">showStudentGrades</span><span class="p">(</span><span class="s">&quot;S004&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// 存在しない</span>
+
+<span class="w">  </span><span class="n">subjectStats</span><span class="p">(</span><span class="s">&quot;数学&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">subjectStats</span><span class="p">(</span><span class="s">&quot;英語&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_17">単語カウンター<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// WordCounter.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">wordCounter</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    Scalaは楽しい言語です。</span>
+<span class="s">    Scalaで関数型プログラミングを学びましょう。</span>
+<span class="s">    Scalaは型安全です。</span>
+<span class="s">  &quot;&quot;&quot;</span>
+
+<span class="w">  </span><span class="c1">// 単語を数える</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">text</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;\\s+|。|、&quot;</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">nonEmpty</span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="n">wordCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">]()</span>
+
+<span class="w">  </span><span class="n">words</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wordCount</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">wordCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wordCount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 結果を表示</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 単語の出現回数 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">wordCount</span><span class="p">.</span><span class="n">toList</span>
+<span class="w">    </span><span class="p">.</span><span class="n">sortBy</span><span class="p">(</span><span class="o">-</span><span class="n">_</span><span class="p">.</span><span class="n">_2</span><span class="p">)</span><span class="w">  </span><span class="c1">// 回数の多い順</span>
+<span class="w">    </span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;</span><span class="si">$</span><span class="n">word</span><span class="s">: </span><span class="si">$</span><span class="n">count回</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_18">マップの便利な操作<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h2>
+<h3 id="_19">フィルタリングと変換<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MapOperations.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mapOperations</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ペン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ノート&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;消しゴム&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;定規&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;はさみ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 150円以上の商品を抽出</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">expensive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">products</span><span class="p">.</span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">150</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;150円以上: </span><span class="si">$</span><span class="n">expensive</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 価格を10%値上げ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">increased</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">products</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1.1</span><span class="p">).</span><span class="n">toInt</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;10%値上げ後: </span><span class="si">$</span><span class="n">increased</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// キーだけ変換（商品名を大文字に）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">upperCase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">products</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">toUpperCase</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;大文字: </span><span class="si">$</span><span class="n">upperCase</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_20">マップの結合<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MergingMaps.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mergingMaps</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">shop1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;りんご&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;バナナ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">80</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">shop2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;バナナ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;オレンジ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">120</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 単純な結合（後の値で上書き）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">merged1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shop1</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">shop2</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;shop2優先: </span><span class="si">$</span><span class="n">merged1</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">merged2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shop2</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">shop1</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;shop1優先: </span><span class="si">$</span><span class="n">merged2</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// カスタム結合（安い方を選ぶ）</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">bestPrices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">shop1</span><span class="p">.</span><span class="n">keySet</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">shop2</span><span class="p">.</span><span class="n">keySet</span><span class="p">).</span><span class="n">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">fruit</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">price1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shop1</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="n">fruit</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">price2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shop2</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="n">fruit</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+<span class="w">    </span><span class="n">fruit</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">math</span><span class="p">.</span><span class="n">min</span><span class="p">(</span><span class="n">price1</span><span class="p">,</span><span class="w"> </span><span class="n">price2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}.</span><span class="n">toMap</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;最安値: </span><span class="si">$</span><span class="n">bestPrices</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_21">よくある間違いと対処法<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h2>
+<h3 id="1">間違い1：存在しないキー<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MapMistakes1.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mapMistakes1</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">ages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="s">&quot;太郎&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;花子&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">22</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 間違い：存在しないキーに直接アクセス</span>
+<span class="w">  </span><span class="c1">// val jiroAge = ages(&quot;次郎&quot;)  // エラー！</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法1：getを使う</span>
+<span class="w">  </span><span class="n">ages</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;次郎は</span><span class="si">${</span><span class="n">age</span><span class="si">}</span><span class="s">歳&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;次郎のデータはありません&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法2：getOrElseを使う</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">jiroAge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ages</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;次郎の年齢: </span><span class="si">$</span><span class="n">jiroAge</span><span class="s">（デフォルト値）&quot;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 正しい方法3：事前にチェック</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ages</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;次郎は</span><span class="si">${</span><span class="n">ages</span><span class="p">(</span><span class="s">&quot;次郎&quot;</span><span class="p">)</span><span class="si">}</span><span class="s">歳&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;次郎のデータはありません&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2">間違い2：型の不一致<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// MapMistakes2.scala</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">mapMistakes2</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// 型が明確なマップ</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">prices</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;紅茶&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">250</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// 間違い：違う型の値を追加しようとする</span>
+<span class="w">  </span><span class="c1">// val wrong = prices + (&quot;ケーキ&quot; -&gt; &quot;400円&quot;)  // エラー！</span>
+
+<span class="w">  </span><span class="c1">// 正しい：同じ型で追加</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">correct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_22">練習してみよう！<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h2>
+<h3 id="1_1">練習1：メニュー計算機<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<p>カフェのメニューと注文リストから、合計金額を計算してください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice1</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">menu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;紅茶&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ケーキ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;サンドイッチ&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">350</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;コーヒー&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;コーヒー&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ケーキ&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;紅茶&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここに合計金額を計算するコードを書いてください</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2_1">練習2：投票集計<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<p>投票結果のリストから、各候補者の得票数を集計してください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice2</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">votes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;山田&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;田中&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;山田&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;佐藤&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s">&quot;田中&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;山田&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;田中&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;田中&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここに集計コードを書いてください</span>
+<span class="w">  </span><span class="c1">// 期待する結果: Map(&quot;山田&quot; -&gt; 3, &quot;田中&quot; -&gt; 4, &quot;佐藤&quot; -&gt; 1)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="3">練習3：在庫チェック<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p>注文リストに対して、在庫が足りるかチェックしてください。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">practice3</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ペン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ノート&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;消しゴム&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;ペン&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;ノート&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">  </span><span class="c1">// 在庫不足！</span>
+<span class="w">    </span><span class="s">&quot;定規&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">10</span><span class="w">     </span><span class="c1">// 在庫にない！</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// ここにチェックコードを書いてください</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_23">この章のまとめ<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h2>
+<p>マップについて、本当にたくさんのことを学びましたね！</p>
+<h3 id="_24">できるようになったこと<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>マップの基本</strong>
+- キーと値のペアでデータを管理
+- 型安全な宣言と操作
+- 効率的なデータの検索</p>
+<p>✅ <strong>マップの操作</strong>
+- 値の取得（get、getOrElse）
+- 要素の追加・更新・削除
+- 安全なアクセス方法</p>
+<p>✅ <strong>実践的な使い方</strong>
+- 在庫管理システム
+- 成績の集計と分析
+- 単語のカウント</p>
+<p>✅ <strong>便利な機能</strong>
+- フィルタリングと変換
+- マップの結合
+- キーと値の操作</p>
+<h3 id="_25">マップを使うべき場面<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>検索が必要なとき</strong></p>
+<ul>
+<li>名前から電話番号を調べる</li>
+<li>商品名から価格を調べる</li>
+<li>IDからデータを取得する</li>
+</ul>
+</li>
+<li>
+<p><strong>関連付けが必要なとき</strong></p>
+<ul>
+<li>単語と意味</li>
+<li>人と属性</li>
+<li>キーと設定値</li>
+</ul>
+</li>
+<li>
+<p><strong>集計や分析</strong></p>
+<ul>
+<li>出現回数のカウント</li>
+<li>グループごとの集計</li>
+<li>データの分類</li>
+</ul>
+</li>
+</ol>
+<h3 id="_26">次の章では...<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<p>マップを使った、より高度なデータ処理について学びます。複雑なデータ構造の操作も、怖くありませんよ！</p>
+<h3 id="_27">最後に<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<p>マップは「魔法の辞書」のようなものです。何でも入れられて、すぐに取り出せる。この便利さを活用して、もっと楽しいプログラムを作っていきましょう！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  ページトップへ戻る
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Scala 3入門編集部
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/example/easy-scala3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3519 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="プログラミング完全初心者のためのScala 3入門書">
+      
+      
+        <meta name="author" content="Scala 3入門編集部">
+      
+      
+        <link rel="canonical" href="https://example.com/easy-scala3/part9/chapter37/">
+      
+      
+        <link rel="prev" href="../chapter36/">
+      
+      
+        <link rel="next" href="../../appendix/appendixA/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>第37章 ビルドツールと依存性管理 - やさしいScala 3入門</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#37" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="ヘッダー">
+    <a href="../.." title="やさしいScala 3入門" class="md-header__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            やさしいScala 3入門
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第37章 ビルドツールと依存性管理
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ダークモードに切り替え"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ライトモードに切り替え"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="検索">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="共有" aria-label="共有" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            検索を初期化
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="やさしいScala 3入門" class="md-nav__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    やさしいScala 3入門
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ホーム
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第I部 プログラミングの世界へようこそ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            第I部 プログラミングの世界へようこそ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第0章 プログラミングをはじめる前に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part1/chapter02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第2章 数値で遊んでみよう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第II部 データと型の基本を理解しよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            第II部 データと型の基本を理解しよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第3章 値と変数の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第4章 いろいろな種類のデータ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第5章 型って何だろう？（型の基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第6章 型推論の魔法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第7章 文字列を自由自在に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第III部 型を意識してデータをまとめよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            第III部 型を意識してデータをまとめよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第8章 型安全なコレクション（基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第9章 リストで同じデータを並べる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第10章 型安全なタプル
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第13章 マップで関連付けて保存
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IV部 プログラムに判断力を持たせよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            第IV部 プログラムに判断力を持たせよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第14章 条件分岐の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第15章 パターンマッチングの威力
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第16章 関数の定義と利用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第17章 関数の引数をもっと賢く
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第18章 高階関数とは何か
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第19章 OptionとEitherで安全に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第V部 非同期処理とエラーハンドリング
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            第V部 非同期処理とエラーハンドリング
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第20章 Future[T]で非同期処理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第21章 Try[T]で例外を扱う
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VI部 型で設計するデータ構造
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            第VI部 型で設計するデータ構造
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第22章 ケースクラスの便利さ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第23章 シールドトレイトで網羅的に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第24章 イミュータブルなデータ設計
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VII部 関数型プログラミングの基礎
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            第VII部 関数型プログラミングの基礎
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第25章 関数合成で処理を組み立てる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第26章 型パラメータ入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第27章 境界と変位指定
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第29章 型クラスパターン
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第30章 for式の内部動作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VIII部 コレクションの使いこなし
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            第VIII部 コレクションの使いこなし
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第31章 コレクションの選び方
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第32章 効率的なコレクション操作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第33章 並行プログラミング入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IX部 実用的なプログラミング技術
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            第IX部 実用的なプログラミング技術
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第34章 スレッドセーフを意識する
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第35章 アクターモデル入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第36章 テストを書こう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめに
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sbt" class="md-nav__link">
+    <span class="md-ellipsis">
+      sbtの基礎
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="sbtの基礎">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      プロジェクトの構造
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      基本的なタスク
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      依存性管理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="依存性管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      ライブラリの追加と管理
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      依存性の競合解決
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      カスタムタスクとプラグイン
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="カスタムタスクとプラグイン">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      カスタムタスクの作成
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      便利なプラグイン
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      実践的なプロジェクト設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="実践的なプロジェクト設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web" class="md-nav__link">
+    <span class="md-ellipsis">
+      Webアプリケーションプロジェクト
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD統合
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      プロジェクトテンプレート
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習してみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="練習してみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習1：マルチモジュールプロジェクト
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習2：カスタムタスク
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習3：CI/CDパイプライン
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      この章のまとめ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この章のまとめ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      できるようになったこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      ビルド管理のコツ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      最後に
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    付録
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            付録
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録A よくあるエラーメッセージ完全ガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録B REPL完全活用法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録C 便利なメソッド・関数リファレンス
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録D 開発環境カスタマイズガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録E 練習問題解答集
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録F 次に読むべき書籍・資料
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="37">第37章 ビルドツールと依存性管理<a class="headerlink" href="#37" title="Permanent link">&para;</a></h1>
+<h2 id="_1">はじめに<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>家を建てるとき、設計図があり、必要な材料のリストがあり、組み立て方の手順があります。プログラミングプロジェクトも同じです。どんなライブラリが必要か、どうやってコンパイルするか、どうやって配布するか。</p>
+<p>この章では、Scalaプロジェクトの「建築管理」を担うビルドツールと依存性管理について学びましょう！</p>
+<h2 id="sbt">sbtの基礎<a class="headerlink" href="#sbt" title="Permanent link">&para;</a></h2>
+<h3 id="_2">プロジェクトの構造<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// プロジェクトのディレクトリ構造</span>
+<span class="n">my</span><span class="o">-</span><span class="n">scala</span><span class="o">-</span><span class="n">project</span><span class="o">/</span>
+<span class="o">├──</span><span class="w"> </span><span class="n">build</span><span class="p">.</span><span class="n">sbt</span><span class="w">              </span><span class="n">#</span><span class="w"> </span><span class="n">ビルド定義</span>
+<span class="o">├──</span><span class="w"> </span><span class="n">project</span><span class="o">/</span>
+<span class="n">│</span><span class="w">   </span><span class="o">├──</span><span class="w"> </span><span class="n">build</span><span class="p">.</span><span class="n">properties</span><span class="w">   </span><span class="n">#</span><span class="w"> </span><span class="n">sbtバ</span><span class="err">ー</span><span class="n">ジョン</span>
+<span class="n">│</span><span class="w">   </span><span class="o">└──</span><span class="w"> </span><span class="n">plugins</span><span class="p">.</span><span class="n">sbt</span><span class="w">        </span><span class="n">#</span><span class="w"> </span><span class="n">プラグイン設定</span>
+<span class="o">├──</span><span class="w"> </span><span class="n">src</span><span class="o">/</span>
+<span class="n">│</span><span class="w">   </span><span class="o">├──</span><span class="w"> </span><span class="n">main</span><span class="o">/</span>
+<span class="n">│</span><span class="w">   </span><span class="n">│</span><span class="w">   </span><span class="o">├──</span><span class="w"> </span><span class="n">scala</span><span class="o">/</span><span class="w">        </span><span class="n">#</span><span class="w"> </span><span class="n">メインのScalaコ</span><span class="err">ー</span><span class="n">ド</span>
+<span class="n">│</span><span class="w">   </span><span class="n">│</span><span class="w">   </span><span class="o">└──</span><span class="w"> </span><span class="n">resources</span><span class="o">/</span><span class="w">    </span><span class="n">#</span><span class="w"> </span><span class="n">リソ</span><span class="err">ー</span><span class="n">スファイル</span>
+<span class="n">│</span><span class="w">   </span><span class="o">└──</span><span class="w"> </span><span class="n">test</span><span class="o">/</span>
+<span class="n">│</span><span class="w">       </span><span class="o">├──</span><span class="w"> </span><span class="n">scala</span><span class="o">/</span><span class="w">        </span><span class="n">#</span><span class="w"> </span><span class="n">テストコ</span><span class="err">ー</span><span class="n">ド</span>
+<span class="n">│</span><span class="w">       </span><span class="o">└──</span><span class="w"> </span><span class="n">resources</span><span class="o">/</span><span class="w">    </span><span class="n">#</span><span class="w"> </span><span class="n">テストリソ</span><span class="err">ー</span><span class="n">ス</span>
+<span class="o">├──</span><span class="w"> </span><span class="n">target</span><span class="o">/</span><span class="w">               </span><span class="n">#</span><span class="w"> </span><span class="n">ビルド成果物</span><span class="err">（</span><span class="n">自動生成</span><span class="err">）</span>
+<span class="o">└──</span><span class="w"> </span><span class="p">.</span><span class="n">gitignore</span><span class="w">           </span><span class="n">#</span><span class="w"> </span><span class="nc">Git除外設定</span>
+
+<span class="c1">// build.sbt の基本</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">scalaVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;3.3.1&quot;</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">version</span><span class="w">      </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">organization</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-scala-project&quot;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// 依存ライブラリ</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;org.typelevel&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;cats-core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.10.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.play&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;play-json&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.10.1&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.scalatest&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scalatest&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.2.17&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="w">    </span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// コンパイラオプション</span>
+<span class="w">    </span><span class="n">scalacOptions</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;-deprecation&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-feature&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-unchecked&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-Xfatal-warnings&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="c1">// project/build.properties</span>
+<span class="n">sbt</span><span class="p">.</span><span class="n">version</span><span class="o">=</span><span class="mf">1.9.7</span>
+
+<span class="c1">// project/plugins.sbt</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;com.github.sbt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-native-packager&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.9.16&quot;</span><span class="p">)</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;org.scalameta&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-scalafmt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.5.2&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_3">基本的なタスク<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// BasicSbtTasks.scala</span>
+<span class="c1">// sbtコンソールでの操作</span>
+
+<span class="c1">// コンパイル</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">compile</span>
+
+<span class="c1">// テスト実行</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">test</span>
+
+<span class="c1">// 特定のテストのみ実行</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">testOnly</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="nc">MyClassTest</span>
+
+<span class="c1">// 継続的なコンパイル（ファイル変更を監視）</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="o">~</span><span class="n">compile</span>
+
+<span class="c1">// REPL起動</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">console</span>
+<span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">example</span><span class="p">.</span><span class="n">_</span>
+<span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">.</span><span class="n">doSomething</span><span class="p">()</span>
+
+<span class="c1">// 実行</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">run</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">arg1</span><span class="w"> </span><span class="n">arg2</span><span class="w">  </span><span class="c1">// 引数付き</span>
+
+<span class="c1">// クリーン</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">clean</span>
+
+<span class="c1">// パッケージング</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">package</span><span class="w">       </span><span class="c1">// JARファイル作成</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">packageBin</span><span class="w">    </span><span class="c1">// バイナリJAR</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">packageDoc</span><span class="w">    </span><span class="c1">// JavadocJAR</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">packageSrc</span><span class="w">    </span><span class="c1">// ソースJAR</span>
+
+<span class="c1">// 依存関係の確認</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">dependencyTree</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">evicted</span><span class="w">       </span><span class="c1">// 競合して除外された依存関係</span>
+
+<span class="c1">// タスクの説明を見る</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">compile</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">tasks</span><span class="w">         </span><span class="c1">// 利用可能なタスク一覧</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_4">依存性管理<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h3 id="_5">ライブラリの追加と管理<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// DependencyManagement.scala</span>
+<span class="c1">// build.sbt</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">versions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">scala</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;3.3.1&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akka</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2.8.5&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akkaHttp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10.5.3&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">circe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.14.6&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">scalaTest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;3.2.17&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">logback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;1.4.11&quot;</span>
+<span class="p">}</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Akka</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akkaActor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-actor-typed&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">akka</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akkaStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-stream&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">akka</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akkaHttp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-http&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">akkaHttp</span>
+
+<span class="w">  </span><span class="c1">// JSON処理</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">circeCore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;io.circe&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;circe-core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">circe</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">circeGeneric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;io.circe&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;circe-generic&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">circe</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">circeParser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;io.circe&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;circe-parser&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">circe</span>
+
+<span class="w">  </span><span class="c1">// ロギング</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">slf4j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;org.slf4j&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;slf4j-api&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.0.9&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">logback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ch.qos.logback&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;logback-classic&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">logback</span>
+
+<span class="w">  </span><span class="c1">// テスト</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">scalaTest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;org.scalatest&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scalatest&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">scalaTest</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">akkaTestkit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-actor-testkit-typed&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">akka</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="p">}</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">commonSettings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="n">scalaVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">versions</span><span class="p">.</span><span class="n">scala</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">// リゾルバー（カスタムリポジトリ）</span>
+<span class="w">  </span><span class="n">resolvers</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;Sonatype OSS Snapshots&quot;</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/content/repositories/snapshots&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;Typesafe Repository&quot;</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="s">&quot;https://repo.typesafe.com/typesafe/releases/&quot;</span>
+<span class="w">  </span><span class="p">),</span>
+
+<span class="w">  </span><span class="c1">// 除外設定</span>
+<span class="w">  </span><span class="n">excludeDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">    </span><span class="nc">ExclusionRule</span><span class="p">(</span><span class="s">&quot;org.slf4j&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;slf4j-log4j12&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="nc">ExclusionRule</span><span class="p">(</span><span class="s">&quot;log4j&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;log4j&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">// マルチプロジェクト構成</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">core</span><span class="p">,</span><span class="w"> </span><span class="n">web</span><span class="p">,</span><span class="w"> </span><span class="n">cli</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">publish</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;core&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app-core&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">circeCore</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">circeGeneric</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">slf4j</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">scalaTest</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;web&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">dependsOn</span><span class="p">(</span><span class="n">core</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app-web&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">akkaHttp</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">akkaStream</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">circeParser</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">logback</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">cli</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;cli&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">dependsOn</span><span class="p">(</span><span class="n">core</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app-cli&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;com.github.scopt&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scopt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;4.1.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">dependencies</span><span class="p">.</span><span class="n">logback</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_6">依存性の競合解決<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ConflictResolution.scala</span>
+<span class="c1">// build.sbt</span>
+
+<span class="c1">// 依存性の競合を解決する方法</span>
+
+<span class="c1">// 1. 明示的なバージョン指定</span>
+<span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;com.fasterxml.jackson.core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;jackson-databind&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.15.3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="c1">// 他のライブラリが古いバージョンを要求しても、これを使う</span>
+<span class="p">)</span>
+
+<span class="c1">// 2. force を使った強制</span>
+<span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;org.scala-lang.modules&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scala-xml&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.2.0&quot;</span><span class="w"> </span><span class="n">force</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1">// 3. dependencyOverrides を使った上書き</span>
+<span class="n">dependencyOverrides</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;org.scala-lang.modules&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scala-xml&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s">&quot;com.google.guava&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;guava&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;32.1.3-jre&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// 4. 除外ルール</span>
+<span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;com.example&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;some-library&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">exclude</span><span class="p">(</span><span class="s">&quot;org.slf4j&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;slf4j-log4j12&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">exclude</span><span class="p">(</span><span class="s">&quot;commons-logging&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;commons-logging&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">// 5. 競合戦略の設定</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">conflictManager</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">ConflictManager</span><span class="p">.</span><span class="n">latestRevision</span>
+
+<span class="c1">// 6. カスタム競合解決</span>
+<span class="n">conflictManager</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;com.google.guava&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;guava&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">ConflictManager</span><span class="p">.</span><span class="n">latestRevision</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;org.scala-lang.modules&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">ConflictManager</span><span class="p">.</span><span class="n">latestRevision</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">ConflictManager</span><span class="p">.</span><span class="n">default</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_7">カスタムタスクとプラグイン<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h3 id="_8">カスタムタスクの作成<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CustomTasks.scala</span>
+<span class="c1">// build.sbt</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">sbt</span><span class="p">.</span><span class="n">_</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">sbt</span><span class="p">.</span><span class="nc">Keys</span><span class="p">.</span><span class="n">_</span>
+
+<span class="c1">// シンプルなタスク</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">hello</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Prints &#39;Hello, World!&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">hello</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 他のタスクに依存するタスク</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">packageAndRun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Package and run the application&quot;</span><span class="p">)</span>
+
+<span class="n">packageAndRun</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">packageBin</span><span class="p">).</span><span class="n">value</span>
+<span class="w">  </span><span class="p">(</span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">run</span><span class="p">).</span><span class="n">toTask</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">).</span><span class="n">value</span>
+<span class="p">}</span>
+
+<span class="c1">// 入力を受け取るタスク</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Greet someone&quot;</span><span class="p">)</span>
+
+<span class="n">greet</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">import</span><span class="w"> </span><span class="nn">complete</span><span class="p">.</span><span class="nc">DefaultParsers</span><span class="p">.</span><span class="n">_</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spaceDelimited</span><span class="p">(</span><span class="s">&quot;&lt;name&gt;&quot;</span><span class="p">).</span><span class="n">parsed</span><span class="p">.</span><span class="n">headOption</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;World&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Hello, </span><span class="si">$</span><span class="n">name</span><span class="s">!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// ファイル生成タスク</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">generateVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">File</span><span class="p">](</span><span class="s">&quot;Generate version file&quot;</span><span class="p">)</span>
+
+<span class="n">generateVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sourceManaged</span><span class="p">).</span><span class="n">value</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s">&quot;Version.scala&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">    </span><span class="s">s&quot;&quot;&quot;package com.example</span>
+<span class="s">       |</span>
+<span class="s">       |object Version {</span>
+<span class="s">       |  val version = &quot;</span><span class="si">${</span><span class="n">version</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">&quot;</span>
+<span class="s">       |  val buildTime = &quot;</span><span class="si">${</span><span class="n">java</span><span class="p">.</span><span class="n">time</span><span class="p">.</span><span class="nc">Instant</span><span class="p">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span>
+<span class="s">       |  val gitCommit = &quot;</span><span class="si">${</span><span class="n">git</span><span class="p">.</span><span class="n">gitHeadCommit</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;unknown&quot;</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span>
+<span class="s">       |}</span>
+<span class="s">       |&quot;&quot;&quot;</span><span class="p">.</span><span class="n">stripMargin</span>
+
+<span class="w">  </span><span class="nc">IO</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">)</span>
+<span class="w">  </span><span class="n">file</span>
+<span class="p">}</span>
+
+<span class="c1">// ソース生成をコンパイルに追加</span>
+<span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sourceGenerators</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">generateVersion</span><span class="p">.</span><span class="n">taskValue</span>
+
+<span class="c1">// 環境ごとの設定</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">deployEnvironment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">settingKey</span><span class="p">[</span><span class="nc">String</span><span class="p">](</span><span class="s">&quot;Deployment environment&quot;</span><span class="p">)</span>
+
+<span class="n">deployEnvironment</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">env</span><span class="p">.</span><span class="n">getOrElse</span><span class="p">(</span><span class="s">&quot;DEPLOY_ENV&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;development&quot;</span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">deploy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Deploy the application&quot;</span><span class="p">)</span>
+
+<span class="n">deploy</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployEnvironment</span><span class="p">.</span><span class="n">value</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">jar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">packageBin</span><span class="p">).</span><span class="n">value</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Deploying to </span><span class="si">$</span><span class="n">env</span><span class="s"> environment...&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">env</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;production&quot;</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="c1">// 本番環境へのデプロイ</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Uploading </span><span class="si">${</span><span class="n">jar</span><span class="p">.</span><span class="n">getName</span><span class="si">}</span><span class="s"> to production server...&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;staging&quot;</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="c1">// ステージング環境へのデプロイ</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Uploading </span><span class="si">${</span><span class="n">jar</span><span class="p">.</span><span class="n">getName</span><span class="si">}</span><span class="s"> to staging server...&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="c1">// 開発環境</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Copying </span><span class="si">${</span><span class="n">jar</span><span class="p">.</span><span class="n">getName</span><span class="si">}</span><span class="s"> to local directory...&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_9">便利なプラグイン<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// UsefulPlugins.scala</span>
+<span class="c1">// project/plugins.sbt</span>
+
+<span class="c1">// コードフォーマッター</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;org.scalameta&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-scalafmt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.5.2&quot;</span><span class="p">)</span>
+
+<span class="c1">// ネイティブパッケージャー</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;com.github.sbt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-native-packager&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.9.16&quot;</span><span class="p">)</span>
+
+<span class="c1">// リリース管理</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;com.github.sbt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-release&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.1.0&quot;</span><span class="p">)</span>
+
+<span class="c1">// 依存関係の更新チェック</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;com.timushev.sbt&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-updates&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;0.6.4&quot;</span><span class="p">)</span>
+
+<span class="c1">// カバレッジ測定</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;org.scoverage&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-scoverage&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.0.9&quot;</span><span class="p">)</span>
+
+<span class="c1">// Assembly（fat JAR作成）</span>
+<span class="n">addSbtPlugin</span><span class="p">(</span><span class="s">&quot;com.eed3si9n&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;sbt-assembly&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.1.5&quot;</span><span class="p">)</span>
+
+<span class="c1">// build.sbt でのプラグイン設定</span>
+
+<span class="c1">// Scalafmt</span>
+<span class="n">scalafmtOnCompile</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="c1">// Native Packager</span>
+<span class="n">enablePlugins</span><span class="p">(</span><span class="nc">JavaAppPackaging</span><span class="p">)</span>
+
+<span class="n">packageName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app&quot;</span>
+<span class="n">maintainer</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;your-email@example.com&quot;</span>
+<span class="n">packageDescription</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;My Scala Application&quot;</span>
+
+<span class="c1">// Docker設定</span>
+<span class="n">enablePlugins</span><span class="p">(</span><span class="nc">DockerPlugin</span><span class="p">)</span>
+<span class="nc">Docker</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">packageName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;my-app&quot;</span>
+<span class="nc">Docker</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">version</span><span class="p">.</span><span class="n">value</span>
+<span class="n">dockerBaseImage</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;openjdk:11-jre-slim&quot;</span>
+<span class="n">dockerExposedPorts</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span>
+
+<span class="c1">// Assembly設定</span>
+<span class="n">assembly</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">assemblyMergeStrategy</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="nc">PathList</span><span class="p">(</span><span class="s">&quot;META-INF&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">_*</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">MergeStrategy</span><span class="p">.</span><span class="n">discard</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;reference.conf&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">MergeStrategy</span><span class="p">.</span><span class="n">concat</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">MergeStrategy</span><span class="p">.</span><span class="n">first</span>
+<span class="p">}</span>
+
+<span class="n">assembly</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">assemblyJarName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">s&quot;</span><span class="si">${</span><span class="n">name</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">-</span><span class="si">${</span><span class="n">version</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">.jar&quot;</span>
+
+<span class="c1">// Coverage設定</span>
+<span class="n">coverageEnabled</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">coverageMinimumStmtTotal</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">80</span>
+<span class="n">coverageFailOnMinimum</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="c1">// 依存関係の更新チェック</span>
+<span class="c1">// &gt; dependencyUpdates</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_10">実践的なプロジェクト設定<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<h3 id="web">Webアプリケーションプロジェクト<a class="headerlink" href="#web" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// WebAppProject.scala</span>
+<span class="c1">// build.sbt</span>
+
+<span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">typesafe</span><span class="p">.</span><span class="nn">sbt</span><span class="p">.</span><span class="nn">packager</span><span class="p">.</span><span class="nn">docker</span><span class="p">.</span><span class="n">_</span>
+
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">scalaVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;3.3.1&quot;</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">organization</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">commonSettings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">  </span><span class="n">scalacOptions</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;-deprecation&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;-feature&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;-unchecked&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;-Ymacro-annotations&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;-Xfatal-warnings&quot;</span>
+<span class="w">  </span><span class="p">),</span>
+
+<span class="w">  </span><span class="nc">Test</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fork</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nc">Test</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">parallelExecution</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">api</span><span class="p">,</span><span class="w"> </span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">infra</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;web-app&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">publish</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;modules/domain&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;web-app-domain&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;org.typelevel&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;cats-core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.10.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.typelevel&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;cats-effect&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.5.2&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.scalatest&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scalatest&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.2.17&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">infra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;modules/infra&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">dependsOn</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;web-app-infra&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.slick&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;slick&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.5.0-M4&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.postgresql&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;postgresql&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;42.6.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.zaxxer&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;HikariCP&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;5.1.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.flywaydb&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;flyway-core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;9.22.3&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;modules/api&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">enablePlugins</span><span class="p">(</span><span class="nc">JavaAppPackaging</span><span class="p">,</span><span class="w"> </span><span class="nc">DockerPlugin</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">dependsOn</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span><span class="w"> </span><span class="n">infra</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span><span class="n">commonSettings</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;web-app-api&quot;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-http&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;10.5.3&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;de.heikoseeberger&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-http-circe&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.39.2&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-actor-typed&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.8.5&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-stream&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;2.8.5&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;ch.qos.logback&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;logback-classic&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.4.11&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;config&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.4.3&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.akka&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;akka-http-testkit&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;10.5.3&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="w">    </span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// アプリケーション設定</span>
+<span class="w">    </span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mainClass</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;com.example.api.Main&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// Docker設定</span>
+<span class="w">    </span><span class="nc">Docker</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">packageName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;web-app-api&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nc">Docker</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">version</span><span class="p">.</span><span class="n">value</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dockerBaseImage</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;eclipse-temurin:11-jre&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dockerExposedPorts</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="mi">8080</span><span class="p">),</span>
+<span class="w">    </span><span class="n">dockerExposedVolumes</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span><span class="s">&quot;/opt/app/logs&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="n">dockerCommands</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">dockerCommands</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">flatMap</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">cmd</span><span class="nd">@Cmd</span><span class="p">(</span><span class="s">&quot;FROM&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span>
+<span class="w">        </span><span class="n">cmd</span><span class="p">,</span>
+<span class="w">        </span><span class="nc">Cmd</span><span class="p">(</span><span class="s">&quot;RUN&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;apt-get update &amp;&amp; apt-get install -y curl &amp;&amp; rm -rf /var/lib/apt/lists/*&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="nc">Cmd</span><span class="p">(</span><span class="s">&quot;HEALTHCHECK&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;--interval=30s&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;--timeout=3s&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;--start-period=40s&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;--retries=3&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s">&quot;CMD&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;curl -f http://localhost:8080/health || exit 1&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nc">List</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="c1">// 環境変数</span>
+<span class="w">    </span><span class="nc">Universal</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">javaOptions</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;-Dconfig.file=/opt/app/conf/application.conf&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-Dlogback.configurationFile=/opt/app/conf/logback.xml&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="c1">// プロファイル別の設定</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;dev&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">dependsOn</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s">&quot;org.testcontainers&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;postgresql&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.19.3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">run</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fork</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="n">run</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">javaOptions</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;-Dconfig.resource=application-dev.conf&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-Xmx1g&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="cicd">CI/CD統合<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// CICDIntegration.scala</span>
+<span class="c1">// build.sbt</span>
+
+<span class="c1">// GitHub Actions用の設定</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">githubWorkflowGenerate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Generate GitHub Actions workflow&quot;</span><span class="p">)</span>
+
+<span class="n">githubWorkflowGenerate</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;.github/workflows/ci.yml&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;name: CI</span>
+<span class="s">    |</span>
+<span class="s">    |on:</span>
+<span class="s">    |  push:</span>
+<span class="s">    |    branches: [ main, develop ]</span>
+<span class="s">    |  pull_request:</span>
+<span class="s">    |    branches: [ main ]</span>
+<span class="s">    |</span>
+<span class="s">    |jobs:</span>
+<span class="s">    |  test:</span>
+<span class="s">    |    runs-on: ubuntu-latest</span>
+<span class="s">    |    steps:</span>
+<span class="s">    |    - uses: actions/checkout@v3</span>
+<span class="s">    |    - uses: actions/setup-java@v3</span>
+<span class="s">    |      with:</span>
+<span class="s">    |        distribution: &#39;temurin&#39;</span>
+<span class="s">    |        java-version: &#39;11&#39;</span>
+<span class="s">    |    </span>
+<span class="s">    |    - name: Cache SBT</span>
+<span class="s">    |      uses: actions/cache@v3</span>
+<span class="s">    |      with:</span>
+<span class="s">    |        path: |</span>
+<span class="s">    |          ~/.ivy2/cache</span>
+<span class="s">    |          ~/.sbt</span>
+<span class="s">    |        key: ${{ runner.os }}-sbt-${{ hashFiles(&#39;**/build.sbt&#39;) }}</span>
+<span class="s">    |    </span>
+<span class="s">    |    - name: Run tests</span>
+<span class="s">    |      run: sbt clean coverage test coverageReport</span>
+<span class="s">    |    </span>
+<span class="s">    |    - name: Upload coverage</span>
+<span class="s">    |      uses: codecov/codecov-action@v3</span>
+<span class="s">    |      with:</span>
+<span class="s">    |        file: ./target/scala-3.3.1/scoverage-report/scoverage.xml</span>
+<span class="s">    |    </span>
+<span class="s">    |    - name: Build Docker image</span>
+<span class="s">    |      if: github.ref == &#39;refs/heads/main&#39;</span>
+<span class="s">    |      run: sbt docker:publishLocal</span>
+<span class="s">    |&quot;&quot;&quot;</span><span class="p">.</span><span class="n">stripMargin</span>
+
+<span class="w">  </span><span class="nc">IO</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Generated </span><span class="si">$</span><span class="n">file</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// リリースプロセス</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">sbtrelease</span><span class="p">.</span><span class="nc">ReleaseStateTransformations</span><span class="p">.</span><span class="n">_</span>
+
+<span class="n">releaseProcess</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">ReleaseStep</span><span class="p">](</span>
+<span class="w">  </span><span class="n">checkSnapshotDependencies</span><span class="p">,</span>
+<span class="w">  </span><span class="n">inquireVersions</span><span class="p">,</span>
+<span class="w">  </span><span class="n">runClean</span><span class="p">,</span>
+<span class="w">  </span><span class="n">runTest</span><span class="p">,</span>
+<span class="w">  </span><span class="n">setReleaseVersion</span><span class="p">,</span>
+<span class="w">  </span><span class="n">commitReleaseVersion</span><span class="p">,</span>
+<span class="w">  </span><span class="n">tagRelease</span><span class="p">,</span>
+<span class="w">  </span><span class="n">publishArtifacts</span><span class="p">,</span>
+<span class="w">  </span><span class="n">setNextVersion</span><span class="p">,</span>
+<span class="w">  </span><span class="n">commitNextVersion</span><span class="p">,</span>
+<span class="w">  </span><span class="n">pushChanges</span>
+<span class="p">)</span>
+
+<span class="c1">// 公開設定</span>
+<span class="n">publishTo</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">nexus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://oss.sonatype.org/&quot;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isSnapshot</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="w">    </span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;snapshots&quot;</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">nexus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;content/repositories/snapshots&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;releases&quot;</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">nexus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;service/local/staging/deploy/maven2&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">publishMavenStyle</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">true</span>
+<span class="nc">Test</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">publishArtifact</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">pomIncludeRepository</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
+
+<span class="n">pomExtra</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/yourname/your-project&lt;/url&gt;</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">licenses</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">license</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="nc">Apache</span><span class="w"> </span><span class="mf">2.0</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="n">http</span><span class="p">:</span><span class="c1">//www.apache.org/licenses/LICENSE-2.0&lt;/url&gt;</span>
+<span class="w">    </span><span class="o">&lt;/</span><span class="n">license</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="o">&lt;/</span><span class="n">licenses</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">scm</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="n">git</span><span class="nd">@github</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">yourname</span><span class="o">/</span><span class="n">your</span><span class="o">-</span><span class="n">project</span><span class="p">.</span><span class="n">git</span><span class="o">&lt;/</span><span class="n">url</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">connection</span><span class="o">&gt;</span><span class="n">scm</span><span class="p">:</span><span class="n">git</span><span class="p">:</span><span class="n">git</span><span class="nd">@github</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">yourname</span><span class="o">/</span><span class="n">your</span><span class="o">-</span><span class="n">project</span><span class="p">.</span><span class="n">git</span><span class="o">&lt;/</span><span class="n">connection</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="o">&lt;/</span><span class="n">scm</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="o">&lt;</span><span class="n">developers</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">developer</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="n">id</span><span class="o">&gt;</span><span class="n">yourname</span><span class="o">&lt;/</span><span class="n">id</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="nc">Your</span><span class="w"> </span><span class="nc">Name</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/yourname&lt;/url&gt;</span>
+<span class="w">    </span><span class="o">&lt;/</span><span class="n">developer</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="o">&lt;/</span><span class="n">developers</span><span class="o">&gt;</span>
+<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_11">プロジェクトテンプレート<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// ProjectTemplate.scala</span>
+<span class="c1">// src/main/g8/build.sbt (Giter8テンプレート)</span>
+
+<span class="c1">// テンプレート変数</span>
+<span class="c1">// $name$ - プロジェクト名</span>
+<span class="c1">// $organization$ - 組織名</span>
+<span class="c1">// $scala_version$ - Scalaバージョン</span>
+
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">scalaVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;$scala_version$&quot;</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;0.1.0-SNAPSHOT&quot;</span>
+<span class="nc">ThisBuild</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">organization</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;$organization$&quot;</span>
+
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">project</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="n">settings</span><span class="p">(</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;$name$&quot;</span><span class="p">,</span>
+
+<span class="w">    </span><span class="n">libraryDependencies</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="c1">// ロギング</span>
+<span class="w">      </span><span class="s">&quot;ch.qos.logback&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;logback-classic&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.4.11&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe.scala-logging&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scala-logging&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.9.5&quot;</span><span class="p">,</span>
+
+<span class="w">      </span><span class="c1">// 設定</span>
+<span class="w">      </span><span class="s">&quot;com.typesafe&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;config&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;1.4.3&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;com.github.pureconfig&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;pureconfig-core&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;0.17.4&quot;</span><span class="p">,</span>
+
+<span class="w">      </span><span class="c1">// テスト</span>
+<span class="w">      </span><span class="s">&quot;org.scalatest&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scalatest&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;3.2.17&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;org.scalamock&quot;</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="s">&quot;scalamock&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="s">&quot;5.2.0&quot;</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nc">Test</span>
+<span class="w">    </span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// アプリケーション設定</span>
+<span class="w">    </span><span class="nc">Compile</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mainClass</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nc">Some</span><span class="p">(</span><span class="s">&quot;$organization$.$name;format=&quot;</span><span class="n">norm</span><span class="s">&quot;$.Main&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// テスト設定</span>
+<span class="w">    </span><span class="nc">Test</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">testOptions</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nc">Tests</span><span class="p">.</span><span class="nc">Argument</span><span class="p">(</span><span class="nc">TestFrameworks</span><span class="p">.</span><span class="nc">ScalaTest</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-oDF&quot;</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// コンパイラ設定</span>
+<span class="w">    </span><span class="n">scalacOptions</span><span class="w"> </span><span class="o">++=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">      </span><span class="s">&quot;-deprecation&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-feature&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-unchecked&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-Xfatal-warnings&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-language:higherKinds&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s">&quot;-language:implicitConversions&quot;</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="c1">// プロジェクト構造を生成するタスク</span>
+<span class="k">lazy</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="n">initProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskKey</span><span class="p">[</span><span class="nc">Unit</span><span class="p">](</span><span class="s">&quot;Initialize project structure&quot;</span><span class="p">)</span>
+
+<span class="n">initProject</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">dirs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Seq</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;src/main/scala/$organization;format=&quot;</span><span class="n">packaged</span><span class="s">&quot;$/$name;format=&quot;</span><span class="n">norm</span><span class="s">&quot;$&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;src/main/resources&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;src/test/scala/$organization;format=&quot;</span><span class="n">packaged</span><span class="s">&quot;$/$name;format=&quot;</span><span class="n">norm</span><span class="s">&quot;$&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;src/test/resources&quot;</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">dirs</span><span class="p">.</span><span class="n">foreach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nc">IO</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="w">      </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Created: </span><span class="si">$</span><span class="n">dir</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// Main.scalaの生成</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">mainFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="p">(</span><span class="s">&quot;src/main/scala/$organization;format=&quot;</span><span class="n">packaged</span><span class="s">&quot;$/$name;format=&quot;</span><span class="n">norm</span><span class="s">&quot;$/Main.scala&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mainFile</span><span class="p">.</span><span class="n">exists</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="n">mainContent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;package $organization$.$name;format=&quot;norm&quot;$</span>
+<span class="s">      |</span>
+<span class="s">      |object Main extends App {</span>
+<span class="s">      |  println(&quot;Hello, $name$!&quot;)</span>
+<span class="s">      |}</span>
+<span class="s">      |&quot;&quot;&quot;</span><span class="p">.</span><span class="n">stripMargin</span>
+
+<span class="w">    </span><span class="nc">IO</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">mainFile</span><span class="p">,</span><span class="w"> </span><span class="n">mainContent</span><span class="p">)</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;Created: </span><span class="si">${</span><span class="n">mainFile</span><span class="p">.</span><span class="n">getPath</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="_12">練習してみよう！<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<h3 id="1">練習1：マルチモジュールプロジェクト<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>以下の構成のプロジェクトを作成してください：
+- core: ビジネスロジック
+- web: REST API
+- batch: バッチ処理</p>
+<h3 id="2">練習2：カスタムタスク<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>プロジェクトの統計情報を表示するタスクを作成してください：
+- ソースコードの行数
+- テストカバレッジ
+- 依存ライブラリ数</p>
+<h3 id="3cicd">練習3：CI/CDパイプライン<a class="headerlink" href="#3cicd" title="Permanent link">&para;</a></h3>
+<p>GitHub ActionsでのCI/CDパイプラインを設定してください：
+- テスト実行
+- カバレッジレポート
+- Dockerイメージのビルド</p>
+<h2 id="_13">この章のまとめ<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<p>ビルドツールと依存性管理の実践的な知識を習得しました！</p>
+<h3 id="_14">できるようになったこと<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>sbtの基本</strong>
+- プロジェクト構造
+- 基本的なタスク
+- 設定の書き方</p>
+<p>✅ <strong>依存性管理</strong>
+- ライブラリの追加
+- バージョン管理
+- 競合の解決</p>
+<p>✅ <strong>カスタマイズ</strong>
+- カスタムタスク
+- プラグインの活用
+- 環境別設定</p>
+<p>✅ <strong>実践的な設定</strong>
+- マルチプロジェクト
+- Docker統合
+- CI/CD連携</p>
+<h3 id="_15">ビルド管理のコツ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>整理された構造</strong></p>
+<ul>
+<li>明確なモジュール分割</li>
+<li>共通設定の抽出</li>
+<li>適切な命名</li>
+</ul>
+</li>
+<li>
+<p><strong>再現可能性</strong></p>
+<ul>
+<li>バージョンの固定</li>
+<li>環境の明示</li>
+<li>ビルドの自動化</li>
+</ul>
+</li>
+<li>
+<p><strong>効率的な開発</strong></p>
+<ul>
+<li>インクリメンタルビルド</li>
+<li>並列実行</li>
+<li>キャッシュの活用</li>
+</ul>
+</li>
+</ol>
+<h3 id="_16">最後に<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>ビルドツールは「プロジェクトの指揮者」です。たくさんの楽器（ライブラリ）を束ね、正しい順序で演奏させ、美しいハーモニー（アプリケーション）を作り出す。この指揮者の使い方をマスターすれば、どんな大規模なプロジェクトも効率的に管理できるようになります。</p>
+<p>これで、初心者向けScala 3入門書の全37章が完成しました！プログラミングの世界への第一歩から、実践的なプロジェクト管理まで、幅広く学んできました。この知識を活かして、素晴らしいScalaアプリケーションを作ってください！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  ページトップへ戻る
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Scala 3入門編集部
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/example/easy-scala3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

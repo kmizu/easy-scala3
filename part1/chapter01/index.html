@@ -1,0 +1,3098 @@
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="プログラミング完全初心者のためのScala 3入門書">
+      
+      
+        <meta name="author" content="Scala 3入門編集部">
+      
+      
+        <link rel="canonical" href="https://example.com/easy-scala3/part1/chapter01/">
+      
+      
+        <link rel="prev" href="../chapter00/">
+      
+      
+        <link rel="next" href="../chapter02/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>第1章 Scalaと出会おう - やさしいScala 3入門</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-scala" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="ヘッダー">
+    <a href="../.." title="やさしいScala 3入門" class="md-header__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            やさしいScala 3入門
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              第1章 Scalaと出会おう
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ダークモードに切り替え"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="ダークモードに切り替え" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="red"  aria-label="ライトモードに切り替え"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="ライトモードに切り替え" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="検索">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="共有" aria-label="共有" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="クリア" aria-label="クリア" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            検索を初期化
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="ナビゲーション" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="やさしいScala 3入門" class="md-nav__button md-logo" aria-label="やさしいScala 3入門" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    やさしいScala 3入門
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ホーム
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第I部 プログラミングの世界へようこそ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            第I部 プログラミングの世界へようこそ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter00/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第0章 プログラミングをはじめる前に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    第1章 Scalaと出会おう
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめに
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      プログラムって何だろう？
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="プログラムって何だろう？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      身近な例で考えてみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scala" class="md-nav__link">
+    <span class="md-ellipsis">
+      なぜScalaを選ぶの？
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scala_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalaを使えるようにしよう
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scalaを使えるようにしよう">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      まず最初に：「ターミナル」って何？
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Javaの確認（必要なもの その1）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    <span class="md-ellipsis">
+      Javaのインストール（必要な場合のみ）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scala_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalaのインストール
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scalaのインストール">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windowsの場合
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mac" class="md-nav__link">
+    <span class="md-ellipsis">
+      Macの場合
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      インストールできたか確認しよう
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scala-" class="md-nav__link">
+    <span class="md-ellipsis">
+      はじめてのScala - 電卓として使ってみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="はじめてのScala - 電卓として使ってみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scala_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalaを起動する
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      最初の計算をしてみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      もっと計算してみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      文字も表示できる！
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      画面に文字を出してみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scala_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalaを終了する
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      初めてのプログラムを作ろう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="初めてのプログラムを作ろう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ステップ1：メモ帳を開く
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ステップ2：プログラムを書く
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      ステップ3：ファイルを保存
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      ステップ4：保存した場所に移動
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      ステップ5：プログラムを実行！
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      何が起きたの？
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      プログラムの中身を理解しよう
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      もう少し面白いプログラムを作ろう
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="もう少し面白いプログラムを作ろう">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      「変数」を使ってみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      実行してみよう
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      何が起きたの？
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      自分の名前に変えてみよう！
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      エラーが出たら？心配しないで！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="エラーが出たら？心配しないで！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      よくあるエラー1：ファイルが見つからない
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      よくあるエラー2：日本語入力のままだった
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      よくあるエラー3：カッコを閉じ忘れた
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      エラーが出たときの心構え
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      プログラムの「形」を覚えよう
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="プログラムの「形」を覚えよう">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      一番シンプルな形
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      コメント（メモ）の書き方
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      大事！インデント（字下げ）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      もっと便利にプログラムを書く方法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="もっと便利にプログラムを書く方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visual-studio-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visual Studio Code（おすすめ）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ok" class="md-nav__link">
+    <span class="md-ellipsis">
+      今はメモ帳でOK！
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習してみよう！
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="練習してみよう！">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習1：自己紹介プログラム
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習2：計算プログラム
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      練習3：エラーを見つけよう
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      この章のまとめ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この章のまとめ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      できるようになったこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      覚えておくこと
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      次の章では...
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      最後に
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scala_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      おまけ：Scalaをもっと便利に使うコツ
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="おまけ：Scalaをもっと便利に使うコツ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repl" class="md-nav__link">
+    <span class="md-ellipsis">
+      REPLでの便利な機能
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      困ったときのコマンド
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      プログラムを書くときのコツ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第2章 数値で遊んでみよう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第II部 データと型の基本を理解しよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            第II部 データと型の基本を理解しよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第3章 値と変数の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第4章 いろいろな種類のデータ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第5章 型って何だろう？（型の基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第6章 型推論の魔法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part2/chapter07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第7章 文字列を自由自在に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第III部 型を意識してデータをまとめよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            第III部 型を意識してデータをまとめよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第8章 型安全なコレクション（基礎編）
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第9章 リストで同じデータを並べる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第10章 型安全なタプル
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第11章 タプルで違うデータをまとめる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第12章 型安全なマップ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part3/chapter13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第13章 マップで関連付けて保存
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IV部 プログラムに判断力を持たせよう
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            第IV部 プログラムに判断力を持たせよう
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第14章 条件分岐の基本
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第15章 パターンマッチングの威力
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第16章 関数の定義と利用
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第17章 関数の引数をもっと賢く
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第18章 高階関数とは何か
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part4/chapter19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第19章 OptionとEitherで安全に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第V部 非同期処理とエラーハンドリング
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            第V部 非同期処理とエラーハンドリング
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第20章 Future[T]で非同期処理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part5/chapter21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第21章 Try[T]で例外を扱う
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VI部 型で設計するデータ構造
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            第VI部 型で設計するデータ構造
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第22章 ケースクラスの便利さ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第23章 シールドトレイトで網羅的に
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part6/chapter24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第24章 イミュータブルなデータ設計
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VII部 関数型プログラミングの基礎
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            第VII部 関数型プログラミングの基礎
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第25章 関数合成で処理を組み立てる
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第26章 型パラメータ入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第27章 境界と変位指定
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第28章 暗黙の引数とは
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第29章 型クラスパターン
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part7/chapter30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第30章 for式の内部動作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第VIII部 コレクションの使いこなし
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            第VIII部 コレクションの使いこなし
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第31章 コレクションの選び方
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第32章 効率的なコレクション操作
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part8/chapter33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第33章 並行プログラミング入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    第IX部 実用的なプログラミング技術
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            第IX部 実用的なプログラミング技術
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第34章 スレッドセーフを意識する
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第35章 アクターモデル入門
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第36章 テストを書こう
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../part9/chapter37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    第37章 ビルドツールと依存性管理
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    付録
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            付録
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録A よくあるエラーメッセージ完全ガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録B REPL完全活用法
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録C 便利なメソッド・関数リファレンス
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録D 開発環境カスタマイズガイド
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録E 練習問題解答集
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/appendixF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    付録F 次に読むべき書籍・資料
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-scala">第1章 Scalaと出会おう<a class="headerlink" href="#1-scala" title="Permanent link">&para;</a></h1>
+<h2 id="_1">はじめに<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>プログラミングの世界へ、ようこそ！</p>
+<p>この章では、あなたが生まれて初めてプログラムを書くところから始めます。「プログラムって何？」「どうやって動かすの？」といった疑問に一つ一つ答えながら、ゆっくりと進んでいきましょう。</p>
+<p>最初は誰でも初心者です。焦らず、楽しみながら学んでいきましょう！</p>
+<h2 id="_2">プログラムって何だろう？<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="_3">身近な例で考えてみよう<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>プログラムは、コンピュータへの「お願いリスト」のようなものです。</p>
+<p>例えば、友達に「コンビニでお茶を買ってきて」とお願いするとき、こんな風に伝えますよね：</p>
+<ol>
+<li>コンビニに行って</li>
+<li>飲み物コーナーを探して</li>
+<li>お茶を選んで</li>
+<li>レジでお金を払って</li>
+<li>買ったお茶を持って帰ってきて</li>
+</ol>
+<p>プログラムも同じです。コンピュータに「これをやって、次にあれをやって」と順番に指示を出していきます。</p>
+<h3 id="scala">なぜScalaを選ぶの？<a class="headerlink" href="#scala" title="Permanent link">&para;</a></h3>
+<p>プログラミング言語はたくさんあります（日本語、英語、中国語のように！）。その中でScalaを選ぶ理由は：</p>
+<ul>
+<li><strong>間違いを見つけやすい</strong>：書いている途中で「ここ、おかしいよ」と教えてくれます</li>
+<li><strong>日本語が使える</strong>：変数名（後で説明します）に日本語が使えるので、最初は日本語で書いてもOK</li>
+<li><strong>ステップアップしやすい</strong>：簡単なことから始めて、徐々に高度なことができるようになります</li>
+</ul>
+<h2 id="scala_1">Scalaを使えるようにしよう<a class="headerlink" href="#scala_1" title="Permanent link">&para;</a></h2>
+<h3 id="_4">まず最初に：「ターミナル」って何？<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>プログラムを動かすには「ターミナル」（黒い画面）を使います。</p>
+<p><strong>Windowsの場合</strong>：
+1. キーボードの「Windowsキー」を押す
+2. 「cmd」と入力
+3. 「コマンドプロンプト」をクリック</p>
+<p><strong>Macの場合</strong>：
+1. 「アプリケーション」フォルダを開く
+2. 「ユーティリティ」フォルダを開く<br />
+3. 「ターミナル」をダブルクリック</p>
+<p>黒い画面（または白い画面）が出てきましたか？これがターミナルです！</p>
+<h3 id="java-1">Javaの確認（必要なもの その1）<a class="headerlink" href="#java-1" title="Permanent link">&para;</a></h3>
+<p>Scalaを動かすには「Java」というソフトが必要です。まず、Javaが入っているか確認しましょう。</p>
+<p>ターミナルに以下の文字を<strong>そのまま</strong>入力して、Enterキーを押してください：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>java<span class="w"> </span>-version
+</code></pre></div></td></tr></table></div>
+<p>何か英語がたくさん出てきましたか？</p>
+<p><strong>こんな感じの表示が出たらOK</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>java version &quot;11.0.19&quot; 
+（以下、英語が続く...）
+</code></pre></div></td></tr></table></div></p>
+<p><strong>「コマンドが見つかりません」と出た場合</strong>：
+Javaがまだ入っていません。次の手順でインストールしましょう。</p>
+<h3 id="java">Javaのインストール（必要な場合のみ）<a class="headerlink" href="#java" title="Permanent link">&para;</a></h3>
+<p><strong>Windowsの場合</strong>：
+1. ブラウザで「Java 11 ダウンロード」と検索
+2. 「Oracle JDK 11」または「OpenJDK 11」のページを開く
+3. 「Windows x64 Installer」をクリックしてダウンロード
+4. ダウンロードしたファイルをダブルクリック
+5. 「次へ」を何回かクリックしてインストール</p>
+<p><strong>Macの場合</strong>：
+1. ターミナルに以下を入力してEnter：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div></td></tr></table></div>
+2. しばらく待つ（5分くらいかかるかも）
+3. 終わったら、これを入力してEnter：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>openjdk@11
+</code></pre></div></td></tr></table></div></p>
+<p><strong>よくわからない場合</strong>：
+詳しい人に聞くか、「Java 11 インストール方法 [あなたのOS名]」で検索してみてください。</p>
+<h3 id="scala_2">Scalaのインストール<a class="headerlink" href="#scala_2" title="Permanent link">&para;</a></h3>
+<h4 id="windows">Windowsの場合<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h4>
+<ol>
+<li>ブラウザで「Scala 公式サイト」と検索</li>
+<li>「Download」または「ダウンロード」をクリック  </li>
+<li>「Download for Windows」をクリック</li>
+<li>ダウンロードしたファイル（scala-3-...-.msi みたいな名前）をダブルクリック</li>
+<li>「Next」を何回かクリックしてインストール</li>
+</ol>
+<h4 id="mac">Macの場合<a class="headerlink" href="#mac" title="Permanent link">&para;</a></h4>
+<p>ターミナルに以下を<strong>1行ずつ</strong>入力してEnter（コピー&amp;ペーストでもOK）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>coursier/formulas/coursier
+</code></pre></div></td></tr></table></div>
+<p>しばらく待ってから：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>cs<span class="w"> </span>setup
+</code></pre></div></td></tr></table></div>
+<p>「Press Enter」と出たらEnterキーを押す。</p>
+<h3 id="_5">インストールできたか確認しよう<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><strong>重要</strong>：ターミナルを一度閉じて、新しく開き直してください！</p>
+<p>新しいターミナルで以下を入力してEnter：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>scala<span class="w"> </span>--version
+</code></pre></div></td></tr></table></div>
+<p>こんな表示が出たら成功です！
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>Scala 3.3.1
+</code></pre></div></td></tr></table></div></p>
+<p>数字が少し違っても（3.2.0とか3.4.0とか）大丈夫です。</p>
+<h2 id="scala-">はじめてのScala - 電卓として使ってみよう！<a class="headerlink" href="#scala-" title="Permanent link">&para;</a></h2>
+<h3 id="scala_3">Scalaを起動する<a class="headerlink" href="#scala_3" title="Permanent link">&para;</a></h3>
+<p>ターミナルで、以下の5文字を入力してEnterキーを押してください：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>scala
+</code></pre></div></td></tr></table></div>
+<p>すると、こんな画面になります：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code>Welcome to Scala 3.3.1 ...
+（英語がいろいろ書いてある）
+
+scala&gt; 
+</code></pre></div></td></tr></table></div>
+<p><code>scala&gt;</code> の後ろでカーソルが点滅していますね？ここに計算式を書けます！</p>
+<h3 id="_6">最初の計算をしてみよう<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p><code>scala&gt;</code> の後ろに <code>1 + 1</code> と入力して、Enterキーを押してみてください：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div></td></tr></table></div>
+<p>Enterを押すと...</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">res0</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+</code></pre></div></td></tr></table></div>
+<p>やった！答えが出ました。<code>2</code> ですね。</p>
+<p><strong>何が起きたの？</strong>
+- あなたが「1 + 1を計算して」とお願いした
+- Scalaが計算して「答えは2だよ」と教えてくれた
+- ついでに <code>res0</code> という名前で答えを覚えておいてくれた</p>
+<h3 id="_7">もっと計算してみよう<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>以下を1つずつ入力してEnterを押してみてください：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">res1</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+
+<span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">7</span><span class="w">  </span>
+<span class="kd">val</span><span class="w"> </span><span class="n">res2</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+
+<span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">res3</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+</code></pre></div></td></tr></table></div>
+<p>電卓みたいに使えますね！
+- <code>*</code> は「かける」
+- <code>-</code> は「ひく」<br />
+- <code>/</code> は「わる」</p>
+<h3 id="_8">文字も表示できる！<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>数字だけじゃなく、文字（文字列）も扱えます。</p>
+<p><strong>注意</strong>：文字を書くときは <code>""</code> （ダブルクォーテーション）で囲みます！</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">res4</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Hello</span><span class="o">!</span>
+
+<span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;こんにちは&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">res5</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">こんにちは</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_9">画面に文字を出してみよう<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p><code>println</code> を使うと、画面に文字を表示できます：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;こんにちは、Scala！&quot;</span><span class="p">)</span>
+<span class="n">こんにちは</span><span class="err">、</span><span class="nc">Scala</span><span class="err">！</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>println って何？</strong>
+- print = 印刷する、表示する
+- ln = line（行）
+- つまり「1行表示して」という命令です</p>
+<h3 id="scala_4">Scalaを終了する<a class="headerlink" href="#scala_4" title="Permanent link">&para;</a></h3>
+<p>Scalaを終了するには <code>:quit</code> と入力してEnter：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="p">:</span><span class="n">quit</span>
+</code></pre></div></td></tr></table></div>
+<p>ターミナルの最初の画面に戻りましたね。お疲れさまでした！</p>
+<h2 id="_10">初めてのプログラムを作ろう！<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<p>今度は「ファイル」にプログラムを書いて実行してみましょう。</p>
+<h3 id="1">ステップ1：メモ帳を開く<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p><strong>Windowsの場合</strong>：
+1. Windowsキーを押す
+2. 「メモ帳」と入力
+3. 「メモ帳」をクリック</p>
+<p><strong>Macの場合</strong>：
+1. アプリケーション → テキストエディット
+2. 「フォーマット」メニュー → 「標準テキストにする」をクリック</p>
+<h3 id="2">ステップ2：プログラムを書く<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>以下の4行を<strong>そのまま</strong>入力してください（コピー&amp;ペーストでもOK）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// はじめてのプログラム</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;はじめてのScalaプログラム&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>重要な注意点</strong>：
+- 2行目の <code>@main</code> の前にスペースを入れない
+- 3行目と4行目の最初に<strong>スペース2個</strong>を入れる（重要！）
+- <code>""</code> は必ず<strong>半角</strong>で入力</p>
+<h3 id="3">ステップ3：ファイルを保存<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<ol>
+<li>「ファイル」→「名前を付けて保存」</li>
+<li>ファイル名：<code>HelloWorld.scala</code>（最後の<code>.scala</code>が大事！）</li>
+<li>保存場所：デスクトップ（後で見つけやすいように）</li>
+<li>「保存」をクリック</li>
+</ol>
+<h3 id="4">ステップ4：保存した場所に移動<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<p>ターミナルを開いて、以下を入力：</p>
+<p><strong>Windowsの場合</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>Desktop
+</code></pre></div></td></tr></table></div></p>
+<p><strong>Macの場合</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/Desktop
+</code></pre></div></td></tr></table></div></p>
+<p>これで「デスクトップ」フォルダに移動しました。</p>
+<h3 id="5">ステップ5：プログラムを実行！<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
+<p>いよいよプログラムを動かします。ターミナルで以下を入力してEnter：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>scala<span class="w"> </span>HelloWorld.scala
+</code></pre></div></td></tr></table></div>
+<p>数秒待つと...</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>Hello, World!
+はじめてのScalaプログラム
+</code></pre></div></td></tr></table></div>
+<p><strong>おめでとうございます！</strong> 🎉</p>
+<p>あなたは今、人生で初めてのプログラムを実行しました！</p>
+<h3 id="_11">何が起きたの？<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<ol>
+<li>あなたが書いたプログラムをScalaが読んだ</li>
+<li><code>println("Hello, World!")</code> を見て、「Hello, World!」を表示した</li>
+<li><code>println("はじめてのScalaプログラム")</code> を見て、「はじめてのScalaプログラム」を表示した</li>
+<li>プログラムが終了した</li>
+</ol>
+<h3 id="_12">プログラムの中身を理解しよう<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// はじめてのプログラム         ← これは「コメント」。メモみたいなもの</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">    </span><span class="o">←</span><span class="w"> </span><span class="err">「</span><span class="n">ここからプログラムが始まるよ</span><span class="err">」</span><span class="n">という印</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="p">)</span><span class="w">     </span><span class="o">←</span><span class="w"> </span><span class="err">「</span><span class="nc">Hello</span><span class="p">,</span><span class="w"> </span><span class="nc">World</span><span class="o">!</span><span class="err">」</span><span class="n">を表示して</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;はじめてのScalaプログラム&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">←</span><span class="w"> </span><span class="err">「</span><span class="n">はじめてのScalaプログラム</span><span class="err">」</span><span class="n">を表示して</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><code>//</code> で始まる行は「コメント」。人間用のメモで、実行されません</li>
+<li><code>@main</code> は「スタート地点」を表す魔法の言葉</li>
+<li><code>println</code> は「画面に表示して」という命令</li>
+</ul>
+<h2 id="_13">もう少し面白いプログラムを作ろう<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<h3 id="_14">「変数」を使ってみよう<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>変数は「名前付きの箱」のようなものです。データを入れておいて、後で使えます。</p>
+<p>新しいプログラムを作りましょう。メモ帳で新しいファイルを作り、以下を入力：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// あいさつプログラム</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;太郎&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;こんにちは、</span><span class="si">${</span><span class="n">name</span><span class="si">}</span><span class="s">さん！&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;あなたは</span><span class="si">${</span><span class="n">age</span><span class="si">}</span><span class="s">歳ですね。&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;来年は</span><span class="si">${</span><span class="n">age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s">歳になりますね。&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>これを <code>Greeting.scala</code> という名前でデスクトップに保存してください。</p>
+<h3 id="_15">実行してみよう<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>ターミナルで：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>scala<span class="w"> </span>Greeting.scala
+</code></pre></div></td></tr></table></div>
+<p>結果：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>こんにちは、太郎さん！
+あなたは20歳ですね。
+来年は21歳になりますね。
+</code></pre></div></td></tr></table></div>
+<h3 id="_16">何が起きたの？<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;太郎&quot;</span><span class="w">    </span><span class="c1">// 「name」という箱に「太郎」を入れた</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="w">         </span><span class="c1">// 「age」という箱に「20」を入れた</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><code>val</code> は「変数を作るよ」という意味</li>
+<li><code>name</code> は変数の名前（箱の名前）</li>
+<li><code>=</code> は「入れる」という意味</li>
+<li><code>"太郎"</code> は入れるデータ</li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">println</span><span class="p">(</span><span class="s">s&quot;こんにちは、</span><span class="si">${</span><span class="n">name</span><span class="si">}</span><span class="s">さん！&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><code>s"..."</code> は「この中で変数を使うよ」という印</li>
+<li><code>${name}</code> は「nameの中身をここに入れて」という意味</li>
+<li>結果：「こんにちは、太郎さん！」</li>
+</ul>
+<h3 id="_17">自分の名前に変えてみよう！<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>Greeting.scala</code> をメモ帳で開く</li>
+<li><code>"太郎"</code> を自分の名前に変える</li>
+<li><code>20</code> を自分の年齢に変える  </li>
+<li>保存して、もう一度実行</li>
+</ol>
+<p>自分の名前が表示されましたか？これがプログラミングの第一歩です！</p>
+<h2 id="_18">エラーが出たら？心配しないで！<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h2>
+<p>プログラミングでは、エラーは「普通のこと」です。プロでも毎日エラーと付き合っています。</p>
+<h3 id="1_1">よくあるエラー1：ファイルが見つからない<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>scala<span class="w"> </span>HelloWrold.scala<span class="w">  </span><span class="c1"># あれ？「World」のスペルが...</span>
+</code></pre></div></td></tr></table></div>
+<p>こんなエラーが出ます：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>Error: Source file not found: HelloWrold.scala
+</code></pre></div></td></tr></table></div></p>
+<p><strong>意味</strong>：「HelloWrold.scalaっていうファイルが見つからないよ」</p>
+<p><strong>解決方法</strong>：
+1. ファイル名のスペルを確認（HelloW<strong>o</strong>rld.scala が正しい）
+2. 今いる場所が正しいか確認（デスクトップにいる？）</p>
+<h3 id="2_1">よくあるエラー2：日本語入力のままだった<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">　</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// あっ、全角スペースが...</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>こんなエラーが出ます：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>error: illegal character &#39;\u3000&#39;
+</code></pre></div></td></tr></table></div></p>
+<p><strong>意味</strong>：「変な文字（全角スペース）が入ってるよ」</p>
+<p><strong>解決方法</strong>：
+1. 日本語入力をOFFにする
+2. スペースを削除して、半角スペースを入れ直す</p>
+<p><strong>コツ</strong>：プログラムを書くときは、基本的に「半角英数」モードで！</p>
+<h3 id="3_1">よくあるエラー3：カッコを閉じ忘れた<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">hello</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello, World!&quot;</span><span class="w">  </span><span class="c1">// ) を忘れた！</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>こんなエラーが出ます：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>error: &#39;)&#39; expected but end of file found
+</code></pre></div></td></tr></table></div></p>
+<p><strong>意味</strong>：「)（閉じカッコ）が必要なのに、ファイルが終わっちゃった」</p>
+<p><strong>解決方法</strong>：
+<code>(</code> があったら必ず <code>)</code> で閉じる。<code>"</code> も同じく対で使う。</p>
+<h3 id="_19">エラーが出たときの心構え<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>慌てない</strong>：エラーは敵じゃない、先生です</li>
+<li><strong>エラーメッセージを読む</strong>：英語だけど、大事なヒントが書いてある</li>
+<li><strong>1文字ずつ確認</strong>：スペル、スペース、カッコをチェック</li>
+<li><strong>それでもダメなら</strong>：最初からもう一度書いてみる</li>
+</ol>
+<h2 id="_20">プログラムの「形」を覚えよう<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h2>
+<h3 id="_21">一番シンプルな形<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>Scalaのプログラムは、この形が基本です：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">プログラム名</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ここに「やりたいこと」を書く</span>
+<span class="w">  </span><span class="c1">// 好きなだけ書ける</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>例：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">myProgram</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;私のプログラム&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;2行目も書ける&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;3行目も！&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h3 id="_22">コメント（メモ）の書き方<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<p>プログラムの中にメモを残せます：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1">// これはコメント。実行されません</span>
+<span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1">// 行の後ろにも書ける</span>
+<span class="w">  </span><span class="c1">// println(&quot;これは実行されない&quot;)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_23">大事！インデント（字下げ）<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<p>Scalaでは「スペースの数」に意味があります：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">indentExample</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;これはエラー！&quot;</span><span class="p">)</span><span class="w">        </span><span class="c1">// スペースなし = エラー</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;これはOK&quot;</span><span class="p">)</span><span class="w">            </span><span class="c1">// スペース2個 = 正しい</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;これもエラー！&quot;</span><span class="p">)</span><span class="w">     </span><span class="c1">// スペース4個 = エラー</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>ルール</strong>：
+- <code>@main def ... {</code> の後、波括弧の中で
+- 必ず<strong>スペース2個</strong>を入れる
+- すべての行で同じ数のスペース</p>
+<p><strong>なぜ？</strong>
+波括弧 <code>{</code> と <code>}</code> で「ここからここまでが、このプログラムの中身だよ」と明確に示し、スペースで読みやすくしているのです。</p>
+<h2 id="_24">もっと便利にプログラムを書く方法<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h2>
+<p>メモ帳でも十分ですが、もっと便利な「プログラム専用のメモ帳」があります。</p>
+<h3 id="visual-studio-code">Visual Studio Code（おすすめ）<a class="headerlink" href="#visual-studio-code" title="Permanent link">&para;</a></h3>
+<p><strong>インストール方法</strong>：
+1. 「VS Code」で検索
+2. 公式サイトからダウンロード
+3. インストール（全部「次へ」でOK）</p>
+<p><strong>Scala用の設定</strong>：
+1. VS Codeを起動
+2. 左側の四角いアイコン（拡張機能）をクリック
+3. 「Metals」と検索
+4. 「Install」をクリック</p>
+<p><strong>何が便利？</strong>
+- 色がついて見やすい
+- エラーに赤い波線が出る
+- 入力の補助をしてくれる</p>
+<h3 id="ok">今はメモ帳でOK！<a class="headerlink" href="#ok" title="Permanent link">&para;</a></h3>
+<p>最初はメモ帳で十分です。慣れてきたら便利なツールを使いましょう。</p>
+<h2 id="_25">練習してみよう！<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h2>
+<h3 id="1_2">練習1：自己紹介プログラム<a class="headerlink" href="#1_2" title="Permanent link">&para;</a></h3>
+<p>自分だけの自己紹介プログラムを作ってみましょう。</p>
+<p><strong>やること</strong>：
+1. 新しいファイル <code>Introduction.scala</code> を作る
+2. 以下を参考に、自分の情報でプログラムを書く：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">introduction</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;あなたの名前&quot;</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">food</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;好きな食べ物&quot;</span>
+
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;私の名前は</span><span class="si">${</span><span class="n">name</span><span class="si">}</span><span class="s">です。&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;好きな食べ物は</span><span class="si">${</span><span class="n">food</span><span class="si">}</span><span class="s">です。&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<ol>
+<li>保存して実行</li>
+</ol>
+<p><strong>できたかな？</strong>
+自分の名前と好きな食べ物が表示されれば成功！</p>
+<h3 id="2_2">練習2：計算プログラム<a class="headerlink" href="#2_2" title="Permanent link">&para;</a></h3>
+<p>電卓プログラムを作ってみましょう。</p>
+<p><strong>やること</strong>：
+1. 新しいファイル <code>Calculator.scala</code> を作る
+2. 以下のプログラムを完成させる：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">calculator</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=== 計算結果 ===&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;100 + 200 = </span><span class="si">${</span><span class="mi">100</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">200</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;50 × 4 = </span><span class="si">${</span><span class="mi">50</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">println</span><span class="p">(</span><span class="s">s&quot;1000 ÷ 8 = </span><span class="si">${</span><span class="mi">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>ヒント</strong>：
+- かけ算は <code>*</code>
+- わり算は <code>/</code></p>
+<h3 id="3_2">練習3：エラーを見つけよう<a class="headerlink" href="#3_2" title="Permanent link">&para;</a></h3>
+<p>以下のプログラムには3つのエラーがあります。見つけて直してみましょう：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">broken</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello, Scala!</span>
+<span class="s">  println(message)</span>
+<span class="s">  println(&quot;</span><span class="n">プログラミングは楽しい</span><span class="err">&quot;）</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>ヒント</strong>：
+1. 2行目の最後に何か足りない？
+2. 3行目の最初のスペースは？
+3. 4行目の最後の「）」は半角？全角？</p>
+<p><strong>答え合わせ</strong>：
+正しく直せたら、エラーなく実行できるはずです。</p>
+<h2 id="_26">この章のまとめ<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h2>
+<p>今日、あなたは大きな一歩を踏み出しました！</p>
+<h3 id="_27">できるようになったこと<a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<p>✅ ターミナル（黒い画面）を使えるようになった
+✅ Scalaをインストールできた
+✅ 電卓みたいに計算ができた
+✅ プログラムファイルを作って実行できた
+✅ 変数（データを入れる箱）を使えた
+✅ エラーが出ても慌てなくなった</p>
+<h3 id="_28">覚えておくこと<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>プログラムの基本形</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@main</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">名前</span><span class="p">():</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ここに処理を書く（スペース2個！）</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+</li>
+<li>
+<p><strong>画面に表示</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">println</span><span class="p">(</span><span class="s">&quot;表示したい文字&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div></p>
+</li>
+<li>
+<p><strong>変数を作る</strong>：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">名前</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;データ&quot;</span>
+</code></pre></div></td></tr></table></div></p>
+</li>
+<li>
+<p><strong>エラーが出たら</strong>：</p>
+</li>
+<li>スペルを確認</li>
+<li>半角/全角を確認</li>
+<li>カッコの対応を確認</li>
+</ol>
+<h3 id="_29">次の章では...<a class="headerlink" href="#_29" title="Permanent link">&para;</a></h3>
+<p>数の計算をもっと詳しく学びます。
+- もっと複雑な計算
+- 計算結果を保存する方法
+- 便利な計算機能</p>
+<p>楽しみにしていてください！</p>
+<h3 id="_30">最後に<a class="headerlink" href="#_30" title="Permanent link">&para;</a></h3>
+<p><strong>プログラミングは「慣れ」です。</strong></p>
+<p>最初は難しく感じるかもしれませんが、それは普通のことです。自転車に乗れるようになったときのことを思い出してください。最初は転んでばかりでも、練習すれば必ず乗れるようになりましたよね？</p>
+<p>プログラミングも同じです。エラーが出ても、分からないことがあっても、それは成長の証。一歩ずつ進んでいきましょう！</p>
+<h2 id="scala_5">おまけ：Scalaをもっと便利に使うコツ<a class="headerlink" href="#scala_5" title="Permanent link">&para;</a></h2>
+<h3 id="repl">REPLでの便利な機能<a class="headerlink" href="#repl" title="Permanent link">&para;</a></h3>
+<p><strong>前に入力したものを呼び出す</strong>：
+- 上矢印キー（↑）：前の入力を表示
+- 下矢印キー（↓）：次の入力を表示</p>
+<p>同じ計算を少し変えてやり直すときに便利！</p>
+<p><strong>入力の補助（まだ難しいかも）</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">scala</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="p">.</span><span class="n">to</span><span class="w">  </span><span class="c1">// ここでTabキーを押すと...</span>
+<span class="n">toCharArray</span><span class="w">   </span><span class="n">toLowerCase</span><span class="w">   </span><span class="n">toString</span><span class="w">   </span><span class="n">toUpperCase</span>
+</code></pre></div></td></tr></table></div>
+<p>使える命令の候補を表示してくれます。</p>
+<h3 id="_31">困ったときのコマンド<a class="headerlink" href="#_31" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>:help</code> → ヘルプを表示（英語だけど...）</li>
+<li><code>:reset</code> → 最初からやり直し</li>
+<li><code>:quit</code> → Scalaを終了</li>
+</ul>
+<h3 id="_32">プログラムを書くときのコツ<a class="headerlink" href="#_32" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>まず動くものを作る</strong></p>
+<ul>
+<li>完璧じゃなくていい</li>
+<li>少しずつ改良する</li>
+</ul>
+</li>
+<li>
+<p><strong>エラーを恐れない</strong></p>
+<ul>
+<li>エラー = 学習のチャンス</li>
+<li>みんな最初はエラーだらけ</li>
+</ul>
+</li>
+<li>
+<p><strong>コピペも活用</strong></p>
+<ul>
+<li>最初は例をコピーして改造</li>
+<li>慣れたら自分で書く</li>
+</ul>
+</li>
+<li>
+<p><strong>楽しむことが一番大事！</strong></p>
+<ul>
+<li>できたときの喜びを大切に</li>
+<li>分からないことがあって当然</li>
+</ul>
+</li>
+</ol>
+<p>さあ、次の章へ進みましょう！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  ページトップへ戻る
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Scala 3入門編集部
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/example/easy-scala3" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "search.highlight", "search.share", "content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "search.result.more.one": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3082\u30461\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.more.other": "\u3053\u306e\u30da\u30fc\u30b8\u5185\u306b\u3042\u3068#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.term.missing": "\u691c\u7d22\u306b\u542b\u307e\u308c\u306a\u3044", "select.version": "\u30d0\u30fc\u30b8\u30e7\u30f3\u5207\u308a\u66ff\u3048"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
