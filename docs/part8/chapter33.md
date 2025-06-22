@@ -12,18 +12,18 @@
 
 ```scala
 // ThreadBasics.scala
-@main def threadBasics(): Unit =
+@main def threadBasics(): Unit = {
   // 基本的なスレッド作成
   println("=== スレッドの基本 ===")
   
   val thread1 = new Thread(() => {
-    for i <- 1 to 5 do
+    for (i <- 1 to 5) {
       println(s"スレッド1: $i")
       Thread.sleep(100)
   })
   
   val thread2 = new Thread(() => {
-    for i <- 1 to 5 do
+    for (i <- 1 to 5) {
       println(s"  スレッド2: $i")
       Thread.sleep(100)
   })
@@ -45,7 +45,7 @@
   
   val executor = Executors.newFixedThreadPool(3)
   
-  for i <- 1 to 10 do
+  for (i <- 1 to 10) {
     executor.submit(() => {
       println(s"タスク$i 開始 (${Thread.currentThread.getName})")
       Thread.sleep(500)
@@ -63,11 +63,13 @@
 
 ```scala
 // FutureBasics.scala
-@main def futureBasics(): Unit =
-  import scala.concurrent.{Future, Promise}
+@main def futureBasics(): Unit = {
+  import scala.concurrent.{Future, Promise
+}
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.duration._
-  import scala.util.{Success, Failure}
+  import scala.util.{Success, Failure
+}
   
   // 基本的なFuture
   println("=== Futureの基本 ===")
@@ -76,12 +78,14 @@
     println("計算開始...")
     Thread.sleep(1000)
     42
-  }
+
+}
   
   future1.onComplete {
     case Success(value) => println(s"結果: $value")
     case Failure(error) => println(s"エラー: $error")
-  }
+
+}
   
   // 複数のFutureの合成
   println("\n=== Futureの合成 ===")
@@ -89,12 +93,14 @@
   def fetchUserName(id: Int): Future[String] = Future {
     Thread.sleep(500)
     s"User$id"
-  }
+
+}
   
   def fetchUserScore(name: String): Future[Int] = Future {
     Thread.sleep(300)
     name.length * 10
-  }
+
+}
   
   val result = for
     name <- fetchUserName(123)
@@ -108,9 +114,12 @@
   
   val start = System.currentTimeMillis()
   
-  val f1 = Future { Thread.sleep(1000); "Task1" }
-  val f2 = Future { Thread.sleep(1000); "Task2" }
-  val f3 = Future { Thread.sleep(1000); "Task3" }
+  val f1 = Future { Thread.sleep(1000); "Task1"
+}
+  val f2 = Future { Thread.sleep(1000); "Task2"
+}
+  val f3 = Future { Thread.sleep(1000); "Task3"
+}
   
   val combined = for
     r1 <- f1
@@ -121,15 +130,17 @@
   combined.foreach { results =>
     val elapsed = System.currentTimeMillis() - start
     println(s"結果: $results (${elapsed}ms)")
-  }
+
+}
   
   // エラーハンドリング
   println("\n=== エラーハンドリング ===")
   
   def riskyOperation(n: Int): Future[Int] = Future {
-    if n < 0 then throw new IllegalArgumentException("負の数は不可")
+    if (n < 0) { throw new IllegalArgumentException("負の数は不可")
     n * 2
-  }
+
+}
   
   val futures = List(
     riskyOperation(10),
@@ -141,7 +152,8 @@
     f.recover {
       case _: IllegalArgumentException => -1
     }.foreach(r => println(s"結果: $r"))
-  }
+
+}
   
   Thread.sleep(2000)  // 結果を待つ
 ```
@@ -152,7 +164,7 @@
 
 ```scala
 // SharedStateProblems.scala
-@main def sharedStateProblems(): Unit =
+@main def sharedStateProblems(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import java.util.concurrent.atomic.AtomicInteger
   
@@ -164,12 +176,15 @@
   val futures1 = (1 to 10000).map { _ =>
     Future {
       unsafeCounter += 1  // 安全でない！
-    }
-  }
+
+}
+
+}
   
   Future.sequence(futures1).foreach { _ =>
     println(s"安全でないカウンター: $unsafeCounter （10000になるはず）")
-  }
+
+}
   
   Thread.sleep(1000)
   
@@ -183,13 +198,17 @@
     Future {
       lock.synchronized {
         syncCounter += 1
-      }
-    }
-  }
+
+}
+
+}
+
+}
   
   Future.sequence(futures2).foreach { _ =>
     println(s"同期カウンター: $syncCounter")
-  }
+
+}
   
   Thread.sleep(1000)
   
@@ -201,12 +220,15 @@
   val futures3 = (1 to 10000).map { _ =>
     Future {
       atomicCounter.incrementAndGet()
-    }
-  }
+
+}
+
+}
   
   Future.sequence(futures3).foreach { _ =>
     println(s"Atomicカウンター: ${atomicCounter.get}")
-  }
+
+}
   
   Thread.sleep(1000)
   
@@ -218,13 +240,15 @@
   def updateCounter(states: List[Future[CounterState]]): Future[CounterState] =
     Future.sequence(states).map { list =>
       CounterState(list.map(_.value).sum)
-    }
+
+}
   
   val initialStates = (1 to 100).map(_ => Future(CounterState(1))).toList
   
   updateCounter(initialStates).foreach { finalState =>
     println(s"イミュータブルカウンター: ${finalState.value}")
-  }
+
+}
   
   Thread.sleep(1000)
 ```
@@ -233,7 +257,7 @@
 
 ```scala
 // DeadlockAvoidance.scala
-@main def deadlockAvoidance(): Unit =
+@main def deadlockAvoidance(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   
   // デッドロックが起きる例（実行しないこと！）
@@ -244,11 +268,13 @@
       this.synchronized {
         Thread.sleep(10)  // 処理時間をシミュレート
         to.synchronized {
-          if this.balance >= amount then
+          if (this.balance >= amount) {
             this.balance -= amount
             to.balance += amount
-      }
-    }
+
+}
+
+}
   
   // デッドロックを避ける方法
   println("\n=== デッドロック回避 ===")
@@ -256,39 +282,44 @@
   class SafeBankAccount(val id: Int, var balance: Double):
     def transfer(to: SafeBankAccount, amount: Double): Unit =
       // 常に同じ順序でロック
-      val (first, second) = if this.id < to.id then (this, to) else (to, this)
+      val (first, second) = if (this.id < to.id) { (this, to) else (to, this)
       
       first.synchronized {
         second.synchronized {
-          if this.balance >= amount then
+          if (this.balance >= amount) {
             this.balance -= amount
             to.balance += amount
             println(s"送金成功: ${this.id} -> ${to.id}, $amount 円")
-          else
+          } else {
             println(s"送金失敗: 残高不足")
-        }
-      }
+
+}
+
+}
   
   val account1 = new SafeBankAccount(1, 1000)
   val account2 = new SafeBankAccount(2, 1000)
   
   val transfer1 = Future {
-    for i <- 1 to 5 do
+    for (i <- 1 to 5) {
       account1.transfer(account2, 100)
       Thread.sleep(50)
-  }
+
+}
   
   val transfer2 = Future {
-    for i <- 1 to 5 do
+    for (i <- 1 to 5) {
       account2.transfer(account1, 150)
       Thread.sleep(50)
-  }
+
+}
   
   Future.sequence(List(transfer1, transfer2)).foreach { _ =>
     println(s"\n最終残高:")
     println(s"  アカウント1: ${account1.balance}")
     println(s"  アカウント2: ${account2.balance}")
-  }
+
+}
   
   Thread.sleep(1000)
 ```
@@ -299,9 +330,10 @@
 
 ```scala
 // SimpleActor.scala
-@main def simpleActor(): Unit =
+@main def simpleActor(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
-  import java.util.concurrent.{LinkedBlockingQueue, TimeUnit}
+  import java.util.concurrent.{LinkedBlockingQueue, TimeUnit
+}
   
   // シンプルなアクターの実装
   trait Message
@@ -337,10 +369,10 @@
         println(s"入金: $amount 円, 残高: $balance 円")
         
       case Withdraw(amount) =>
-        if balance >= amount then
+        if (balance >= amount) {
           balance -= amount
           println(s"出金: $amount 円, 残高: $balance 円")
-        else
+        } else {
           println(s"出金失敗: 残高不足")
           
       case GetBalance(replyTo) =>
@@ -349,7 +381,8 @@
       case Stop =>
         println("アクター停止")
         actor.stop()
-    }
+
+}
     
     def deposit(amount: Double): Unit = actor.send(Deposit(amount))
     def withdraw(amount: Double): Unit = actor.send(Withdraw(amount))
@@ -364,16 +397,18 @@
   
   // 並行してメッセージを送信
   Future { 
-    for i <- 1 to 5 do
+    for (i <- 1 to 5) {
       account.deposit(100)
       Thread.sleep(100)
-  }
+
+}
   
   Future {
-    for i <- 1 to 3 do
+    for (i <- 1 to 3) {
       account.withdraw(200)
       Thread.sleep(150)
-  }
+
+}
   
   Thread.sleep(1000)
   
@@ -383,7 +418,8 @@
     case BalanceReply(balance) =>
       println(s"\n最終残高: $balance 円")
       replyActor.stop()
-  }
+
+}
   
   account.getBalance(replyActor)
   Thread.sleep(500)
@@ -395,12 +431,15 @@
 
 ```scala
 // ConcurrentWebCrawler.scala
-@main def concurrentWebCrawler(): Unit =
-  import scala.concurrent.{Future, Promise}
+@main def concurrentWebCrawler(): Unit = {
+  import scala.concurrent.{Future, Promise
+}
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.collection.concurrent.TrieMap
-  import java.util.concurrent.{Semaphore, ConcurrentLinkedQueue}
-  import scala.util.{Success, Failure, Random}
+  import java.util.concurrent.{Semaphore, ConcurrentLinkedQueue
+}
+  import scala.util.{Success, Failure, Random
+}
   
   // 仮想的なWebページ
   case class WebPage(url: String, content: String, links: Set[String])
@@ -415,7 +454,8 @@
     }.toSet
     
     WebPage(url, s"Content of $url", links)
-  }
+
+}
   
   // 並行クローラー
   class ConcurrentCrawler(maxConcurrency: Int, maxDepth: Int):
@@ -434,7 +474,7 @@
     private def processQueue(promise: Promise[Map[String, WebPage]]): Unit =
       Future {
         while !queue.isEmpty || semaphore.availablePermits() < maxConcurrency do
-          Option(queue.poll()) match
+          Option(queue.poll()) match {
             case Some((url, depth)) if !visited.contains(url) && depth <= maxDepth =>
               semaphore.acquire()
               
@@ -446,20 +486,23 @@
                   // 新しいリンクをキューに追加
                   page.links.foreach { link =>
                     queue.offer((link, depth + 1))
-                  }
+
+}
                   
                   semaphore.release()
                   
                 case Failure(error) =>
                   println(s"エラー: $url - $error")
                   semaphore.release()
-              }
+
+}
               
             case Some(_) => // 既に訪問済みか深さ制限
             case None => Thread.sleep(10)  // キューが空
         
         promise.success(visited.toMap)
-      }
+
+}
   
   // クローラーの実行
   println("=== 並行Webクローラー ===")
@@ -478,8 +521,10 @@
     results.keys.toList.sorted.foreach { url =>
       val page = results(url)
       println(s"  $url (リンク数: ${page.links.size})")
-    }
-  }
+
+}
+
+}
   
   Thread.sleep(5000)  // 完了を待つ
   
@@ -491,7 +536,7 @@
     @volatile private var producing = true
     
     def produce(item: T): Boolean = 
-      if producing then buffer.offer(item, 100, TimeUnit.MILLISECONDS)
+      if (producing) { buffer.offer(item, 100, TimeUnit.MILLISECONDS)
       else false
     
     def consume(): Option[T] = 
@@ -506,13 +551,14 @@
   
   // プロデューサー
   val producer = Future {
-    for i <- 1 to 20 do
+    for (i <- 1 to 20) {
       val data = s"Data-$i"
       if pipeline.produce(data) then
         println(s"生成: $data")
       Thread.sleep(100)
     pipeline.stopProducing()
-  }
+
+}
   
   // コンシューマー（複数）
   def consumer(id: Int) = Future {
@@ -521,14 +567,17 @@
         println(s"  消費[$id]: $data を処理中...")
         Thread.sleep(Random.nextInt(300) + 100)
         println(s"  消費[$id]: $data 完了")
-      }
-  }
+
+}
+
+}
   
   val consumers = (1 to 3).map(consumer)
   
   Future.sequence(producer :: consumers.toList).foreach { _ =>
     println("\nパイプライン処理完了")
-  }
+
+}
   
   Thread.sleep(5000)
 ```
@@ -537,8 +586,9 @@
 
 ```scala
 // ReactiveSystem.scala
-@main def reactiveSystem(): Unit =
-  import scala.concurrent.{Future, Promise}
+@main def reactiveSystem(): Unit = {
+  import scala.concurrent.{Future, Promise
+}
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.collection.mutable
   import java.util.concurrent.ConcurrentLinkedQueue
@@ -557,16 +607,20 @@
       subscribers.synchronized {
         val handlers = subscribers.getOrElseUpdate(eventType, mutable.Set.empty)
         handlers += handler.asInstanceOf[Event => Unit]
-      }
+
+}
     
     def publish(event: Event): Unit =
       Future {
         subscribers.synchronized {
           subscribers.get(event.getClass).foreach { handlers =>
             handlers.foreach(_(event))
-          }
-        }
-      }
+
+}
+
+}
+
+}
   
   // センサーシミュレーター
   class TemperatureSensor(id: String, bus: EventBus):
@@ -577,7 +631,8 @@
         val temp = 20 + scala.util.Random.nextGaussian() * 5
         bus.publish(TemperatureReading(id, temp))
         Thread.sleep(1000)
-    }
+
+}
     
     def stop(): Unit = running = false
   
@@ -589,27 +644,30 @@
       readings.synchronized {
         readings(reading.sensorId) = reading.celsius
         
-        if reading.celsius > 30 then
+        if (reading.celsius > 30) {
           bus.publish(Alert(
             s"高温警告: ${reading.sensorId} = ${reading.celsius}°C",
             "WARNING"
           ))
-        else if reading.celsius < 10 then
+        else if (reading.celsius < 10) {
           bus.publish(Alert(
             s"低温警告: ${reading.sensorId} = ${reading.celsius}°C",
             "WARNING"
           ))
-      }
+
+}
       
       println(f"温度: ${reading.sensorId} = ${reading.celsius}%.1f°C")
-    }
+
+}
     
     def getAverageTemperature: Option[Double] =
       readings.synchronized {
-        if readings.nonEmpty then
+        if (readings.nonEmpty) {
           Some(readings.values.sum / readings.size)
         else None
-      }
+
+}
   
   // アラートハンドラー
   class AlertHandler(bus: EventBus):
@@ -621,13 +679,15 @@
         bus.publish(Command("COOLING_ON"))
       else if alert.message.contains("低温") then
         bus.publish(Command("HEATING_ON"))
-    }
+
+}
   
   // コマンド実行器
   class CommandExecutor(bus: EventBus):
     bus.subscribe(classOf[Command]) { command =>
       println(s"🔧 コマンド実行: ${command.action}")
-    }
+
+}
   
   // システムの起動
   println("=== リアクティブ温度監視システム ===")
@@ -653,7 +713,8 @@
   println("\n=== 統計情報 ===")
   monitor.getAverageTemperature.foreach { avg =>
     println(f"平均温度: $avg%.1f°C")
-  }
+
+}
   
   // センサー停止
   sensors.foreach(_.stop())
@@ -712,19 +773,19 @@
 ### 並行プログラミングのコツ
 
 1. **シンプルに保つ**
-   - 共有状態を最小限に
-   - イミュータブルを活用
-   - 明確な責任分離
+    - 共有状態を最小限に
+    - イミュータブルを活用
+    - 明確な責任分離
 
 2. **適切な抽象化**
-   - Future で非同期
-   - アクターでメッセージング
-   - ストリームで流れ
+    - Future で非同期
+    - アクターでメッセージング
+    - ストリームで流れ
 
 3. **テストとデバッグ**
-   - 並行性のテスト
-   - ログで状態追跡
-   - タイムアウトの設定
+    - 並行性のテスト
+    - ログで状態追跡
+    - タイムアウトの設定
 
 ### 次の部では...
 

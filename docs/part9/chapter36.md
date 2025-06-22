@@ -17,7 +17,7 @@
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class FirstTest extends AnyFunSuite with Matchers:
+class FirstTest extends AnyFunSuite with Matchers {
   
   // 基本的なテスト
   test("1 + 1 は 2 になる") {
@@ -55,9 +55,10 @@ class FirstTest extends AnyFunSuite with Matchers:
   
   // より詳細な検証
   test("Personクラスの動作") {
-    case class Person(name: String, age: Int):
+    case class Person(name: String, age: Int) {
       def isAdult: Boolean = age >= 18
       def greet: String = s"Hello, I'm $name"
+    }
     
     val person = Person("太郎", 25)
     
@@ -77,7 +78,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.BeforeAndAfter
 
-class TestStructure extends AnyFunSuite with Matchers with BeforeAndAfter:
+class TestStructure extends AnyFunSuite with Matchers with BeforeAndAfter {
   
   // テストの前後で実行される処理
   var testData: List[Int] = Nil
@@ -111,13 +112,14 @@ class TestStructure extends AnyFunSuite with Matchers with BeforeAndAfter:
   test("統計情報の計算") {
     case class Stats(min: Int, max: Int, sum: Int, avg: Double)
     
-    def calculateStats(numbers: List[Int]): Stats =
+    def calculateStats(numbers: List[Int]): Stats = {
       Stats(
         min = numbers.min,
         max = numbers.max,
         sum = numbers.sum,
         avg = numbers.sum.toDouble / numbers.size
       )
+    }
     
     val stats = calculateStats(testData)
     
@@ -137,10 +139,11 @@ class TestStructure extends AnyFunSuite with Matchers with BeforeAndAfter:
   
   // テーブル駆動テスト
   test("複数の入力でのテスト") {
-    def isPrime(n: Int): Boolean =
-      if n <= 1 then false
-      else if n <= 3 then true
-      else (2 to math.sqrt(n).toInt).forall(n % _ != 0)
+    def isPrime(n: Int): Boolean = {
+      if (n <= 1) { false }
+      else if (n <= 3) { true }
+      else { (2 to math.sqrt(n).toInt).forall(n % _ != 0) }
+    }
     
     val testCases = Table(
       ("input", "expected"),
@@ -198,7 +201,7 @@ class UserService(
         s"$name 様、ご登録ありがとうございます！"
       )
       
-      if emailSent then Right(user)
+      if (emailSent) { Right(user)
       else Left("メール送信に失敗しました")
       
     catch
@@ -323,7 +326,7 @@ class AsyncTest extends AsyncFunSuite with Matchers:
   
   test("エラーケースのテスト") {
     def riskyOperation(n: Int): Future[Int] = Future {
-      if n < 0 then throw new IllegalArgumentException("負の数は不可")
+      if (n < 0) { throw new IllegalArgumentException("負の数は不可")
       n * 2
     }
     
@@ -438,7 +441,7 @@ class PropertyBasedTest extends AnyFunSuite
   // 境界値のテスト
   test("除算関数の境界値") {
     def safeDivide(a: Double, b: Double): Option[Double] =
-      if b == 0 then None else Some(a / b)
+      if (b == 0) { None else Some(a / b)
     
     val edgeCases = Table(
       ("a", "b", "expected"),
@@ -467,56 +470,67 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.BeforeAndAfterEach
 
 // 仮想的なデータベース接続
-trait Database:
+trait Database {
   def connect(): Unit
   def disconnect(): Unit
   def execute(sql: String): Unit
   def query[T](sql: String): List[T]
+}
 
 // リポジトリ実装
-class UserRepositoryImpl(db: Database) extends UserRepository:
-  def findById(id: String): Option[User] =
+class UserRepositoryImpl(db: Database) extends UserRepository {
+  def findById(id: String): Option[User] = {
     db.query[User](s"SELECT * FROM users WHERE id = '$id'").headOption
+  }
   
-  def save(user: User): Unit =
+  def save(user: User): Unit = {
     db.execute(
       s"INSERT INTO users (id, name, email) VALUES ('${user.id}', '${user.name}', '${user.email}')"
     )
+  }
+}
 
 class IntegrationTest extends AnyFunSuite 
   with Matchers 
   with BeforeAndAfterAll
-  with BeforeAndAfterEach:
+  with BeforeAndAfterEach {
   
   // テスト用のインメモリデータベース
-  class InMemoryDatabase extends Database:
+  class InMemoryDatabase extends Database {
     private var users: List[User] = List.empty
     private var connected = false
     
     def connect(): Unit = connected = true
     def disconnect(): Unit = connected = false
     
-    def execute(sql: String): Unit =
-      if sql.startsWith("INSERT INTO users") then
+    def execute(sql: String): Unit = {
+      if (sql.startsWith("INSERT INTO users")) {
         // 簡易的なパース（実際はもっと適切に）
         val pattern = """VALUES \('([^']+)', '([^']+)', '([^']+)'\)""".r
-        sql match
+        sql match {
           case pattern(id, name, email) =>
             users = users :+ User(id, name, email)
           case _ =>
             throw new Exception("Invalid SQL")
+        }
+      }
+    }
     
-    def query[T](sql: String): List[T] =
-      if sql.contains("WHERE id =") then
+    def query[T](sql: String): List[T] = {
+      if (sql.contains("WHERE id =")) {
         val idPattern = """WHERE id = '([^']+)'""".r
-        sql match
+        sql match {
           case idPattern(id) =>
             users.filter(_.id == id).asInstanceOf[List[T]]
           case _ => List.empty
-      else
+        }
+      } else {
         users.asInstanceOf[List[T]]
+      }
+    }
     
     def clearData(): Unit = users = List.empty
+  }
   
   var database: InMemoryDatabase = _
   var repository: UserRepository = _
@@ -580,7 +594,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 // ステップ1：失敗するテストを書く
-class ShoppingCartTest extends AnyFunSuite with Matchers:
+class ShoppingCartTest extends AnyFunSuite with Matchers {
   
   test("空のカートの合計は0") {
     val cart = new ShoppingCart
@@ -637,7 +651,7 @@ class ShoppingCartTest extends AnyFunSuite with Matchers:
 // ステップ2：テストを通すための実装
 case class CartItem(name: String, price: Double, quantity: Int)
 
-class ShoppingCart:
+class ShoppingCart {
   private var items = Map[String, CartItem]()
   private var discountRate = 0.0
   private var couponDiscount = 0.0
@@ -647,8 +661,8 @@ class ShoppingCart:
     "SAVE100" -> 100.0
   )
   
-  def addItem(name: String, price: Double, quantity: Int): Unit =
-    items.get(name) match
+  def addItem(name: String, price: Double, quantity: Int): Unit = {
+    items.get(name) match {
       case Some(existing) =>
         items = items.updated(
           name, 
@@ -656,30 +670,39 @@ class ShoppingCart:
         )
       case None =>
         items = items + (name -> CartItem(name, price, quantity))
+    }
+  }
   
-  def removeItem(name: String): Unit =
+  def removeItem(name: String): Unit = {
     items = items - name
+  }
   
-  def getQuantity(name: String): Int =
+  def getQuantity(name: String): Int = {
     items.get(name).map(_.quantity).getOrElse(0)
+  }
   
   def itemCount: Int = items.size
   
-  def applyDiscount(rate: Double): Unit =
+  def applyDiscount(rate: Double): Unit = {
     discountRate = rate
+  }
   
-  def applyCoupon(code: String): Boolean =
-    validCoupons.get(code) match
+  def applyCoupon(code: String): Boolean = {
+    validCoupons.get(code) match {
       case Some(discount) =>
         couponDiscount = discount
         true
       case None =>
         false
+    }
+  }
   
-  def total: Double =
+  def total: Double = {
     val subtotal = items.values.map(item => item.price * item.quantity).sum
     val afterDiscount = subtotal * (1 - discountRate)
     math.max(0, afterDiscount - couponDiscount)
+  }
+}
 
 // ステップ3：リファクタリング（より良い設計に）
 class ImprovedShoppingCart:
@@ -695,7 +718,7 @@ class ImprovedShoppingCart:
   
   // イミュータブルな操作
   def addItem(name: String, price: Double, quantity: Int): ImprovedShoppingCart =
-    val newItems = state.items.get(name) match
+    val newItems = state.items.get(name) match {
       case Some(existing) =>
         state.items.updated(name, existing.copy(quantity = existing.quantity + quantity))
       case None =>
@@ -716,41 +739,50 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.BeforeAndAfterAll
 
 // Webアプリケーションのシミュレーション
-class WebApp:
+class WebApp {
   private var users = Map[String, User]()
   private var sessions = Map[String, String]() // sessionId -> userId
   
-  def register(name: String, email: String, password: String): Either[String, String] =
-    if users.values.exists(_.email == email) then
+  def register(name: String, email: String, password: String): Either[String, String] = {
+    if (users.values.exists(_.email == email)) {
       Left("メールアドレスは既に使用されています")
-    else
+    } else {
       val userId = java.util.UUID.randomUUID().toString
       users = users + (userId -> User(userId, name, email))
       Right(userId)
+    }
+  }
   
-  def login(email: String, password: String): Either[String, String] =
-    users.values.find(_.email == email) match
+  def login(email: String, password: String): Either[String, String] = {
+    users.values.find(_.email == email) match {
       case Some(user) =>
         val sessionId = java.util.UUID.randomUUID().toString
         sessions = sessions + (sessionId -> user.id)
         Right(sessionId)
       case None =>
         Left("メールアドレスまたはパスワードが正しくありません")
+    }
+  }
   
-  def getProfile(sessionId: String): Either[String, User] =
-    sessions.get(sessionId).flatMap(users.get) match
+  def getProfile(sessionId: String): Either[String, User] = {
+    sessions.get(sessionId).flatMap(users.get) match {
       case Some(user) => Right(user)
       case None => Left("ログインが必要です")
+    }
+  }
   
-  def logout(sessionId: String): Unit =
+  def logout(sessionId: String): Unit = {
     sessions = sessions - sessionId
+  }
+}
 
-class E2ETest extends AnyFunSuite with Matchers with BeforeAndAfterAll:
+class E2ETest extends AnyFunSuite with Matchers with BeforeAndAfterAll {
   
   var app: WebApp = _
   
-  override def beforeAll(): Unit =
+  override def beforeAll(): Unit = {
     app = new WebApp
+  }
   
   test("ユーザー登録からログアウトまでの一連の流れ") {
     // 1. ユーザー登録
@@ -861,19 +893,19 @@ TODOリスト管理システムのテストを書いてください：
 ### テストを書くコツ
 
 1. **分かりやすく書く**
-   - 明確なテスト名
-   - AAA パターン
-   - 1テスト1検証
+    - 明確なテスト名
+    - AAA パターン
+    - 1テスト1検証
 
 2. **網羅的に書く**
-   - 正常ケース
-   - 異常ケース
-   - 境界値
+    - 正常ケース
+    - 異常ケース
+    - 境界値
 
 3. **保守しやすく書く**
-   - DRYの原則
-   - テストの独立性
-   - 適切な粒度
+    - DRYの原則
+    - テストの独立性
+    - 適切な粒度
 
 ### 次の章では...
 

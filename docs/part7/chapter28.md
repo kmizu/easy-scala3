@@ -12,7 +12,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ImplicitParametersBasics.scala
-@main def implicitParametersBasics(): Unit =
+@main def implicitParametersBasics(): Unit = {
   // 通常の引数（毎回指定が必要）
   def greet(name: String, greeting: String): String =
     s"$greeting, $name!"
@@ -46,7 +46,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ContextProviding.scala
-@main def contextProviding(): Unit =
+@main def contextProviding(): Unit = {
   // 実行コンテキスト
   case class ExecutionContext(
     userId: String,
@@ -105,7 +105,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ConfigurationInjection.scala
-@main def configurationInjection(): Unit =
+@main def configurationInjection(): Unit = {
   // アプリケーション設定
   case class AppConfig(
     apiUrl: String,
@@ -116,15 +116,19 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
   
   // APIクライアント
   class ApiClient:
-    def get(path: String)(implicit config: AppConfig): String =
-      if config.debugMode then
+    def get(path: String)(implicit config: AppConfig): String = {
+      if (config.debugMode) {
         println(s"[DEBUG] GET ${config.apiUrl}$path")
+      }
       s"Response from ${config.apiUrl}$path"
+    }
     
-    def post(path: String, data: String)(implicit config: AppConfig): String =
-      if config.debugMode then
+    def post(path: String, data: String)(implicit config: AppConfig): String = {
+      if (config.debugMode) {
         println(s"[DEBUG] POST ${config.apiUrl}$path with $data")
+      }
       s"Posted to ${config.apiUrl}$path"
+    }
   
   // サービスクラス
   class UserApiService(client: ApiClient):
@@ -169,7 +173,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ImplicitConversions.scala
-@main def implicitConversions(): Unit =
+@main def implicitConversions(): Unit = {
   // JSONライクなデータ構造
   sealed trait JsonValue
   case class JsonString(value: String) extends JsonValue
@@ -206,9 +210,10 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
     // オプションのエンコーダー
     implicit def optionEncoder[A](implicit encoder: JsonEncoder[A]): JsonEncoder[Option[A]] =
       new JsonEncoder[Option[A]]:
-        def encode(value: Option[A]): JsonValue = value match
+        def encode(value: Option[A]): JsonValue = value match {
           case Some(v) => encoder.encode(v)
           case None => JsonNull
+        }
   
   // JSONに変換する関数
   def toJson[A](value: A)(implicit encoder: JsonEncoder[A]): JsonValue =
@@ -248,7 +253,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ImplicitPriority.scala
-@main def implicitPriority(): Unit =
+@main def implicitPriority(): Unit = {
   trait Printer[A]:
     def print(value: A): String
   
@@ -294,7 +299,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // DependencyInjection.scala
-@main def dependencyInjection(): Unit =
+@main def dependencyInjection(): Unit = {
   // サービスのインターフェース
   trait UserRepository:
     def findById(id: String): Option[String]
@@ -330,7 +335,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
                      logger: Logger): Unit =
       logger.info(s"ユーザー登録開始: $id")
       
-      repo.findById(id) match
+      repo.findById(id) match {
         case Some(_) =>
           logger.error(s"ユーザーID $id は既に存在します")
         case None =>
@@ -341,6 +346,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
             s"$name 様、ご登録ありがとうございます！"
           )
           logger.info(s"ユーザー登録完了: $id")
+      }
     
     def getUser(id: String)(implicit repo: UserRepository, logger: Logger): Option[String] =
       logger.info(s"ユーザー検索: $id")
@@ -358,9 +364,10 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
   userService.registerUser("001", "田中太郎", "tanaka@example.com")
   
   println("\n=== ユーザー検索 ===")
-  userService.getUser("001") match
+  userService.getUser("001") match {
     case Some(name) => println(s"見つかりました: $name")
     case None => println("見つかりません")
+  }
   
   // テスト環境では別の実装を注入
   def testEnvironment(): Unit =
@@ -376,7 +383,7 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 
 ```scala
 // ImplicitBestPractices.scala
-@main def implicitBestPractices(): Unit =
+@main def implicitBestPractices(): Unit = {
   // 1. 明確な型名を使う
   case class DatabaseConnection(url: String)
   case class SecurityContext(userId: String, permissions: Set[String])
@@ -388,10 +395,11 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
   // 2. 暗黙の引数は最後の引数リストに
   def processData[A](data: List[A])(f: A => String)
                     (implicit ctx: SecurityContext): List[String] =
-    if ctx.permissions.contains("READ") then
+    if (ctx.permissions.contains("READ")) {
       data.map(f)
-    else
+    } else {
       List("アクセス拒否")
+    }
   
   // 3. デフォルト値を提供する
   object SecurityContext:
@@ -493,19 +501,19 @@ Scalaの暗黙の引数（implicit parameters）も同じです。よく使う�
 ### 暗黙の引数を使うコツ
 
 1. **明確さを保つ**
-   - 何が暗黙的か分かりやすく
-   - 型から用途が推測できる
-   - 必要に応じて明示的に
+    - 何が暗黙的か分かりやすく
+    - 型から用途が推測できる
+    - 必要に応じて明示的に
 
 2. **スコープ管理**
-   - 影響範囲を限定
-   - インポートの活用
-   - 競合を避ける
+    - 影響範囲を限定
+    - インポートの活用
+    - 競合を避ける
 
 3. **デバッグしやすく**
-   - implicitlyで確認
-   - 明示的な指定でテスト
-   - エラーメッセージを理解
+    - implicitlyで確認
+    - 明示的な指定でテスト
+    - エラーメッセージを理解
 
 ### 次の章では...
 

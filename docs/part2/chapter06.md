@@ -10,7 +10,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
 
 ```scala
 // BasicTypeInference.scala
-@main def basicTypeInference(): Unit =
+@main def basicTypeInference(): Unit = {
   // 型を書かなくても、Scalaが自動的に型を推論
   val number = 42              // Int型と推論
   val decimal = 3.14           // Double型と推論
@@ -29,13 +29,14 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   
   // 両者は完全に同じ
   println(s"推論: ${number}, 明示: ${explicitNumber}")
+}
 ```
 
 ### 式からの型推論
 
 ```scala
 // ExpressionTypeInference.scala
-@main def expressionTypeInference(): Unit =
+@main def expressionTypeInference(): Unit = {
   // 計算結果の型も推論される
   val sum = 10 + 20           // Int
   val product = 5.0 * 3       // Double（片方がDouble）
@@ -50,6 +51,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   // 複雑な式でも推論
   val complex = (10 + 5) * 2.0 / 3  // Double
   println(s"complex: ${complex} (${complex.getClass.getSimpleName})")
+}
 ```
 
 ## 関数での型推論
@@ -58,7 +60,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
 
 ```scala
 // FunctionTypeInference.scala
-@main def functionTypeInference(): Unit =
+@main def functionTypeInference(): Unit = {
   // 戻り値の型を推論
   def add(x: Int, y: Int) = x + y  // 戻り値はIntと推論
   
@@ -77,15 +79,16 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   println(greet("太郎"))
   println(s"20歳は成人？: ${isAdult(20)}")
   println(s"BMI: ${calculateBMI(65.0, 1.70)}")
+}
 ```
 
 ### ローカル関数での型推論
 
 ```scala
 // LocalFunctionInference.scala
-@main def localFunctionInference(): Unit =
+@main def localFunctionInference(): Unit = {
   // 関数内で定義する関数
-  def processNumbers(numbers: List[Int]): String =
+  def processNumbers(numbers: List[Int]): String = {
     // ローカル関数の型も推論される
     def double(x: Int) = x * 2
     def isEven(x: Int) = x % 2 == 0
@@ -96,9 +99,11 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
       .filter(isEven)   // 偶数のみ選択
       .map(format)      // フォーマット
       .mkString(", ")   // 文字列に結合
+  }
   
   val result = processNumbers(List(1, 2, 3, 4, 5))
   println(s"結果: ${result}")
+}
 ```
 
 ## コレクションでの型推論
@@ -107,7 +112,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
 
 ```scala
 // CollectionTypeInference.scala
-@main def collectionTypeInference(): Unit =
+@main def collectionTypeInference(): Unit = {
   // 要素から型を推論
   val numbers = List(1, 2, 3, 4, 5)          // List[Int]
   val words = List("apple", "banana", "cat")  // List[String]
@@ -134,13 +139,14 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   )  // Map[String, List[Int]]
   
   println(s"studentScores: ${studentScores}")
+}
 ```
 
 ### メソッドチェーンでの型推論
 
 ```scala
 // MethodChainInference.scala
-@main def methodChainInference(): Unit =
+@main def methodChainInference(): Unit = {
   val numbers = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
   
   // 各ステップで型が推論される
@@ -161,6 +167,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   println(s"step1: ${step1} (${step1.getClass.getSimpleName})")
   println(s"step2: ${step2} (${step2.getClass.getSimpleName})")
   println(s"step3: ${step3} (${step3.getClass.getSimpleName})")
+}
 ```
 
 ## 型推論の限界
@@ -169,37 +176,41 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
 
 ```scala
 // RecursionTypeInference.scala
-@main def recursionTypeInference(): Unit =
+@main def recursionTypeInference(): Unit = {
   // 再帰関数では戻り値の型を明示する必要がある
-  def factorial(n: Int): Int =  // 戻り値の型が必要
-    if n <= 1 then 1
+  def factorial(n: Int): Int = {  // 戻り値の型が必要
+    if (n <= 1) 1
     else n * factorial(n - 1)
+  }
   
   // これはエラーになる
   // def factorialError(n: Int) =
-  //   if n <= 1 then 1
+  //   if (n <= 1) 1
   //   else n * factorialError(n - 1)
   
   println(s"5! = ${factorial(5)}")
   
   // 相互再帰も型が必要
-  def isEven(n: Int): Boolean =
-    if n == 0 then true
+  def isEven(n: Int): Boolean = {
+    if (n == 0) true
     else isOdd(n - 1)
+  }
   
-  def isOdd(n: Int): Boolean =
-    if n == 0 then false
+  def isOdd(n: Int): Boolean = {
+    if (n == 0) false
     else isEven(n - 1)
+  }
   
   println(s"10は偶数？: ${isEven(10)}")
   println(s"7は奇数？: ${isOdd(7)}")
+}
 ```
 
 ### 型パラメータの推論
 
 ```scala
 // TypeParameterInference.scala
-@main def typeParameterInference(): Unit =
+@main def typeParameterInference(): Unit = {
   // ジェネリック関数の型推論
   def identity[T](x: T): T = x
   
@@ -213,14 +224,16 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   println(s"doubleResult: ${doubleResult}")
   
   // より実用的な例
-  def firstElement[T](list: List[T]): Option[T] =
+  def firstElement[T](list: List[T]): Option[T] = {
     list.headOption
+  }
   
   val first1 = firstElement(List(1, 2, 3))        // Option[Int]
   val first2 = firstElement(List("a", "b", "c"))  // Option[String]
   
   println(s"first1: ${first1}")
   println(s"first2: ${first2}")
+}
 ```
 
 ## 型推論のベストプラクティス
@@ -229,10 +242,11 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
 
 ```scala
 // WhenToSpecifyTypes.scala
-@main def whenToSpecifyTypes(): Unit =
+@main def whenToSpecifyTypes(): Unit = {
   // 1. パブリックAPIでは型を明示
-  def calculatePrice(basePrice: Double, taxRate: Double): Double =
+  def calculatePrice(basePrice: Double, taxRate: Double): Double = {
     basePrice * (1 + taxRate)
+  }
   
   // 2. 複雑な型や意図を明確にしたい場合
   val userDataList: List[(String, Int, Boolean)] = List(
@@ -251,13 +265,14 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   println(s"価格: ${calculatePrice(1000, 0.1)}円")
   println(s"ユーザー数: ${userDataList.length}")
   println(s"スコア: ${score}")
+}
 ```
 
 ### 型推論を活用した読みやすいコード
 
 ```scala
 // ReadableCodeWithInference.scala
-@main def readableCodeWithInference(): Unit =
+@main def readableCodeWithInference(): Unit = {
   // 冗長な型指定を避ける
   // 悪い例
   val numbers1: List[Int] = List[Int](1, 2, 3, 4, 5)
@@ -278,13 +293,14 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
   
   println("果物の集計:")
   println(report)
+}
 ```
 
 ## 実践的な例：成績管理システム
 
 ```scala
 // GradeManagementSystem.scala
-@main def gradeManagementSystem(): Unit =
+@main def gradeManagementSystem(): Unit = {
   // 学生の成績データ（型推論を活用）
   case class Student(name: String, scores: Map[String, Int])
   
@@ -299,12 +315,13 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
     scores.sum.toDouble / scores.size
   
   // 成績評価（型推論を活用）
-  def grade(score: Double) = score match
+  def grade(score: Double) = score match {
     case s if s >= 90 => "A"
     case s if s >= 80 => "B"
     case s if s >= 70 => "C"
     case s if s >= 60 => "D"
     case _ => "F"
+  }
   
   // レポート生成
   println("=== 成績レポート ===")
@@ -332,6 +349,7 @@ Scalaの最も便利な機能の一つが「型推論」です。型推論とは
     
     println(s"${subject}: 平均${avg.round}点, 最高${max}点, 最低${min}点")
   }
+}
 ```
 
 ## よくある間違いと対処法
@@ -373,7 +391,7 @@ anyValue = "text"   // OK
 
 ```scala
 // TypeInferenceDebugging.scala
-@main def typeInferenceDebugging(): Unit =
+@main def typeInferenceDebugging(): Unit = {
   // 推論された型を確認する方法
   
   // 1. IDEのホバー機能を使う（最も簡単）
@@ -391,6 +409,7 @@ anyValue = "text"   // OK
   
   // 5. コンパイラオプションで型を表示
   // scalac -Xprint:typer MyFile.scala
+}
 ```
 
 ## 練習問題
@@ -437,28 +456,28 @@ val result = 10 / 3                 // 小数の結果が欲しい
 この章では以下のことを学びました：
 
 1. **型推論の基本**
-   - Scalaが自動的に型を判断
-   - 値や式から適切な型を推論
-   - コードがシンプルで読みやすくなる
+    - Scalaが自動的に型を判断
+    - 値や式から適切な型を推論
+    - コードがシンプルで読みやすくなる
 
 2. **関数での型推論**
-   - 戻り値の型は多くの場合推論可能
-   - 引数の型は明示的に指定が必要
-   - 再帰関数では戻り値の型が必須
+    - 戻り値の型は多くの場合推論可能
+    - 引数の型は明示的に指定が必要
+    - 再帰関数では戻り値の型が必須
 
 3. **コレクションでの型推論**
-   - 要素から自動的に型を判断
-   - メソッドチェーンでも型を追跡
-   - 複雑な構造でも適切に推論
+    - 要素から自動的に型を判断
+    - メソッドチェーンでも型を追跡
+    - 複雑な構造でも適切に推論
 
 4. **型推論のベストプラクティス**
-   - パブリックAPIでは型を明示
-   - ローカル変数では推論を活用
-   - 意図を明確にしたい場合は型を書く
+    - パブリックAPIでは型を明示
+    - ローカル変数では推論を活用
+    - 意図を明確にしたい場合は型を書く
 
 5. **型推論の限界と注意点**
-   - 再帰関数での制限
-   - 意図しない型推論への対処
-   - デバッグ方法の理解
+    - 再帰関数での制限
+    - 意図しない型推論への対処
+    - デバッグ方法の理解
 
 次の章では、文字列の操作について詳しく学んでいきます！

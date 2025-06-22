@@ -258,9 +258,10 @@ scala> :quit
 
 ```scala
 // はじめてのプログラム
-@main def hello(): Unit =
+@main def hello(): Unit = {
   println("Hello, World!")
   println("はじめてのScalaプログラム")
+}
 ```
 
 **重要な注意点**：
@@ -321,9 +322,10 @@ Hello, World!
 
 ```scala
 // はじめてのプログラム         ← これは「コメント」。メモみたいなもの
-@main def hello(): Unit =      ← 「ここからプログラムが始まるよ」という印
+@main def hello(): Unit = {    ← 「ここからプログラムが始まるよ」という印
   println("Hello, World!")     ← 「Hello, World!」を表示して
   println("はじめてのScalaプログラム") ← 「はじめてのScalaプログラム」を表示して
+}
 ```
 
 - `//` で始まる行は「コメント」。人間用のメモで、実行されません
@@ -340,13 +342,14 @@ Hello, World!
 
 ```scala
 // あいさつプログラム
-@main def greeting(): Unit =
+@main def greeting(): Unit = {
   val name = "太郎"
   val age = 20
   
   println(s"こんにちは、${name}さん！")
   println(s"あなたは${age}歳ですね。")
   println(s"来年は${age + 1}歳になりますね。")
+}
 ```
 
 これを `Greeting.scala` という名前でデスクトップに保存してください。
@@ -420,8 +423,9 @@ Error: Source file not found: HelloWrold.scala
 ### よくあるエラー2：日本語入力のままだった
 
 ```scala
-@main def hello(): Unit =
+@main def hello(): Unit = {
 　println("Hello, World!")  // あっ、全角スペースが...
+}
 ```
 
 こんなエラーが出ます：
@@ -440,8 +444,9 @@ error: illegal character '\u3000'
 ### よくあるエラー3：カッコを閉じ忘れた
 
 ```scala
-@main def hello(): Unit =
+@main def hello(): Unit = {
   println("Hello, World!"  // ) を忘れた！
+}
 ```
 
 こんなエラーが出ます：
@@ -468,17 +473,19 @@ error: ')' expected but end of file found
 Scalaのプログラムは、この形が基本です：
 
 ```scala
-@main def プログラム名(): Unit =
+@main def プログラム名(): Unit = {
   // ここに「やりたいこと」を書く
   // 好きなだけ書ける
+}
 ```
 
 例：
 ```scala
-@main def myProgram(): Unit =
+@main def myProgram(): Unit = {
   println("私のプログラム")
   println("2行目も書ける")
   println("3行目も！")
+}
 ```
 
 ### コメント（メモ）の書き方
@@ -487,9 +494,10 @@ Scalaのプログラムは、この形が基本です：
 
 ```scala
 // これはコメント。実行されません
-@main def test(): Unit =
+@main def test(): Unit = {
   println("Hello")  // 行の後ろにも書ける
   // println("これは実行されない")
+}
 ```
 
 ### 大事！インデント（字下げ）
@@ -497,19 +505,20 @@ Scalaのプログラムは、この形が基本です：
 Scalaでは「スペースの数」に意味があります：
 
 ```scala
-@main def indentExample(): Unit =
+@main def indentExample(): Unit = {
 println("これはエラー！")        // スペースなし = エラー
   println("これはOK")            // スペース2個 = 正しい
     println("これもエラー！")     // スペース4個 = エラー
+}
 ```
 
 **ルール**：
-- `@main def ...` の次の行から
+- `@main def ... {` の後、波括弧の中で
 - 必ず**スペース2個**を入れる
 - すべての行で同じ数のスペース
 
 **なぜ？**
-スペースで「ここからここまでが、このプログラムの中身だよ」と教えているのです。
+波括弧 `{` と `}` で「ここからここまでが、このプログラムの中身だよ」と明確に示し、スペースで読みやすくしているのです。
 
 ## もっと便利にプログラムを書く方法
 
@@ -548,12 +557,13 @@ println("これはエラー！")        // スペースなし = エラー
 2. 以下を参考に、自分の情報でプログラムを書く：
 
 ```scala
-@main def introduction(): Unit =
+@main def introduction(): Unit = {
   val name = "あなたの名前"
   val food = "好きな食べ物"
   
   println(s"私の名前は${name}です。")
   println(s"好きな食べ物は${food}です。")
+}
 ```
 
 3. 保存して実行
@@ -570,11 +580,12 @@ println("これはエラー！")        // スペースなし = エラー
 2. 以下のプログラムを完成させる：
 
 ```scala
-@main def calculator(): Unit =
+@main def calculator(): Unit = {
   println("=== 計算結果 ===")
   println(s"100 + 200 = ${100 + 200}")
   println(s"50 × 4 = ${50 * 4}")
   println(s"1000 ÷ 8 = ${1000 / 8}")
+}
 ```
 
 **ヒント**：
@@ -586,10 +597,11 @@ println("これはエラー！")        // スペースなし = エラー
 以下のプログラムには3つのエラーがあります。見つけて直してみましょう：
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val message = "Hello, Scala!
   println(message)
   println("プログラミングは楽しい"）
+}
 ```
 
 **ヒント**：
@@ -617,8 +629,9 @@ println("これはエラー！")        // スペースなし = エラー
 
 1. **プログラムの基本形**：
 ```scala
-@main def 名前(): Unit =
+@main def 名前(): Unit = {
   // ここに処理を書く（スペース2個！）
+}
 ```
 
 2. **画面に表示**：
@@ -681,19 +694,19 @@ toCharArray   toLowerCase   toString   toUpperCase
 ### プログラムを書くときのコツ
 
 1. **まず動くものを作る**
-   - 完璧じゃなくていい
-   - 少しずつ改良する
+    - 完璧じゃなくていい
+    - 少しずつ改良する
 
 2. **エラーを恐れない**
-   - エラー = 学習のチャンス
-   - みんな最初はエラーだらけ
+    - エラー = 学習のチャンス
+    - みんな最初はエラーだらけ
 
 3. **コピペも活用**
-   - 最初は例をコピーして改造
-   - 慣れたら自分で書く
+    - 最初は例をコピーして改造
+    - 慣れたら自分で書く
 
 4. **楽しむことが一番大事！**
-   - できたときの喜びを大切に
-   - 分からないことがあって当然
+    - できたときの喜びを大切に
+    - 分からないことがあって当然
 
 さあ、次の章へ進みましょう！

@@ -12,18 +12,19 @@
 
 ```scala
 // SyncVsAsync.scala
-@main def syncVsAsync(): Unit =
+@main def syncVsAsync(): Unit = {
   import scala.concurrent.{Future, ExecutionContext}
   import scala.concurrent.duration.*
   import ExecutionContext.Implicits.global
   
   // 同期処理（順番に実行）
   println("=== 同期処理 ===")
-  def cookSync(dish: String): String =
+  def cookSync(dish: String): String = {
     println(s"$dish の調理開始...")
     Thread.sleep(2000)  // 2秒かかる
     println(s"$dish 完成！")
     dish
+  }
   
   val start1 = System.currentTimeMillis()
   cookSync("パスタ")
@@ -50,6 +51,7 @@
   Thread.sleep(3000)
   val end2 = System.currentTimeMillis()
   println(s"合計時間: ${end2 - start2}ms")
+}
 ```
 
 ## Futureの基本
@@ -58,7 +60,7 @@
 
 ```scala
 // FutureBasics.scala
-@main def futureBasics(): Unit =
+@main def futureBasics(): Unit = {
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -93,13 +95,14 @@
   
   val results = Await.result(allResults, 3.seconds)
   println(s"すべての結果: $results")
+}
 ```
 
 ### Futureのコールバック
 
 ```scala
 // FutureCallbacks.scala
-@main def futureCallbacks(): Unit =
+@main def futureCallbacks(): Unit = {
   import scala.concurrent.Future
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.util.{Success, Failure}
@@ -107,7 +110,7 @@
   // onComplete：成功でも失敗でも実行
   val future1 = Future {
     Thread.sleep(500)
-    if scala.util.Random.nextBoolean() then 42
+    if (scala.util.Random.nextBoolean()) 42
     else throw new Exception("ランダムエラー")
   }
   
@@ -144,6 +147,7 @@
   }
   
   Thread.sleep(1500)  // 完了まで待つ
+}
 ```
 
 ## Futureの変換と合成
@@ -152,7 +156,7 @@
 
 ```scala
 // FutureTransformations.scala
-@main def futureTransformations(): Unit =
+@main def futureTransformations(): Unit = {
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -174,10 +178,10 @@
     id * 100  // 仮のスコア
   }
   
-  val scoresFuture = for
+  val scoresFuture = for {
     id <- getUserId("太郎")
     score <- getUserScore(id)
-  yield score
+  } yield score
   
   println(s"スコア: ${Await.result(scoresFuture, 2.seconds)}")
   
@@ -185,18 +189,20 @@
   val numbers = Future(42)
   val filtered = numbers.filter(_ > 50)
   
-  try
+  try {
     Await.result(filtered, 1.second)
-  catch
+  } catch {
     case _: NoSuchElementException =>
       println("条件を満たしませんでした")
+  }
+}
 ```
 
 ### 複数のFutureを組み合わせる
 
 ```scala
 // CombiningFutures.scala
-@main def combiningFutures(): Unit =
+@main def combiningFutures(): Unit = {
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -220,11 +226,11 @@
   // すべてのデータを同時に取得
   val userId = 123
   
-  val allDataFuture = for
+  val allDataFuture = for {
     userData <- fetchUserData(userId)
     posts <- fetchUserPosts(userId)
     friends <- fetchUserFriends(userId)
-  yield (userData, posts, friends)
+  } yield (userData, posts, friends)
   
   val (userData, posts, friends) = Await.result(allDataFuture, 2.seconds)
   println(s"ユーザーデータ: $userData")
@@ -239,6 +245,7 @@
   
   val allUsers = Await.result(allUsersFuture, 2.seconds)
   println(s"全ユーザー: $allUsers")
+}
 ```
 
 ## エラーハンドリング
@@ -247,15 +254,15 @@
 
 ```scala
 // FutureErrorHandling.scala
-@main def futureErrorHandling(): Unit =
+@main def futureErrorHandling(): Unit = {
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
   
   // エラーが起きるかもしれない処理
   def riskyOperation(n: Int): Future[Int] = Future {
-    if n < 0 then throw new IllegalArgumentException("負の数は禁止")
-    else if n == 0 then throw new ArithmeticException("ゼロは特別")
+    if (n < 0) throw new IllegalArgumentException("負の数は禁止")
+    else if (n == 0) throw new ArithmeticException("ゼロは特別")
     else n * 10
   }
   
@@ -289,31 +296,34 @@
   )
   
   println(s"変換後: ${Await.result(transformed, 1.second)}")
+}
 ```
 
 ## 実践例：Web APIクライアント
 
 ```scala
 // WebApiClient.scala
-@main def webApiClient(): Unit =
+@main def webApiClient(): Unit = {
   import scala.concurrent.{Future, Promise}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.util.{Try, Success, Failure}
   
   // 模擬的なHTTPクライアント
-  object HttpClient:
+  object HttpClient {
     def get(url: String): Future[String] = Future {
       Thread.sleep(scala.util.Random.nextInt(1000))
-      if scala.util.Random.nextDouble() > 0.8 then
+      if (scala.util.Random.nextDouble() > 0.8) {
         throw new Exception(s"接続エラー: $url")
-      else
+      } else {
         s"""{"status": "ok", "data": "Response from $url"}"""
+      }
     }
+  }
   
   // APIクライアント
-  class ApiClient:
-    def fetchWithRetry(url: String, maxRetries: Int = 3): Future[String] =
+  class ApiClient {
+    def fetchWithRetry(url: String, maxRetries: Int = 3): Future[String] = {
       def attempt(retriesLeft: Int): Future[String] =
         HttpClient.get(url).recoverWith {
           case error if retriesLeft > 0 =>
@@ -325,13 +335,16 @@
         }
       
       attempt(maxRetries)
+    }
     
-    def fetchMultiple(urls: List[String]): Future[List[String]] =
+    def fetchMultiple(urls: List[String]): Future[List[String]] = {
       val futures = urls.map(fetchWithRetry(_, 2))
       Future.sequence(futures)
+    }
     
     def fetchFirstSuccessful(urls: List[String]): Future[String] =
       Future.firstCompletedOf(urls.map(HttpClient.get))
+  }
   
   val client = new ApiClient
   
@@ -359,13 +372,14 @@
   }
   
   Thread.sleep(5000)  // 完了まで待つ
+}
 ```
 
 ## タイムアウトとキャンセル
 
 ```scala
 // TimeoutAndCancel.scala
-@main def timeoutAndCancel(): Unit =
+@main def timeoutAndCancel(): Unit = {
   import scala.concurrent.{Future, Promise, TimeoutException}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -373,7 +387,7 @@
   import java.util.concurrent.ScheduledExecutorService
   
   // タイムアウト付きFuture
-  def withTimeout[T](future: Future[T], duration: Duration): Future[T] =
+  def withTimeout[T](future: Future[T], duration: Duration): Future[T] = {
     val promise = Promise[T]()
     
     future.onComplete(promise.tryComplete)
@@ -386,6 +400,7 @@
     )
     
     promise.future
+  }
   
   // 遅い処理
   def slowOperation(): Future[String] = Future {
@@ -403,6 +418,7 @@
   }
   
   Thread.sleep(4000)
+}
 ```
 
 ## 実用的なパターン
@@ -411,7 +427,7 @@
 
 ```scala
 // ConcurrencyControl.scala
-@main def concurrencyControl(): Unit =
+@main def concurrencyControl(): Unit = {
   import scala.concurrent.{Future, ExecutionContext}
   import scala.concurrent.duration.*
   import java.util.concurrent.Executors
@@ -438,13 +454,15 @@
   def processBatch[T, R](
     items: List[T], 
     batchSize: Int
-  )(f: T => Future[R]): Future[List[R]] =
+  )(f: T => Future[R]): Future[List[R]] = {
     items.grouped(batchSize).foldLeft(Future.successful(List.empty[R])) {
       (accFuture, batch) =>
         accFuture.flatMap { acc =>
           Future.sequence(batch.map(f)).map(acc ++ _)
         }
     }(ExecutionContext.global)
+  }
+}
 }
 ```
 
@@ -491,19 +509,19 @@
 ### 非同期処理のコツ
 
 1. **ブロッキングを避ける**
-   - Await.resultは最小限に
-   - コールバックやmapを活用
-   - 非同期の連鎖を保つ
+    - Await.resultは最小限に
+    - コールバックやmapを活用
+    - 非同期の連鎖を保つ
 
 2. **エラーハンドリング**
-   - recoverで優雅に回復
-   - タイムアウトの設定
-   - リトライの実装
+    - recoverで優雅に回復
+    - タイムアウトの設定
+    - リトライの実装
 
 3. **リソース管理**
-   - ExecutionContextの適切な選択
-   - 並行数の制限
-   - リソースのクリーンアップ
+    - ExecutionContextの適切な選択
+    - 並行数の制限
+    - リソースのクリーンアップ
 
 ### 次の章では...
 

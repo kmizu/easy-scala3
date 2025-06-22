@@ -10,7 +10,7 @@
 
 ```scala
 // RealWorldCollections.scala
-@main def realWorldCollections(): Unit =
+@main def realWorldCollections(): Unit = {
   // 買い物リスト
   val shoppingList = List("牛乳", "パン", "卵", "りんご")
   println(s"買い物リスト: ${shoppingList}")
@@ -26,13 +26,14 @@
     "水曜日" -> "レビュー"
   )
   println(s"今週の予定: ${schedule}")
+}
 ```
 
 ### なぜコレクションが必要か？
 
 ```scala
 // WhyCollections.scala
-@main def whyCollections(): Unit =
+@main def whyCollections(): Unit = {
   // コレクションを使わない場合（非効率）
   val student1 = "太郎"
   val student2 = "花子"
@@ -57,6 +58,7 @@
   println(s"\n生徒数: ${students.length}人")
   println(s"最初の生徒: ${students.head}")
   println(s"「太」を含む生徒: ${students.filter(_.contains("太"))}")
+}
 ```
 
 ## 型安全性とは
@@ -65,7 +67,7 @@
 
 ```scala
 // TypeSafeCollections.scala
-@main def typeSafeCollections(): Unit =
+@main def typeSafeCollections(): Unit = {
   // 型安全なリスト（すべて同じ型）
   val numbers: List[Int] = List(1, 2, 3, 4, 5)
   val total = numbers.sum  // 型が保証されているので計算可能
@@ -82,13 +84,14 @@
   
   // 型を間違えるとコンパイルエラー
   // prices.append("無料")  // エラー！Stringは追加できない
+}
 ```
 
 ### 型パラメータ
 
 ```scala
 // TypeParameters.scala
-@main def typeParameters(): Unit =
+@main def typeParameters(): Unit = {
   // List[T]のTが型パラメータ
   val intList: List[Int] = List(1, 2, 3)
   val stringList: List[String] = List("a", "b", "c")
@@ -110,6 +113,7 @@
   listOfLists.foreach { row =>
     println(row.mkString(" "))
   }
+}
 ```
 
 ## 基本的なコレクション型
@@ -118,7 +122,7 @@
 
 ```scala
 // ListBasics.scala
-@main def listBasics(): Unit =
+@main def listBasics(): Unit = {
   // リストの作成
   val fruits = List("りんご", "バナナ", "オレンジ")
   val numbers = List(10, 20, 30, 40, 50)
@@ -140,12 +144,13 @@
   println(s"末尾に追加: ${evenMore}")
 }
 ```
+```
 
 ### Set（集合）
 
 ```scala
 // SetBasics.scala
-@main def setBasics(): Unit =
+@main def setBasics(): Unit = {
   // Setの作成（重複する要素は自動的に除去）
   val numbers = Set(1, 2, 3, 2, 1, 4)
   println(s"Set: ${numbers}")  // 重複が除去される
@@ -167,13 +172,14 @@
   val removed = numbers - 2
   println(s"5を追加: ${added}")
   println(s"2を削除: ${removed}")
+}
 ```
 
 ### Map（マップ）
 
 ```scala
 // MapBasics.scala
-@main def mapBasics(): Unit =
+@main def mapBasics(): Unit = {
   // Mapの作成
   val ages = Map(
     "太郎" -> 20,
@@ -185,9 +191,10 @@
   println(s"太郎の年齢: ${ages("太郎")}")
   
   // 安全な値の取得
-  ages.get("花子") match
+  ages.get("花子") match {
     case Some(age) => println(s"花子は${age}歳です")
     case None => println("花子が見つかりません")
+  }
   
   // キーと値の一覧
   println(s"名前一覧: ${ages.keys}")
@@ -199,6 +206,7 @@
   
   println(s"桜を追加: ${updated}")
   println(s"太郎を更新: ${modified}")
+}
 ```
 
 ## イミュータブルとミュータブル
@@ -207,7 +215,7 @@
 
 ```scala
 // ImmutableCollections.scala
-@main def immutableCollections(): Unit =
+@main def immutableCollections(): Unit = {
   // デフォルトはイミュータブル
   val list = List(1, 2, 3)
   val newList = list :+ 4  // 新しいリストを作成
@@ -224,13 +232,14 @@
   
   println(s"処理前: ${original}")  // 元のデータは変わらない
   println(s"処理後: ${processed}")
+}
 ```
 
 ### ミュータブル（変更可能）コレクション
 
 ```scala
 // MutableCollections.scala
-@main def mutableCollections(): Unit =
+@main def mutableCollections(): Unit = {
   import scala.collection.mutable
   
   // ミュータブルなリスト（ListBuffer）
@@ -253,6 +262,7 @@
   // - 基本的にはイミュータブルを使う
   // - パフォーマンスが重要な場合のみミュータブル
 }
+}
 ```
 
 ## コレクションの基本操作
@@ -261,7 +271,7 @@
 
 ```scala
 // AccessingElements.scala
-@main def accessingElements(): Unit =
+@main def accessingElements(): Unit = {
   val list = List("A", "B", "C", "D", "E")
   
   // インデックスでアクセス
@@ -269,27 +279,30 @@
   println(s"2番目: ${list(2)}")
   
   // 安全なアクセス
-  list.lift(10) match
+  list.lift(10) match {
     case Some(elem) => println(s"10番目: ${elem}")
     case None => println("10番目は存在しません")
+  }
   
   // 条件に合う要素を探す
   val numbers = List(1, 3, 5, 7, 9)
-  numbers.find(_ > 5) match
+  numbers.find(_ > 5) match {
     case Some(n) => println(s"5より大きい最初の数: ${n}")
     case None => println("見つかりません")
+  }
   
   // 複数の要素を取得
   println(s"最初の3つ: ${list.take(3)}")
   println(s"最後の2つ: ${list.takeRight(2)}")
   println(s"2番目から4番目: ${list.slice(1, 4)}")
+}
 ```
 
 ### フィルタリングと変換
 
 ```scala
 // FilteringAndTransforming.scala
-@main def filteringAndTransforming(): Unit =
+@main def filteringAndTransforming(): Unit = {
   val numbers = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
   
   // フィルタリング
@@ -315,13 +328,14 @@
     .filter(_ > 10)
   
   println(s"偶数を3倍して10より大: ${result}")
+}
 ```
 
 ## 実践的な例：成績管理システム
 
 ```scala
 // GradeManagement.scala
-@main def gradeManagement(): Unit =
+@main def gradeManagement(): Unit = {
   // 学生の成績データ
   case class Student(name: String, id: Int, scores: Map[String, Int])
   
@@ -371,7 +385,7 @@
 
 ```scala
 // CollectionPerformance.scala
-@main def collectionPerformance(): Unit =
+@main def collectionPerformance(): Unit = {
   // Listの特性
   // - 先頭への追加: O(1)
   // - 末尾への追加: O(n)
@@ -457,7 +471,7 @@ val numbers: List[Int] = List(1, 2, 3)
 ### 問題5：エラーを修正
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val list = List(1, 2, 3)
   list.add(4)
   
@@ -467,6 +481,7 @@ val numbers: List[Int] = List(1, 2, 3)
   val set = Set(1, 2, 3)
   val first = set.head
   set.remove(first)
+}
 ```
 
 ## まとめ
@@ -474,28 +489,28 @@ val numbers: List[Int] = List(1, 2, 3)
 この章では以下のことを学びました：
 
 1. **コレクションの基本概念**
-   - 複数のデータをまとめて扱う仕組み
-   - 型安全性による安全なプログラミング
-   - 型パラメータの使い方
+    - 複数のデータをまとめて扱う仕組み
+    - 型安全性による安全なプログラミング
+    - 型パラメータの使い方
 
 2. **基本的なコレクション型**
-   - List：順序付きリスト
-   - Set：重複のない集合
-   - Map：キーと値のペア
+    - List：順序付きリスト
+    - Set：重複のない集合
+    - Map：キーと値のペア
 
 3. **イミュータブルとミュータブル**
-   - デフォルトはイミュータブル（推奨）
-   - 必要に応じてミュータブルを使用
-   - それぞれの利点と使い分け
+    - デフォルトはイミュータブル（推奨）
+    - 必要に応じてミュータブルを使用
+    - それぞれの利点と使い分け
 
 4. **基本的な操作**
-   - 要素へのアクセス
-   - フィルタリングと変換
-   - 安全な操作方法
+    - 要素へのアクセス
+    - フィルタリングと変換
+    - 安全な操作方法
 
 5. **パフォーマンスの考慮**
-   - 各コレクションの特性
-   - 適切なコレクションの選択
-   - 遅延評価の活用
+    - 各コレクションの特性
+    - 適切なコレクションの選択
+    - 遅延評価の活用
 
 次の章では、最も重要なコレクションであるListについて詳しく学んでいきます！

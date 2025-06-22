@@ -25,7 +25,7 @@ Scalaには以下のような基本的なデータ型があります：
 
 ```scala
 // StringBasics.scala
-@main def stringBasics(): Unit =
+@main def stringBasics(): Unit = {
   val greeting = "こんにちは"
   val name = "太郎"
   
@@ -42,13 +42,14 @@ Scalaには以下のような基本的なデータ型があります：
     |やうやう白くなりゆく
     |山ぎは少し明かりて""".stripMargin
   println(poem)
+}
 ```
 
 ### 文字列の操作
 
 ```scala
 // StringOperations.scala
-@main def stringOperations(): Unit =
+@main def stringOperations(): Unit = {
   val text = "Hello, Scala!"
   
   // 長さを取得
@@ -71,13 +72,14 @@ Scalaには以下のような基本的なデータ型があります：
   val spacedText = "  Scala  "
   println(s"元: '${spacedText}'")
   println(s"trim後: '${spacedText.trim}'")
+}
 ```
 
 ### 文字列の分割と結合
 
 ```scala
 // StringSplitJoin.scala
-@main def stringSplitJoin(): Unit =
+@main def stringSplitJoin(): Unit = {
   // 文字列の分割
   val csv = "りんご,みかん,ぶどう,もも"
   val fruits = csv.split(",")
@@ -96,6 +98,7 @@ Scalaには以下のような基本的なデータ型があります：
   
   val lineArray = lines.split("\n")
   println(s"行数: ${lineArray.length}")
+}
 ```
 
 ## 真偽値（Boolean）
@@ -104,7 +107,7 @@ Scalaには以下のような基本的なデータ型があります：
 
 ```scala
 // BooleanBasics.scala
-@main def booleanBasics(): Unit =
+@main def booleanBasics(): Unit = {
   val isStudent = true
   val isWorking = false
   
@@ -118,13 +121,14 @@ Scalaには以下のような基本的なデータ型があります：
   
   println(s"${age}歳は成人？: ${isAdult}")
   println(s"${age}歳はティーンエイジャー？: ${isTeenager}")
+}
 ```
 
 ### 論理演算
 
 ```scala
 // LogicalOperations.scala
-@main def logicalOperations(): Unit =
+@main def logicalOperations(): Unit = {
   val hasLicense = true
   val hasExperience = false
   val age = 25
@@ -144,6 +148,7 @@ Scalaには以下のような基本的なデータ型があります：
   // 複雑な条件
   val isEligible = (hasLicense || hasExperience) && age >= 20
   println(s"条件を満たす？: ${isEligible}")
+}
 ```
 
 ## 文字（Char）
@@ -152,7 +157,7 @@ Scalaには以下のような基本的なデータ型があります：
 
 ```scala
 // CharBasics.scala
-@main def charBasics(): Unit =
+@main def charBasics(): Unit = {
   val letter = 'A'
   val digit = '5'
   val symbol = '@'
@@ -169,13 +174,14 @@ Scalaには以下のような基本的なデータ型があります：
   
   println(s"Char型: ${charA.getClass.getSimpleName}")
   println(s"String型: ${stringA.getClass.getSimpleName}")
+}
 ```
 
 ### Charの操作
 
 ```scala
 // CharOperations.scala
-@main def charOperations(): Unit =
+@main def charOperations(): Unit = {
   val ch = 'A'
   
   // 文字コードの取得
@@ -198,6 +204,7 @@ Scalaには以下のような基本的なデータ型があります：
   // 連続する文字
   val nextChar = (ch.toInt + 1).toChar
   println(s"'${ch}'の次の文字: ${nextChar}")
+}
 ```
 
 ## Unit型
@@ -206,18 +213,20 @@ Scalaには以下のような基本的なデータ型があります：
 
 ```scala
 // UnitType.scala
-@main def unitType(): Unit =
+@main def unitType(): Unit = {
   // printlnはUnit型を返す
   val result = println("Hello")
   println(s"printlnの戻り値: ${result}")
   println(s"型: ${result.getClass.getSimpleName}")
   
   // Unit型を返す関数
-  def greet(name: String): Unit =
+  def greet(name: String): Unit = {
     println(s"こんにちは、${name}さん")
+  }
   
   val greetResult = greet("太郎")
   println(s"greet関数の戻り値: ${greetResult}")
+}
 ```
 
 ## 型変換
@@ -226,7 +235,7 @@ Scalaには以下のような基本的なデータ型があります：
 
 ```scala
 // TypeConversion.scala
-@main def typeConversion(): Unit =
+@main def typeConversion(): Unit = {
   // 数値型の変換
   val intNum: Int = 42
   val longNum: Long = intNum     // IntからLongは自動変換
@@ -248,13 +257,14 @@ Scalaには以下のような基本的なデータ型があります：
   
   val backToStr = num.toString
   println(s"数値${num} → 文字列\"${backToStr}\"")
+}
 ```
 
 ### 安全な型変換
 
 ```scala
 // SafeConversion.scala
-@main def safeConversion(): Unit =
+@main def safeConversion(): Unit = {
   // 変換可能な文字列
   val validStr = "456"
   val validNum = validStr.toInt
@@ -275,16 +285,18 @@ Scalaには以下のような基本的なデータ型があります：
   println(s"\"${str2}\".toIntOption: ${opt2}")
   
   // Optionの値を取り出す
-  opt1 match
+  opt1 match {
     case Some(n) => println(s"変換成功: ${n}")
     case None => println("変換失敗")
+  }
+}
 ```
 
 ## 特殊な文字（エスケープシーケンス）
 
 ```scala
 // EscapeSequences.scala
-@main def escapeSequences(): Unit =
+@main def escapeSequences(): Unit = {
   // 改行
   println("1行目\n2行目\n3行目")
   
@@ -302,13 +314,14 @@ Scalaには以下のような基本的なデータ型があります：
   
   // Unicodeエスケープ
   println("\u3042\u3044\u3046")  // あいう
+}
 ```
 
 ## 実践的な例：ユーザー登録フォーム
 
 ```scala
 // UserRegistration.scala
-@main def userRegistration(): Unit =
+@main def userRegistration(): Unit = {
   // ユーザー情報
   val firstName = "太郎"
   val lastName = "山田"
@@ -324,30 +337,32 @@ Scalaには以下のような基本的なデータ型があります：
   val isValidEmail = email.contains("@") && email.contains(".")
   
   // 年齢カテゴリの判定
-  val ageCategory = if age < 20 then "未成年" 
-                    else if age < 30 then "20代"
-                    else if age < 40 then "30代"
+  val ageCategory = if (age < 20) "未成年" 
+                    else if (age < 30) "20代"
+                    else if (age < 40) "30代"
                     else "40代以上"
   
   // 性別の表示
-  val genderStr = gender match
+  val genderStr = gender match {
     case 'M' => "男性"
     case 'F' => "女性"
     case 'O' => "その他"
     case _ => "不明"
+  }
   
   // 登録情報の表示
   println("=== ユーザー登録情報 ===")
   println(s"名前: ${fullName}")
   println(s"メール: ${email}")
-  println(s"メール検証: ${if isValidEmail then "有効" else "無効"}")
+  println(s"メール検証: ${if (isValidEmail) "有効" else "無効"}")
   println(s"年齢: ${age}歳（${ageCategory}）")
-  println(s"学生: ${if isStudent then "はい" else "いいえ"}")
+  println(s"学生: ${if (isStudent) "はい" else "いいえ"}")
   println(s"性別: ${genderStr}")
   
   // パスワード生成（簡易版）
   val password = s"${firstName.take(2)}${age}${email.take(3)}"
   println(s"仮パスワード: ${password}")
+}
 ```
 
 ## よくあるエラーと対処法
@@ -418,16 +433,19 @@ val num = "abc".toInt  // 実行時エラー！
 ### 問題5：エラーを修正
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val name = 'Scala'
   val age = "25"
   val isValid = "true"
   
-  if age >= 20 then
+  if (age >= 20) {
     println(name + "は成人です")
+  }
   
-  if isValid then
+  if (isValid) {
     println("有効です")
+  }
+}
 ```
 
 ## まとめ
@@ -435,27 +453,27 @@ val num = "abc".toInt  // 実行時エラー！
 この章では以下のことを学びました：
 
 1. **文字列（String）**
-   - 文字列の連結と文字列補間
-   - 様々な文字列操作メソッド
-   - 複数行文字列
+    - 文字列の連結と文字列補間
+    - 様々な文字列操作メソッド
+    - 複数行文字列
 
 2. **真偽値（Boolean）**
-   - true/falseの2つの値
-   - 論理演算（AND、OR、NOT）
-   - 比較演算の結果
+    - true/falseの2つの値
+    - 論理演算（AND、OR、NOT）
+    - 比較演算の結果
 
 3. **文字（Char）**
-   - 1文字を表す型
-   - シングルクォートで囲む
-   - 文字コードとの変換
+    - 1文字を表す型
+    - シングルクォートで囲む
+    - 文字コードとの変換
 
 4. **Unit型**
-   - 値を返さない処理の型
-   - 主に副作用のある処理で使用
+    - 値を返さない処理の型
+    - 主に副作用のある処理で使用
 
 5. **型変換**
-   - 自動変換と明示的変換
-   - toXxxメソッドによる変換
-   - 安全な変換方法
+    - 自動変換と明示的変換
+    - toXxxメソッドによる変換
+    - 安全な変換方法
 
 次の章では、Scalaの強力な型システムについて詳しく学んでいきます！

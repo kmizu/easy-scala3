@@ -12,16 +12,19 @@
 
 ```scala
 // BasicIf.scala
-@main def basicIf(): Unit =
+@main def basicIf(): Unit = {
   val age = 20
   
-  if age >= 18 then
+  if (age >= 18) {
     println("成人です！選挙権があります。")
+  }
   
   val temperature = 28
   
-  if temperature > 25 then
+  if (temperature > 25) {
     println("暑いですね。エアコンをつけましょう。")
+  }
+}
 ```
 
 「もし（if）〜なら（then）、これをする」という形です。日本語と同じですね！
@@ -30,50 +33,56 @@
 
 ```scala
 // IfElse.scala
-@main def ifElse(): Unit =
+@main def ifElse(): Unit = {
   val score = 75
   
-  if score >= 80 then
+  if (score >= 80) {
     println("合格です！おめでとう！")
-  else
+  } else {
     println("残念、不合格です。次回がんばりましょう。")
+  }
   
   // 天気で行動を決める
   val weather = "雨"
   
-  if weather == "晴れ" then
+  if (weather == "晴れ") {
     println("ピクニックに行きましょう！")
-  else
+  } else {
     println("家で映画でも見ましょう。")
+  }
+}
 ```
 
 ### if-else if-else：複数の条件
 
 ```scala
 // MultipleConditions.scala
-@main def multipleConditions(): Unit =
+@main def multipleConditions(): Unit = {
   val score = 85
   
-  if score >= 90 then
+  if (score >= 90) {
     println("優秀！Aランクです")
-  else if score >= 80 then
+  } else if (score >= 80) {
     println("良好！Bランクです")
-  else if score >= 70 then
+  } else if (score >= 70) {
     println("合格！Cランクです")
-  else
+  } else {
     println("もう少しがんばりましょう")
+  }
   
   // 時間帯であいさつを変える
   val hour = 14
   
-  if hour >= 5 && hour < 12 then
+  if (hour >= 5 && hour < 12) {
     println("おはようございます")
-  else if hour >= 12 && hour < 17 then
+  } else if (hour >= 12 && hour < 17) {
     println("こんにちは")
-  else if hour >= 17 && hour < 22 then
+  } else if (hour >= 17 && hour < 22) {
     println("こんばんは")
-  else
+  } else {
     println("おやすみなさい")
+  }
+}
 ```
 
 ## 条件の書き方
@@ -82,7 +91,7 @@
 
 ```scala
 // ComparisonOperators.scala
-@main def comparisonOperators(): Unit =
+@main def comparisonOperators(): Unit = {
   val x = 10
   val y = 20
   
@@ -98,39 +107,45 @@
   val name = "太郎"
   println(s"\n名前が太郎？: ${name == "太郎"}")
   println(s"名前が太郎じゃない？: ${name != "太郎"}")
+}
 ```
 
 ### 論理演算子：条件を組み合わせる
 
 ```scala
 // LogicalOperators.scala
-@main def logicalOperators(): Unit =
+@main def logicalOperators(): Unit = {
   val age = 25
   val hasLicense = true
   
   // && (かつ、AND)
-  if age >= 18 && hasLicense then
+  if (age >= 18 && hasLicense) {
     println("車を運転できます")
+  }
   
   // || (または、OR)
   val isWeekend = true
   val isHoliday = false
   
-  if isWeekend || isHoliday then
+  if (isWeekend || isHoliday) {
     println("今日は休みです！")
+  }
   
   // ! (否定、NOT)
   val isRaining = false
   
-  if !isRaining then
+  if (!isRaining) {
     println("雨は降っていません")
+  }
   
   // 複雑な条件
   val temperature = 22
   val humidity = 60
   
-  if temperature >= 20 && temperature <= 25 && humidity < 70 then
+  if (temperature >= 20 && temperature <= 25 && humidity < 70) {
     println("とても快適な天気です")
+  }
+}
 ```
 
 ## if式は値を返す
@@ -139,31 +154,33 @@
 
 ```scala
 // IfAsExpression.scala
-@main def ifAsExpression(): Unit =
+@main def ifAsExpression(): Unit = {
   val score = 85
   
   // ifの結果を変数に入れる
-  val result = if score >= 80 then "合格" else "不合格"
+  val result = if (score >= 80) "合格" else "不合格"
   println(s"判定: $result")
   
   // 計算にも使える
   val price = 1000
   val isMember = true
   
-  val finalPrice = if isMember then price * 0.9 else price
+  val finalPrice = if (isMember) price * 0.9 else price
   println(f"お支払い金額: ${finalPrice.toInt}円")
   
   // 複数行でも大丈夫
-  val message = if score >= 90 then
+  val message = if (score >= 90) {
     "素晴らしい！" +
     "次もこの調子で！"
-  else if score >= 80 then
+  } else if (score >= 80) {
     "よくできました！" +
     "もう少しで最高評価です。"
-  else
+  } else {
     "もっとがんばりましょう。"
+  }
   
   println(message)
+}
 ```
 
 ## 実践的な例
@@ -172,21 +189,23 @@
 
 ```scala
 // PriceCalculator.scala
-@main def priceCalculator(): Unit =
+@main def priceCalculator(): Unit = {
   // 映画館の料金計算
-  def calculateTicketPrice(age: Int, dayOfWeek: String): Int =
+  def calculateTicketPrice(age: Int, dayOfWeek: String): Int = {
     val basePrice = 1800
     
-    if age < 6 then
+    if (age < 6) {
       0  // 幼児無料
-    else if age <= 12 then
+    } else if (age <= 12) {
       1000  // 子供料金
-    else if age >= 60 then
+    } else if (age >= 60) {
       1200  // シニア料金
-    else if dayOfWeek == "水曜日" then
+    } else if (dayOfWeek == "水曜日") {
       1000  // レディースデー（誰でも）
-    else
+    } else {
       basePrice  // 通常料金
+    }
+  }
   
   // いろいろな条件で試してみる
   println("=== 映画館料金表 ===")
@@ -200,40 +219,46 @@
     age: Int, 
     isMember: Boolean, 
     hasСoupon: Boolean
-  ): Int =
+  ): Int = {
     var price = calculateTicketPrice(age, "月曜日")
     
     // 会員割引（10%オフ）
-    if isMember && price > 0 then
+    if (isMember && price > 0) {
       price = (price * 0.9).toInt
+    }
     
     // クーポン割引（200円引き）
-    if hasСoupon && price > 200 then
+    if (hasСoupon && price > 200) {
       price = price - 200
+    }
     
     price
+  }
   
   println("\n=== 割引適用例 ===")
   println(s"一般・会員・クーポンあり: ${calculateWithDiscounts(30, true, true)}円")
+}
 ```
 
 ### BMI計算と健康アドバイス
 
 ```scala
 // BMICalculator.scala
-@main def bmiCalculator(): Unit =
+@main def bmiCalculator(): Unit = {
   def calculateBMI(weight: Double, height: Double): Double =
     weight / (height * height)
   
-  def getHealthAdvice(bmi: Double): String =
-    if bmi < 18.5 then
+  def getHealthAdvice(bmi: Double): String = {
+    if (bmi < 18.5) {
       "低体重です。バランスの良い食事を心がけましょう。"
-    else if bmi < 25.0 then
+    } else if (bmi < 25.0) {
       "標準体重です。この調子を維持しましょう！"
-    else if bmi < 30.0 then
+    } else if (bmi < 30.0) {
       "肥満（1度）です。適度な運動を始めましょう。"
-    else
+    } else {
       "肥満（2度以上）です。医師に相談することをお勧めします。"
+    }
+  }
   
   // テストケース
   val people = List(
@@ -248,22 +273,25 @@
     println(s"  → ${getHealthAdvice(bmi)}")
     println()
   }
+}
 ```
 
 ### ゲーム：じゃんけん判定
 
 ```scala
 // RockPaperScissors.scala
-@main def rockPaperScissors(): Unit =
-  def judge(player1: String, player2: String): String =
-    if player1 == player2 then
+@main def rockPaperScissors(): Unit = {
+  def judge(player1: String, player2: String): String = {
+    if (player1 == player2) {
       "引き分け"
-    else if (player1 == "グー" && player2 == "チョキ") ||
-            (player1 == "チョキ" && player2 == "パー") ||
-            (player1 == "パー" && player2 == "グー") then
+    } else if ((player1 == "グー" && player2 == "チョキ") ||
+               (player1 == "チョキ" && player2 == "パー") ||
+               (player1 == "パー" && player2 == "グー")) {
       "プレイヤー1の勝ち！"
-    else
+    } else {
       "プレイヤー2の勝ち！"
+    }
+  }
   
   // 対戦
   println("=== じゃんけん大会 ===")
@@ -288,30 +316,36 @@
   println(s"\nあなた: $playerHand")
   println(s"コンピュータ: $computerHand")
   println(s"結果: ${judge(playerHand, computerHand)}")
+}
 ```
 
 ## ネストした条件分岐
 
 ```scala
 // NestedIf.scala
-@main def nestedIf(): Unit =
+@main def nestedIf(): Unit = {
   // 遊園地の乗り物制限
-  def canRide(age: Int, height: Int, withParent: Boolean): String =
-    if age < 6 then
-      if withParent then
+  def canRide(age: Int, height: Int, withParent: Boolean): String = {
+    if (age < 6) {
+      if (withParent) {
         "保護者同伴で乗れます"
-      else
+      } else {
         "保護者の同伴が必要です"
-    else if age < 12 then
-      if height >= 120 then
+      }
+    } else if (age < 12) {
+      if (height >= 120) {
         "乗れます！"
-      else
+      } else {
         "身長が120cm以上必要です"
-    else
-      if height >= 140 then
+      }
+    } else {
+      if (height >= 140) {
         "乗れます！"
-      else
+      } else {
         "身長が140cm以上必要です"
+      }
+    }
+  }
   
   // テスト
   println("=== ジェットコースター乗車判定 ===")
@@ -319,6 +353,7 @@
   println(s"5歳・110cm・親あり: ${canRide(5, 110, true)}")
   println(s"10歳・125cm・親なし: ${canRide(10, 125, false)}")
   println(s"15歳・135cm・親なし: ${canRide(15, 135, false)}")
+}
 ```
 
 ## よくある間違いと注意点
@@ -327,59 +362,68 @@
 
 ```scala
 // CommonMistakes1.scala
-@main def commonMistakes1(): Unit =
+@main def commonMistakes1(): Unit = {
   val x = 10
   
   // 間違い（これは代入になってしまう）
   // if x = 10 then  // エラー！
   
   // 正しい（比較）
-  if x == 10 then
+  if (x == 10) {
     println("xは10です")
+  }
   
   // 否定の場合
-  if x != 5 then
+  if (x != 5) {
     println("xは5ではありません")
+  }
+}
 ```
 
 ### 間違い2：条件の範囲
 
 ```scala
 // CommonMistakes2.scala
-@main def commonMistakes2(): Unit =
+@main def commonMistakes2(): Unit = {
   val score = 75
   
   // 間違い：条件が重複している
-  if score >= 70 then
+  if (score >= 70) {
     println("C")
-  else if score >= 80 then  // この条件には到達しない！
+  } else if (score >= 80) {  // この条件には到達しない！
     println("B")
+  }
   
   // 正しい：大きい値から順に
-  if score >= 80 then
+  if (score >= 80) {
     println("B")
-  else if score >= 70 then
+  } else if (score >= 70) {
     println("C")
+  }
+}
 ```
 
 ### 間違い3：型の不一致
 
 ```scala
 // CommonMistakes3.scala
-@main def commonMistakes3(): Unit =
+@main def commonMistakes3(): Unit = {
   val age = "20"  // 文字列
   
   // 間違い：文字列と数値を比較
   // if age > 18 then  // エラー！
   
   // 正しい：数値に変換してから比較
-  if age.toInt > 18 then
+  if (age.toInt > 18) {
     println("成人です")
+  }
   
   // または最初から数値で扱う
   val ageNum = 20
-  if ageNum > 18 then
+  if (ageNum > 18) {
     println("成人です")
+  }
+}
 ```
 
 ## 練習してみよう！
@@ -435,19 +479,19 @@
 ### 条件分岐を使うコツ
 
 1. **シンプルに始める**
-   - まず単純な条件から
-   - 必要に応じて複雑化
-   - 読みやすさを重視
+    - まず単純な条件から
+    - 必要に応じて複雑化
+    - 読みやすさを重視
 
 2. **条件の順序**
-   - 特殊なケースを先に
-   - 範囲は大きい方から
-   - デフォルトは最後に
+    - 特殊なケースを先に
+    - 範囲は大きい方から
+    - デフォルトは最後に
 
 3. **適切な粒度**
-   - 条件が多すぎたら整理
-   - 関数に分割
-   - パターンマッチング（次章）の検討
+    - 条件が多すぎたら整理
+    - 関数に分割
+    - パターンマッチング（次章）の検討
 
 ### 次の章では...
 

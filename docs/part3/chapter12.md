@@ -12,7 +12,7 @@
 
 ```scala
 // MapLikeDictionary.scala
-@main def mapLikeDictionary(): Unit =
+@main def mapLikeDictionary(): Unit = {
   // 電話帳のようなマップ
   val phoneBook = Map(
     "田中太郎" -> "090-1234-5678",
@@ -31,6 +31,7 @@
   )
   
   println(s"appleの意味: ${dictionary("apple")}")
+}
 ```
 
 マップは「何か」と「何か」を結びつける、便利な道具です！
@@ -39,7 +40,7 @@
 
 ```scala
 // PracticalMaps.scala
-@main def practicalMaps(): Unit =
+@main def practicalMaps(): Unit = {
   // 商品と価格
   val prices = Map(
     "コーヒー" -> 300,
@@ -65,6 +66,7 @@
   grades.foreach { case (id, score) =>
     println(s"学籍番号$id: $score点")
   }
+}
 ```
 
 ## マップの作り方
@@ -73,7 +75,7 @@
 
 ```scala
 // CreatingMaps.scala
-@main def creatingMaps(): Unit =
+@main def creatingMaps(): Unit = {
   // 方法1：矢印記法（おすすめ！）
   val fruits = Map(
     "apple" -> "りんご",
@@ -96,13 +98,14 @@
   println(s"果物: $fruits")
   println(s"数字: $numbers")
   println(s"追加後: $withTwo")
+}
 ```
 
 ### 型を明示する
 
 ```scala
 // TypedMaps.scala
-@main def typedMaps(): Unit =
+@main def typedMaps(): Unit = {
   // 型を明示的に指定
   val ages: Map[String, Int] = Map(
     "太郎" -> 20,
@@ -127,6 +130,7 @@
   studentInfo.foreach { case (id, (age, dept)) =>
     println(s"$id: ${age}歳, $dept")
   }
+}
 ```
 
 ## 値を取り出す
@@ -135,7 +139,7 @@
 
 ```scala
 // GettingValues.scala
-@main def gettingValues(): Unit =
+@main def gettingValues(): Unit = {
   val inventory = Map(
     "ペン" -> 50,
     "ノート" -> 30,
@@ -150,20 +154,23 @@
   // val rulerCount = inventory("定規")  // エラー！
   
   // 安全に取り出す（getメソッド）
-  inventory.get("ノート") match
+  inventory.get("ノート") match {
     case Some(count) => println(s"ノートの在庫: ${count}個")
     case None => println("ノートは在庫にありません")
+  }
   
-  inventory.get("定規") match
+  inventory.get("定規") match {
     case Some(count) => println(s"定規の在庫: ${count}個")
     case None => println("定規は在庫にありません")
+  }
+}
 ```
 
 ### 便利な取り出し方
 
 ```scala
 // ConvenientGetters.scala
-@main def convenientGetters(): Unit =
+@main def convenientGetters(): Unit = {
   val settings = Map(
     "fontSize" -> 14,
     "theme" -> "dark",
@@ -178,15 +185,17 @@
   println(s"行の高さ: $lineHeight（デフォルト値）")
   
   // キーの存在確認
-  if settings.contains("theme") then
+  if (settings.contains("theme")) {
     println(s"テーマ設定: ${settings("theme")}")
-  else
+  } else {
     println("テーマは未設定です")
+  }
   
   // すべてのキーと値を取得
   println("\n=== すべての設定 ===")
   println(s"キー一覧: ${settings.keys}")
   println(s"値一覧: ${settings.values}")
+}
 ```
 
 ## マップの更新
@@ -195,7 +204,7 @@
 
 ```scala
 // UpdatingMaps.scala
-@main def updatingMaps(): Unit =
+@main def updatingMaps(): Unit = {
   val originalPrices = Map(
     "コーヒー" -> 300,
     "紅茶" -> 250
@@ -221,13 +230,14 @@
   println(s"フルメニュー: $fullMenu")
   println(s"値上げ後: $newPrices")
   println(s"紅茶なし: $withoutTea")
+}
 ```
 
 ### ミュータブルマップ
 
 ```scala
 // MutableMaps.scala
-@main def mutableMaps(): Unit =
+@main def mutableMaps(): Unit = {
   import scala.collection.mutable
   
   // ミュータブルマップの作成
@@ -249,6 +259,7 @@
   // 一括更新
   scores ++= Map("桜" -> 88, "健太" -> 92)
   println(s"複数追加: $scores")
+}
 ```
 
 ## 実践的な使い方
@@ -257,7 +268,7 @@
 
 ```scala
 // InventorySystem.scala
-@main def inventorySystem(): Unit =
+@main def inventorySystem(): Unit = {
   // 商品の在庫管理
   var inventory = Map(
     "ペン" -> 100,
@@ -267,16 +278,17 @@
   )
   
   // 在庫を表示
-  def showInventory(): Unit =
+  def showInventory(): Unit = {
     println("=== 現在の在庫 ===")
     inventory.foreach { case (item, count) =>
-      val status = if count < 50 then "⚠️ 在庫少" else "✓"
+      val status = if (count < 50) "⚠️ 在庫少" else "✓"
       println(f"$item%-10s: $count%3d個 $status")
     }
+  }
   
   // 商品を販売
   def sell(item: String, quantity: Int): Unit =
-    inventory.get(item) match
+    inventory.get(item) match {
       case Some(current) if current >= quantity =>
         inventory = inventory + (item -> (current - quantity))
         println(s"✓ $item を${quantity}個販売しました")
@@ -284,12 +296,14 @@
         println(s"❌ 在庫不足！${item}は${current}個しかありません")
       case None =>
         println(s"❌ ${item}は取り扱っていません")
+    }
   
   // 在庫を補充
-  def restock(item: String, quantity: Int): Unit =
+  def restock(item: String, quantity: Int): Unit = {
     val current = inventory.getOrElse(item, 0)
     inventory = inventory + (item -> (current + quantity))
     println(s"✓ $item を${quantity}個補充しました")
+  }
   
   // 使ってみる
   showInventory()
@@ -305,13 +319,14 @@
   
   println()
   showInventory()
+}
 ```
 
 ### 成績管理と分析
 
 ```scala
 // GradeAnalysis.scala
-@main def gradeAnalysis(): Unit =
+@main def gradeAnalysis(): Unit = {
   // 学生の成績（学籍番号 -> (名前, 点数のマップ)）
   val students = Map(
     "S001" -> ("田中太郎", Map("数学" -> 85, "英語" -> 78, "理科" -> 92)),
@@ -321,7 +336,7 @@
   
   // 個人成績表
   def showStudentGrades(id: String): Unit =
-    students.get(id) match
+    students.get(id) match {
       case Some((name, grades)) =>
         println(s"=== $name さんの成績 ===")
         var total = 0
@@ -334,15 +349,16 @@
         
       case None =>
         println(s"学籍番号 $id の学生は見つかりません")
+    }
   
   // 科目別統計
-  def subjectStats(subject: String): Unit =
+  def subjectStats(subject: String): Unit = {
     println(s"\n=== $subject の統計 ===")
     val scores = students.values.flatMap { case (_, grades) =>
       grades.get(subject)
     }.toList
     
-    if scores.nonEmpty then
+    if (scores.nonEmpty) {
       val average = scores.sum.toDouble / scores.length
       val max = scores.max
       val min = scores.min
@@ -350,6 +366,8 @@
       println(f"平均点: $average%.1f")
       println(s"最高点: $max")
       println(s"最低点: $min")
+    }
+  }
   
   // 使ってみる
   showStudentGrades("S001")
@@ -357,13 +375,14 @@
   
   subjectStats("数学")
   subjectStats("英語")
+}
 ```
 
 ### 単語カウンター
 
 ```scala
 // WordCounter.scala
-@main def wordCounter(): Unit =
+@main def wordCounter(): Unit = {
   val text = """
     Scalaは楽しい言語です。
     Scalaで関数型プログラミングを学びましょう。
@@ -387,6 +406,7 @@
     .foreach { case (word, count) =>
       println(s"$word: $count回")
     }
+}
 ```
 
 ## マップの便利な操作
@@ -395,7 +415,7 @@
 
 ```scala
 // MapOperations.scala
-@main def mapOperations(): Unit =
+@main def mapOperations(): Unit = {
   val products = Map(
     "ペン" -> 100,
     "ノート" -> 200,
@@ -419,13 +439,14 @@
     (name.toUpperCase, price)
   }
   println(s"大文字: $upperCase")
+}
 ```
 
 ### マップの結合
 
 ```scala
 // MergingMaps.scala
-@main def mergingMaps(): Unit =
+@main def mergingMaps(): Unit = {
   val shop1 = Map("りんご" -> 100, "バナナ" -> 80)
   val shop2 = Map("バナナ" -> 90, "オレンジ" -> 120)
   
@@ -444,6 +465,7 @@
   }.toMap
   
   println(s"最安値: $bestPrices")
+}
 ```
 
 ## よくある間違いと対処法
@@ -452,33 +474,36 @@
 
 ```scala
 // MapMistakes1.scala
-@main def mapMistakes1(): Unit =
+@main def mapMistakes1(): Unit = {
   val ages = Map("太郎" -> 20, "花子" -> 22)
   
   // 間違い：存在しないキーに直接アクセス
   // val jiroAge = ages("次郎")  // エラー！
   
   // 正しい方法1：getを使う
-  ages.get("次郎") match
+  ages.get("次郎") match {
     case Some(age) => println(s"次郎は${age}歳")
     case None => println("次郎のデータはありません")
+  }
   
   // 正しい方法2：getOrElseを使う
   val jiroAge = ages.getOrElse("次郎", 0)
   println(s"次郎の年齢: $jiroAge（デフォルト値）")
   
   // 正しい方法3：事前にチェック
-  if ages.contains("次郎") then
+  if (ages.contains("次郎")) {
     println(s"次郎は${ages("次郎")}歳")
-  else
+  } else {
     println("次郎のデータはありません")
+  }
+}
 ```
 
 ### 間違い2：型の不一致
 
 ```scala
 // MapMistakes2.scala
-@main def mapMistakes2(): Unit =
+@main def mapMistakes2(): Unit = {
   // 型が明確なマップ
   val prices: Map[String, Int] = Map(
     "コーヒー" -> 300,
@@ -491,6 +516,7 @@
   // 正しい：同じ型で追加
   val correct = prices + ("ケーキ" -> 400)
   println(correct)
+}
 ```
 
 ## 練習してみよう！
@@ -500,7 +526,7 @@
 カフェのメニューと注文リストから、合計金額を計算してください。
 
 ```scala
-@main def practice1(): Unit =
+@main def practice1(): Unit = {
   val menu = Map(
     "コーヒー" -> 300,
     "紅茶" -> 250,
@@ -513,6 +539,7 @@
   )
   
   // ここに合計金額を計算するコードを書いてください
+}
 ```
 
 ### 練習2：投票集計
@@ -520,7 +547,7 @@
 投票結果のリストから、各候補者の得票数を集計してください。
 
 ```scala
-@main def practice2(): Unit =
+@main def practice2(): Unit = {
   val votes = List(
     "山田", "田中", "山田", "佐藤", 
     "田中", "山田", "田中", "田中"
@@ -528,6 +555,7 @@
   
   // ここに集計コードを書いてください
   // 期待する結果: Map("山田" -> 3, "田中" -> 4, "佐藤" -> 1)
+}
 ```
 
 ### 練習3：在庫チェック
@@ -535,7 +563,7 @@
 注文リストに対して、在庫が足りるかチェックしてください。
 
 ```scala
-@main def practice3(): Unit =
+@main def practice3(): Unit = {
   val inventory = Map(
     "ペン" -> 50,
     "ノート" -> 30,
@@ -581,19 +609,19 @@
 ### マップを使うべき場面
 
 1. **検索が必要なとき**
-   - 名前から電話番号を調べる
-   - 商品名から価格を調べる
-   - IDからデータを取得する
+    - 名前から電話番号を調べる
+    - 商品名から価格を調べる
+    - IDからデータを取得する
 
 2. **関連付けが必要なとき**
-   - 単語と意味
-   - 人と属性
-   - キーと設定値
+    - 単語と意味
+    - 人と属性
+    - キーと設定値
 
 3. **集計や分析**
-   - 出現回数のカウント
-   - グループごとの集計
-   - データの分類
+    - 出現回数のカウント
+    - グループごとの集計
+    - データの分類
 
 ### 次の章では...
 

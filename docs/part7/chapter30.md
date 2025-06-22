@@ -12,13 +12,14 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForExpressionBasics.scala
-@main def forExpressionBasics(): Unit =
+@main def forExpressionBasics(): Unit = {
   // 基本的なfor式
   val numbers = List(1, 2, 3, 4, 5)
   
   println("=== 基本的なfor式 ===")
-  for n <- numbers do
+  for (n <- numbers) {
     println(s"数値: $n")
+  }
   
   // これは実際には以下と同じ
   println("\n=== mapを使った同等の処理 ===")
@@ -33,10 +34,10 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   println(s"mapの結果: $doubled2")
   
   // 複数のジェネレータ
-  val pairs = for
+  val pairs = for {
     x <- List(1, 2, 3)
     y <- List('a', 'b')
-  yield (x, y)
+  } yield (x, y)
   
   println(s"\nペア: $pairs")
   
@@ -51,14 +52,14 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForWithFilters.scala
-@main def forWithFilters(): Unit =
+@main def forWithFilters(): Unit = {
   // フィルタ（if条件）付きfor式
   val numbers = 1 to 10
   
-  val evens = for
+  val evens = for {
     n <- numbers
     if n % 2 == 0
-  yield n
+  } yield n
   
   println(s"偶数: $evens")
   
@@ -70,12 +71,12 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   println(s"filter/mapの結果: $evens2")
   
   // 複数の条件
-  val result = for
+  val result = for {
     x <- 1 to 5
     y <- 1 to 5
     if x < y
     if x + y > 5
-  yield (x, y)
+  } yield (x, y)
   
   println(s"\n条件を満たすペア: $result")
   
@@ -96,7 +97,7 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForTransformation.scala
-@main def forTransformation(): Unit =
+@main def forTransformation(): Unit = {
   // 1. 単一ジェネレータ + yield
   // for x <- expr yield f(x)
   // => expr.map(x => f(x))
@@ -110,7 +111,9 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   // => expr.foreach(x => action(x))
   
   var sum1 = 0
-  for x <- List(1, 2, 3) do sum1 += x
+  for (x <- List(1, 2, 3)) {
+    sum1 += x
+  }
   
   var sum2 = 0
   List(1, 2, 3).foreach(x => sum2 += x)
@@ -120,10 +123,10 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   // for x <- expr1; y <- expr2 yield f(x, y)
   // => expr1.flatMap(x => expr2.map(y => f(x, y)))
   
-  val pairs1 = for
+  val pairs1 = for {
     x <- List(1, 2)
     y <- List('a', 'b')
-  yield s"$x$y"
+  } yield s"$x$y"
   
   val pairs2 = List(1, 2).flatMap(x =>
     List('a', 'b').map(y => s"$x$y")
@@ -134,10 +137,10 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   // for x <- expr if p(x) yield f(x)
   // => expr.filter(p).map(f)
   
-  val filtered1 = for
+  val filtered1 = for {
     x <- 1 to 10
     if x % 3 == 0
-  yield x * 2
+  } yield x * 2
   
   val filtered2 = (1 to 10)
     .filter(x => x % 3 == 0)
@@ -150,7 +153,7 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForPatternMatching.scala
-@main def forPatternMatching(): Unit =
+@main def forPatternMatching(): Unit = {
   val pairs = List((1, "one"), (2, "two"), (3, "three"))
   
   // パターンマッチを使ったfor式
@@ -184,9 +187,9 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
     ("C", Some(3))
   )
   
-  val extracted = for
+  val extracted = for {
     (label, Some(value)) <- nested
-  yield s"$label=$value"
+  } yield s"$label=$value"
   
   println(s"\nネストパターン: $extracted")
 ```
@@ -197,21 +200,24 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForWithOption.scala
-@main def forWithOption(): Unit =
+@main def forWithOption(): Unit = {
   // Optionを使った安全な計算
   def parseInt(s: String): Option[Int] =
-    try Some(s.toInt)
-    catch case _: NumberFormatException => None
+    try {
+      Some(s.toInt)
+    } catch {
+      case _: NumberFormatException => None
+    }
   
   def divide(a: Int, b: Int): Option[Double] =
-    if b != 0 then Some(a.toDouble / b) else None
+    if (b != 0) Some(a.toDouble / b) else None
   
   // for式で連鎖
-  val result1 = for
+  val result1 = for {
     a <- parseInt("10")
     b <- parseInt("2")
     c <- divide(a, b)
-  yield c
+  } yield c
   
   println(s"成功ケース: $result1")
   
@@ -225,11 +231,11 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   println(s"展開後: $result2")
   
   // エラーケース
-  val error1 = for
+  val error1 = for {
     a <- parseInt("10")
     b <- parseInt("0")
     c <- divide(a, b)  // ここで失敗
-  yield c
+  } yield c
   
   println(s"\nエラーケース: $error1")
   
@@ -238,19 +244,19 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
   case class Account(userId: Int, balance: Double)
   
   def findUser(id: Int): Option[User] =
-    if id > 0 then Some(User(id, s"User$id")) else None
+    if (id > 0) Some(User(id, s"User$id")) else None
   
   def findAccount(userId: Int): Option[Account] =
-    if userId > 0 then Some(Account(userId, 1000.0 * userId)) else None
+    if (userId > 0) Some(Account(userId, 1000.0 * userId)) else None
   
   def checkBalance(account: Account, amount: Double): Option[Boolean] =
     Some(account.balance >= amount)
   
-  val transaction = for
+  val transaction = for {
     user <- findUser(123)
     account <- findAccount(user.id)
     canWithdraw <- checkBalance(account, 500)
-  yield (user.name, account.balance, canWithdraw)
+  } yield (user.name, account.balance, canWithdraw)
   
   println(s"\nトランザクション: $transaction")
 ```
@@ -259,39 +265,42 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // ForWithEither.scala
-@main def forWithEither(): Unit =
+@main def forWithEither(): Unit = {
   // エラーハンドリング付き計算
   type Result[A] = Either[String, A]
   
   def parseIntE(s: String): Result[Int] =
-    try Right(s.toInt)
-    catch case _: NumberFormatException => Left(s"'$s'は数値ではありません")
+    try {
+      Right(s.toInt)
+    } catch {
+      case _: NumberFormatException => Left(s"'$s'は数値ではありません")
+    }
   
   def divideE(a: Int, b: Int): Result[Double] =
-    if b != 0 then Right(a.toDouble / b)
+    if (b != 0) Right(a.toDouble / b)
     else Left("ゼロ除算エラー")
   
   def sqrtE(x: Double): Result[Double] =
-    if x >= 0 then Right(math.sqrt(x))
+    if (x >= 0) Right(math.sqrt(x))
     else Left(s"負の数の平方根: $x")
   
   // 成功ケース
-  val success = for
+  val success = for {
     a <- parseIntE("100")
     b <- parseIntE("4")
     divided <- divideE(a, b)
     result <- sqrtE(divided)
-  yield result
+  } yield result
   
   println(s"成功: $success")
   
   // エラーケース（最初のエラーで停止）
-  val error = for
+  val error = for {
     a <- parseIntE("abc")  // ここでエラー
     b <- parseIntE("4")
     divided <- divideE(a, b)
     result <- sqrtE(divided)
-  yield result
+  } yield result
   
   println(s"エラー: $error")
   
@@ -315,7 +324,7 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
 
 ```scala
 // CustomForComprehension.scala
-@main def customForComprehension(): Unit =
+@main def customForComprehension(): Unit = {
   // 独自のMaybe型
   sealed trait Maybe[+A]:
     def map[B](f: A => B): Maybe[B]
@@ -326,7 +335,7 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
     def map[B](f: A => B): Maybe[B] = Just(f(value))
     def flatMap[B](f: A => Maybe[B]): Maybe[B] = f(value)
     def filter(p: A => Boolean): Maybe[A] = 
-      if p(value) then this else Empty
+      if (p(value)) this else Empty
   
   case object Empty extends Maybe[Nothing]:
     def map[B](f: Nothing => B): Maybe[B] = Empty
@@ -334,11 +343,11 @@ Scalaのfor式も同じです。一見シンプルな構文の裏側で、複雑
     def filter(p: Nothing => Boolean): Maybe[Nothing] = Empty
   
   // for式が使える！
-  val result = for
+  val result = for {
     x <- Just(10)
     y <- Just(20)
     if x < y
-  yield x + y
+  } yield x + y
   
   println(s"Maybe型でのfor式: $result")
   
@@ -573,19 +582,19 @@ for式の内部動作を深く理解できました！
 ### for式を使いこなすコツ
 
 1. **内部動作を理解する**
-   - map、flatMap への変換
-   - どこで失敗するか
-   - パフォーマンスへの影響
+    - map、flatMap への変換
+    - どこで失敗するか
+    - パフォーマンスへの影響
 
 2. **適切な型を選ぶ**
-   - Option：値の有無
-   - Either：エラー情報
-   - Future：非同期処理
+    - Option：値の有無
+    - Either：エラー情報
+    - Future：非同期処理
 
 3. **読みやすさを重視**
-   - ネストを避ける
-   - 意味のある変数名
-   - 適度な分割
+    - ネストを避ける
+    - 意味のある変数名
+    - 適度な分割
 
 ### 次の部では...
 

@@ -12,7 +12,7 @@
 
 ```scala
 // MutableVsImmutable.scala
-@main def mutableVsImmutable(): Unit =
+@main def mutableVsImmutable(): Unit = {
   import scala.collection.mutable
   
   // ミュータブル（変更可能）- 危険な例
@@ -53,6 +53,7 @@
   println(s"\n元の口座: $account1")
   println(s"入金後の口座: $account2")
   // 元の口座は変わっていない！
+}
 ```
 
 ## イミュータブルデータの利点
@@ -61,7 +62,7 @@
 
 ```scala
 // ThreadSafety.scala
-@main def threadSafety(): Unit =
+@main def threadSafety(): Unit = {
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -103,13 +104,14 @@
   
   val processResults = Await.result(Future.sequence(processingFutures), 5.seconds)
   processResults.foreach(println)
+}
 ```
 
 ### 履歴の管理
 
 ```scala
 // HistoryManagement.scala
-@main def historyManagement(): Unit =
+@main def historyManagement(): Unit = {
   // ドキュメントエディタの例
   case class Document(
     content: String,
@@ -132,13 +134,17 @@
       
       DocumentHistory(newDoc, newHistory, maxHistory)
     
-    def undo: Option[DocumentHistory] = history match
+    def undo: Option[DocumentHistory] = history match {
       case Nil => None
       case prev :: rest => Some(DocumentHistory(prev, rest, maxHistory))
+    }
     
     def getVersion(version: Int): Option[Document] =
-      if current.version == version then Some(current)
-      else history.find(_.version == version)
+      if (current.version == version) {
+        Some(current)
+      } else {
+        history.find(_.version == version)
+      }
   
   // 使用例
   var docHistory = DocumentHistory(Document("初期内容"))
@@ -158,18 +164,21 @@
   
   // アンドゥ
   println("\n=== アンドゥ ===")
-  docHistory.undo match
+  docHistory.undo match {
     case Some(previous) =>
       docHistory = previous
       println(s"v${docHistory.current.version}に戻しました: ${docHistory.current.content}")
     case None =>
       println("これ以上戻れません")
+  }
   
   // 特定バージョンの取得
   println("\n=== バージョン取得 ===")
-  docHistory.getVersion(2) match
+  docHistory.getVersion(2) match {
     case Some(doc) => println(s"v2の内容: ${doc.content}")
     case None => println("v2は見つかりません")
+  }
+}
 ```
 
 ## イミュータブルなデータ構造の設計
@@ -178,7 +187,7 @@
 
 ```scala
 // ImmutableShoppingCart.scala
-@main def immutableShoppingCart(): Unit =
+@main def immutableShoppingCart(): Unit = {
   // 商品
   case class Product(
     id: String,
@@ -200,7 +209,7 @@
     appliedCoupon: Option[String] = None
   ):
     def addItem(product: Product, quantity: Int = 1): ShoppingCart =
-      val newItems = items.get(product.id) match
+      val newItems = items.get(product.id) match {
         case Some(existing) =>
           items.updated(
             product.id,
@@ -208,6 +217,7 @@
           )
         case None =>
           items.updated(product.id, CartItem(product, quantity))
+      }
       
       copy(items = newItems)
     
@@ -215,14 +225,16 @@
       copy(items = items.removed(productId))
     
     def updateQuantity(productId: String, quantity: Int): ShoppingCart =
-      if quantity <= 0 then
+      if (quantity <= 0) {
         removeItem(productId)
-      else
-        items.get(productId) match
+      } else {
+        items.get(productId) match {
           case Some(item) =>
             copy(items = items.updated(productId, item.updateQuantity(quantity)))
           case None =>
             this  // 変更なし
+        }
+      }
     
     def applyCoupon(code: String): ShoppingCart =
       copy(appliedCoupon = Some(code))
@@ -232,29 +244,32 @@
     
     def subtotal: BigDecimal = items.values.map(_.subtotal).sum
     
-    def discount: BigDecimal = appliedCoupon match
+    def discount: BigDecimal = appliedCoupon match {
       case Some("SAVE10") => subtotal * 0.1
       case Some("SAVE20") => subtotal * 0.2
       case _ => 0
+    }
     
     def total: BigDecimal = subtotal - discount
     
     def summary: String =
-      if items.isEmpty then
+      if (items.isEmpty) {
         "カートは空です"
-      else
+      } else {
         val itemLines = items.values.map { item =>
           f"${item.product.name}%-20s × ${item.quantity}%2d = ¥${item.subtotal}%,.0f"
         }.mkString("\n")
         
-        val couponLine = appliedCoupon match
+        val couponLine = appliedCoupon match {
           case Some(code) => f"\nクーポン ($code): -¥${discount}%,.0f"
           case None => ""
+        }
         
         s"""$itemLines
            |${"=" * 50}
            |小計: ¥${subtotal}%,.0f$couponLine
            |合計: ¥${total}%,.0f""".stripMargin
+      }
   
   // 商品カタログ
   val products = Map(
@@ -287,13 +302,14 @@
   
   println("\n=== メソッドチェーンの結果 ===")
   println(finalCart.summary)
+}
 ```
 
 ### イベントソーシングパターン
 
 ```scala
 // EventSourcing.scala
-@main def eventSourcing(): Unit =
+@main def eventSourcing(): Unit = {
   import java.time.LocalDateTime
   
   // イベントの定義
@@ -328,27 +344,30 @@
     events: List[AccountEvent]
   ):
     def applyEvent(event: AccountEvent): AccountState =
-      val newBalance = event match
+      val newBalance = event match {
         case AccountOpened(amount, _) => amount
         case MoneyDeposited(amount, _) => balance + amount
         case MoneyWithdrawn(amount, _) => balance - amount
         case InterestCredited(amount, _) => balance + amount
+      }
       
       AccountState(newBalance, events :+ event)
     
     def deposit(amount: BigDecimal): AccountState =
-      if amount > 0 then
+      if (amount > 0) {
         applyEvent(MoneyDeposited(amount))
-      else
+      } else {
         this
+      }
     
     def withdraw(amount: BigDecimal): Either[String, AccountState] =
-      if amount > balance then
+      if (amount > balance) {
         Left(s"残高不足: 残高${balance}円に対して${amount}円の出金")
-      else if amount <= 0 then
+      } else if (amount <= 0) {
         Left("出金額は正の数である必要があります")
-      else
+      } else {
         Right(applyEvent(MoneyWithdrawn(amount)))
+      }
     
     def creditInterest(rate: BigDecimal): AccountState =
       val interest = balance * rate
@@ -387,13 +406,14 @@
   
   val rebuiltAccount = rebuildState(account4.events)
   println(s"\n再構築後の残高: ¥${rebuiltAccount.balance}")
+}
 ```
 
 ## レンズパターン（ネストした更新）
 
 ```scala
 // LensPattern.scala
-@main def lensPattern(): Unit =
+@main def lensPattern(): Unit = {
   // ネストしたデータ構造
   case class Address(
     street: String,
@@ -482,13 +502,14 @@
   
   val promoted = salaryLens.modify(_ * 1.1)(employee)
   println(s"\n昇給後の給与: ${promoted.salary}")
+}
 ```
 
 ## パフォーマンスの考慮
 
 ```scala
 // PerformanceConsiderations.scala
-@main def performanceConsiderations(): Unit =
+@main def performanceConsiderations(): Unit = {
   import scala.collection.immutable.Vector
   
   // 構造共有（Structural Sharing）の例
@@ -527,7 +548,7 @@
     )
     
     def average: Option[Double] =
-      if count > 0 then Some(sum / count) else None
+      if (count > 0) Some(sum / count) else None
   
   // 大量のデータを効率的に処理
   val numbers = (1 to 10000).map(_.toDouble).toList
@@ -540,6 +561,7 @@
   println(f"平均: ${stats.average.getOrElse(0.0)}%,.1f")
   println(f"最小: ${stats.min}%,.0f")
   println(f"最大: ${stats.max}%,.0f")
+}
 ```
 
 ## 練習してみよう！
@@ -594,19 +616,19 @@
 ### イミュータブル設計のコツ
 
 1. **常に新しく作る**
-   - 変更ではなく作成
-   - copyメソッドの活用
-   - メソッドチェーン
+    - 変更ではなく作成
+    - copyメソッドの活用
+    - メソッドチェーン
 
 2. **履歴を活かす**
-   - 過去の状態を保持
-   - アンドゥ/リドゥ
-   - 監査ログ
+    - 過去の状態を保持
+    - アンドゥ/リドゥ
+    - 監査ログ
 
 3. **適切なデータ構造**
-   - 用途に応じた選択
-   - 構造共有の活用
-   - パフォーマンスの考慮
+    - 用途に応じた選択
+    - 構造共有の活用
+    - パフォーマンスの考慮
 
 ### 次の部では...
 

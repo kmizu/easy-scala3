@@ -12,7 +12,7 @@
 
 ```scala
 // SealedTraitBasics.scala
-@main def sealedTraitBasics(): Unit =
+@main def sealedTraitBasics(): Unit = {
   // 信号機の色（これだけ！）
   sealed trait TrafficLight
   case object Red extends TrafficLight
@@ -20,29 +20,32 @@
   case object Green extends TrafficLight
   
   // 信号の意味を返す関数
-  def meaning(light: TrafficLight): String = light match
+  def meaning(light: TrafficLight): String = light match {
     case Red => "止まれ"
     case Yellow => "注意"
     case Green => "進め"
     // すべてのケースを網羅しているので、デフォルトケースは不要！
+  }
   
   val currentLight: TrafficLight = Red
   println(s"${currentLight}: ${meaning(currentLight)}")
   
   // もし1つでもケースを忘れると...
-  def nextLight(light: TrafficLight): TrafficLight = light match
+  def nextLight(light: TrafficLight): TrafficLight = light match {
     case Red => Green
     case Green => Yellow
     // case Yellow => Red  // コメントアウトすると警告！
+  }
   
   // コンパイラが「Yellowのケースがないよ」と教えてくれる
+}
 ```
 
 ### sealed vs 通常のtrait
 
 ```scala
 // SealedVsNormal.scala
-@main def sealedVsNormal(): Unit =
+@main def sealedVsNormal(): Unit = {
   // 通常のtrait（どこでも継承できる）
   trait Animal
   case class Dog(name: String) extends Animal
@@ -56,24 +59,26 @@
   case object Cash extends PaymentMethod
   // これ以外の支払い方法は存在しない！
   
-  def processPayment(method: PaymentMethod): String = method match
+  def processPayment(method: PaymentMethod): String = method match {
     case CreditCard(number, _) => s"カード決済: ****${number.takeRight(4)}"
     case BankTransfer(account) => s"銀行振込: $account"
     case Cash => "現金決済"
     // すべてのケースを網羅！
+  }
   
   val payment1 = CreditCard("1234567890123456", "123")
   val payment2 = Cash
   
   println(processPayment(payment1))
   println(processPayment(payment2))
+}
 ```
 
 ## 実践的な例：注文管理システム
 
 ```scala
 // OrderManagementSystem.scala
-@main def orderManagementSystem(): Unit =
+@main def orderManagementSystem(): Unit = {
   import java.time.LocalDateTime
   
   // 注文の状態（すべての可能な状態）
@@ -104,7 +109,7 @@
   
   // 状態遷移を管理
   object OrderStateMachine:
-    def canTransition(from: OrderStatus, to: OrderStatus): Boolean = (from, to) match
+    def canTransition(from: OrderStatus, to: OrderStatus): Boolean = (from, to) match {
       case (Pending, Confirmed) => true
       case (Pending, Cancelled) => true
       case (Confirmed, Processing) => true
@@ -112,55 +117,62 @@
       case (Processing, Shipped) => true
       case (Shipped, Delivered) => true
       case _ => false
+    }
     
     def processEvent(order: Order, event: OrderEvent): Either[String, Order] =
-      event match
+      event match {
         case OrderConfirmed(orderId, _) if order.id == orderId =>
-          if canTransition(order.status, Confirmed) then
+          if (canTransition(order.status, Confirmed)) {
             Right(order.copy(
               status = Confirmed,
               events = order.events :+ event
             ))
-          else
+          } else {
             Left(s"${order.status}からConfirmedへの遷移はできません")
+          }
         
         case OrderShipped(orderId, _) if order.id == orderId =>
-          if canTransition(order.status, Shipped) then
+          if (canTransition(order.status, Shipped)) {
             Right(order.copy(
               status = Shipped,
               events = order.events :+ event
             ))
-          else
+          } else {
             Left(s"${order.status}からShippedへの遷移はできません")
+          }
         
         case OrderDelivered(orderId, _) if order.id == orderId =>
-          if canTransition(order.status, Delivered) then
+          if (canTransition(order.status, Delivered)) {
             Right(order.copy(
               status = Delivered,
               events = order.events :+ event
             ))
-          else
+          } else {
             Left(s"${order.status}からDeliveredへの遷移はできません")
+          }
         
         case OrderCancelled(orderId, _) if order.id == orderId =>
-          if order.status == Pending || order.status == Confirmed then
+          if (order.status == Pending || order.status == Confirmed) {
             Right(order.copy(
               status = Cancelled,
               events = order.events :+ event
             ))
-          else
+          } else {
             Left(s"${order.status}の注文はキャンセルできません")
+          }
         
         case _ =>
           Left("不正なイベント")
+      }
     
-    def getStatusMessage(status: OrderStatus): String = status match
+    def getStatusMessage(status: OrderStatus): String = status match {
       case Pending => "注文確認中"
       case Confirmed => "注文確定"
       case Processing => "商品準備中"
       case Shipped => "発送済み"
       case Delivered => "配達完了"
       case Cancelled => "キャンセル済み"
+    }
   
   // 使用例
   val order = Order(
@@ -181,22 +193,25 @@
   
   val finalOrder = events.foldLeft[Either[String, Order]](Right(order)) {
     case (Right(currentOrder), event) =>
-      OrderStateMachine.processEvent(currentOrder, event) match
+      OrderStateMachine.processEvent(currentOrder, event) match {
         case Right(updated) =>
           println(s"✓ ${event.getClass.getSimpleName}: ${OrderStateMachine.getStatusMessage(updated.status)}")
           Right(updated)
         case Left(error) =>
           println(s"✗ エラー: $error")
           Left(error)
+      }
     case (error, _) => error
   }
   
-  finalOrder match
+  finalOrder match {
     case Right(order) =>
       println(s"\n最終状態: ${OrderStateMachine.getStatusMessage(order.status)}")
       println(s"イベント数: ${order.events.length}")
     case Left(error) =>
       println(s"\n処理失敗: $error")
+  }
+}
 ```
 
 ## ADT（代数的データ型）
@@ -205,7 +220,7 @@
 
 ```scala
 // AlgebraicDataTypes.scala
-@main def algebraicDataTypes(): Unit =
+@main def algebraicDataTypes(): Unit = {
   // 直和型（OR型）：いずれか1つ
   sealed trait Shape
   case class Circle(radius: Double) extends Shape
@@ -213,18 +228,20 @@
   case class Triangle(base: Double, height: Double) extends Shape
   
   // 面積を計算（すべてのケースを処理）
-  def area(shape: Shape): Double = shape match
+  def area(shape: Shape): Double = shape match {
     case Circle(r) => math.Pi * r * r
     case Rectangle(w, h) => w * h
     case Triangle(b, h) => b * h / 2
+  }
   
   // 周囲長を計算
-  def perimeter(shape: Shape): Double = shape match
+  def perimeter(shape: Shape): Double = shape match {
     case Circle(r) => 2 * math.Pi * r
     case Rectangle(w, h) => 2 * (w + h)
     case Triangle(b, h) => 
       val hypotenuse = math.sqrt(b * b + h * h)
       b + h + hypotenuse
+  }
   
   val shapes = List(
     Circle(5.0),
@@ -247,35 +264,39 @@
   )
   
   println(s"\n色付き図形: ${coloredCircle.color}の${coloredCircle.shape}")
+}
 ```
 
 ### 再帰的なデータ構造
 
 ```scala
 // RecursiveDataStructures.scala
-@main def recursiveDataStructures(): Unit =
+@main def recursiveDataStructures(): Unit = {
   // 二分木
   sealed trait BinaryTree[+A]
   case object Empty extends BinaryTree[Nothing]
   case class Node[A](value: A, left: BinaryTree[A], right: BinaryTree[A]) extends BinaryTree[A]
   
   // 木の深さを計算
-  def depth[A](tree: BinaryTree[A]): Int = tree match
+  def depth[A](tree: BinaryTree[A]): Int = tree match {
     case Empty => 0
     case Node(_, left, right) => 1 + math.max(depth(left), depth(right))
+  }
   
   // 木の要素数を数える
-  def size[A](tree: BinaryTree[A]): Int = tree match
+  def size[A](tree: BinaryTree[A]): Int = tree match {
     case Empty => 0
     case Node(_, left, right) => 1 + size(left) + size(right)
+  }
   
   // 木を文字列で表現
-  def toString[A](tree: BinaryTree[A], indent: String = ""): String = tree match
+  def toString[A](tree: BinaryTree[A], indent: String = ""): String = tree match {
     case Empty => s"${indent}Empty"
     case Node(value, left, right) =>
       s"""${indent}Node($value)
          |${toString(left, indent + "  ")}
          |${toString(right, indent + "  ")}""".stripMargin
+  }
   
   // サンプルの木を作成
   val tree = Node(
@@ -305,18 +326,20 @@
   case class Subtract(left: Expression, right: Expression) extends Expression
   
   // 式を評価
-  def evaluate(expr: Expression): Double = expr match
+  def evaluate(expr: Expression): Double = expr match {
     case Number(value) => value
     case Add(left, right) => evaluate(left) + evaluate(right)
     case Multiply(left, right) => evaluate(left) * evaluate(right)
     case Subtract(left, right) => evaluate(left) - evaluate(right)
+  }
   
   // 式を文字列に
-  def exprToString(expr: Expression): String = expr match
+  def exprToString(expr: Expression): String = expr match {
     case Number(value) => value.toString
     case Add(left, right) => s"(${exprToString(left)} + ${exprToString(right)})"
     case Multiply(left, right) => s"(${exprToString(left)} * ${exprToString(right)})"
     case Subtract(left, right) => s"(${exprToString(left)} - ${exprToString(right)})"
+  }
   
   // (2 + 3) * (10 - 5)
   val expression = Multiply(
@@ -326,13 +349,14 @@
   
   println(s"\n式: ${exprToString(expression)}")
   println(s"結果: ${evaluate(expression)}")
+}
 ```
 
 ## 実践例：ゲームの状態管理
 
 ```scala
 // GameStateManagement.scala
-@main def gameStateManagement(): Unit =
+@main def gameStateManagement(): Unit = {
   // プレイヤーの行動
   sealed trait PlayerAction
   case object MoveUp extends PlayerAction
@@ -368,7 +392,7 @@
   // ゲームエンジン
   class GameEngine:
     def processEvent(state: GameState, event: GameEvent): GameState =
-      (state, event) match
+      (state, event) match {
         case (MainMenu, StartGame) =>
           Playing(100, (5, 5), 10, 0)
         
@@ -380,18 +404,20 @@
         
         case (Playing(health, pos, enemies, score), PlayerDamaged(damage)) =>
           val newHealth = health - damage
-          if newHealth <= 0 then
+          if (newHealth <= 0) {
             GameOver(score, false)
-          else
+          } else {
             Playing(newHealth, pos, enemies, score)
+          }
         
         case (Playing(health, pos, enemies, score), EnemyDefeated(points)) =>
           val newEnemies = enemies - 1
           val newScore = score + points
-          if newEnemies == 0 then
+          if (newEnemies == 0) {
             GameOver(newScore, true)
-          else
+          } else {
             Playing(health, pos, newEnemies, newScore)
+          }
         
         case (Playing(health, pos, enemies, score), AllEnemiesDefeated) =>
           GameOver(score, true)
@@ -400,37 +426,42 @@
           GameOver(score, false)
         
         case _ => state  // 無効な遷移は現在の状態を保持
+      }
     
     def processAction(state: GameState, action: PlayerAction): GameState =
-      state match
+      state match {
         case Playing(health, (x, y), enemies, score) =>
-          action match
+          action match {
             case MoveUp => Playing(health, (x, y - 1), enemies, score)
             case MoveDown => Playing(health, (x, y + 1), enemies, score)
             case MoveLeft => Playing(health, (x - 1, y), enemies, score)
             case MoveRight => Playing(health, (x + 1, y), enemies, score)
             case Attack =>
               // 攻撃の結果をシミュレート
-              if scala.util.Random.nextBoolean() then
+              if (scala.util.Random.nextBoolean()) {
                 processEvent(state, EnemyDefeated(100))
-              else
+              } else {
                 state
+              }
             case Defend =>
               // 防御は体力を少し回復
               Playing(math.min(100, health + 5), (x, y), enemies, score)
             case UseItem =>
               // アイテム使用（体力回復）
               Playing(math.min(100, health + 20), (x, y), enemies, score)
+          }
         
         case _ => state  // プレイ中以外は行動できない
+      }
     
-    def stateDescription(state: GameState): String = state match
+    def stateDescription(state: GameState): String = state match {
       case MainMenu => "メインメニュー"
       case Playing(health, pos, enemies, score) =>
         f"プレイ中 - 体力:$health%3d 位置:$pos 敵:$enemies%2d 得点:$score%,d"
       case Paused => "一時停止中"
       case GameOver(score, true) => f"勝利！ 最終得点: $score%,d"
       case GameOver(score, false) => f"敗北... 最終得点: $score%,d"
+    }
   
   // ゲームプレイのシミュレーション
   val engine = new GameEngine
@@ -454,13 +485,14 @@
     println(s"\nイベント: $event")
     println(engine.stateDescription(state))
   }
+}
 ```
 
 ## エラーを防ぐ設計
 
 ```scala
 // ErrorPreventingDesign.scala
-@main def errorPreventingDesign(): Unit =
+@main def errorPreventingDesign(): Unit = {
   // メールアドレスの検証状態
   sealed trait EmailValidation
   case object Valid extends EmailValidation
@@ -493,19 +525,25 @@
       val emailVal = validateEmail(email)
       val passStrength = checkPasswordStrength(password)
       
-      (emailVal, passStrength) match
+      (emailVal, passStrength) match {
         case (Valid, Strong | Medium) =>
           Right(Account(email, emailVal, passStrength, Unverified))
         case (Valid, Weak) =>
           Left("パスワードが弱すぎます")
         case (Invalid(reason), _) =>
           Left(s"メールアドレスが無効: $reason")
+      }
     
     private def validateEmail(email: String): EmailValidation =
-      if email.isEmpty then Invalid("空です")
-      else if !email.contains("@") then Invalid("@がありません")
-      else if !email.contains(".") then Invalid(".がありません")
-      else Valid
+      if (email.isEmpty) {
+        Invalid("空です")
+      } else if (!email.contains("@")) {
+        Invalid("@がありません")
+      } else if (!email.contains(".")) {
+        Invalid(".がありません")
+      } else {
+        Valid
+      }
     
     private def checkPasswordStrength(password: String): PasswordStrength =
       val hasUpper = password.exists(_.isUpper)
@@ -516,15 +554,20 @@
       
       val score = List(hasUpper, hasLower, hasDigit, hasSpecial, isLong).count(identity)
       
-      if score >= 4 then Strong
-      else if score >= 3 then Medium
-      else Weak
+      if (score >= 4) {
+        Strong
+      } else if (score >= 3) {
+        Medium
+      } else {
+        Weak
+      }
   
   // 状態遷移も型安全に
   def activateAccount(account: Account): Either[String, Account] =
-    account.state match
+    account.state match {
       case Unverified => Right(account.copy(state = Active))
       case _ => Left("未確認のアカウントのみアクティベートできます")
+    }
   
   // 使用例
   val results = List(
@@ -535,13 +578,16 @@
   
   results.foreach { case (email, password) =>
     println(s"\n登録試行: $email")
-    Account.create(email, password) match
+    Account.create(email, password) match {
       case Right(account) =>
         println(s"✓ アカウント作成成功")
         println(s"  メール検証: ${account.emailValidation}")
         println(s"  パスワード強度: ${account.passwordStrength}")
       case Left(error) =>
         println(s"✗ エラー: $error")
+    }
+  }
+}
   }
 ```
 
@@ -597,19 +643,19 @@
 ### シールドトレイトを使うべき場面
 
 1. **限定された選択肢**
-   - 状態マシン
-   - コマンドパターン
-   - 設定オプション
+    - 状態マシン
+    - コマンドパターン
+    - 設定オプション
 
 2. **網羅的な処理**
-   - すべてのケースを扱う
-   - デフォルトケース不要
-   - 安全性の保証
+    - すべてのケースを扱う
+    - デフォルトケース不要
+    - 安全性の保証
 
 3. **型による設計**
-   - ドメインモデリング
-   - エラーハンドリング
-   - プロトコル定義
+    - ドメインモデリング
+    - エラーハンドリング
+    - プロトコル定義
 
 ### 次の章では...
 

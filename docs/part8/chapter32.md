@@ -12,7 +12,7 @@
 
 ```scala
 // ViewBasics.scala
-@main def viewBasics(): Unit =
+@main def viewBasics(): Unit = {
   // 通常の操作（即座に評価）
   println("=== 通常の操作（即座評価） ===")
   
@@ -22,11 +22,13 @@
     .map { n =>
       println(s"map: $n")
       n * 2
-    }
+
+}
     .filter { n =>
       println(s"filter: $n")
       n > 10
-    }
+
+}
     .take(5)
   
   println(s"結果: $result1")
@@ -39,11 +41,13 @@
     .map { n =>
       println(s"map: $n")
       n * 2
-    }
+
+}
     .filter { n =>
       println(s"filter: $n")
       n > 10
-    }
+
+}
     .take(5)
     .toList
   
@@ -68,7 +72,8 @@
       .filter(_ % 2 == 0)
       .map(_ + 1)
       .take(100)
-  }
+
+}
   
   measureTime("ビューを使った処理") {
     bigList.view
@@ -77,14 +82,15 @@
       .map(_ + 1)
       .take(100)
       .toList
-  }
+
+}
 ```
 
 ### 実践的なビューの活用
 
 ```scala
 // PracticalViews.scala
-@main def practicalViews(): Unit =
+@main def practicalViews(): Unit = {
   import scala.io.Source
   
   // ファイル処理の例（仮想的なログファイル）
@@ -103,14 +109,16 @@
     .map { line =>
       val parts = line.split(" ", 4)
       (parts(0), parts(1), parts(3))
-    }
+
+}
     .take(3)
     .toList
   
   println("=== エラーログ ===")
   errors.foreach { case (date, time, message) =>
     println(s"$date $time: $message")
-  }
+
+}
   
   // 無限シーケンスの処理
   println("\n=== 無限シーケンス ===")
@@ -143,7 +151,8 @@
     .map(_.amount)
     .foldLeft((0.0, 0)) { case ((sum, count), amount) =>
       (sum + amount, count + 1)
-    }
+
+}
   
   val (totalFood, countFood) = foodStats
   println(f"\n食費: 合計 $$${totalFood}%.2f, 平均 $$${totalFood / countFood}%.2f")
@@ -155,7 +164,7 @@
 
 ```scala
 // EfficientTransformations.scala
-@main def efficientTransformations(): Unit =
+@main def efficientTransformations(): Unit = {
   // collect：フィルタとマップを同時に
   println("=== collect（部分関数） ===")
   
@@ -169,7 +178,8 @@
   // 効率的な方法
   val integers2 = mixed.collect {
     case n: Int => n
-  }
+
+}
   
   println(s"整数のみ: $integers2")
   
@@ -177,7 +187,8 @@
   val strings = mixed.collect {
     case s: String => s.toUpperCase
     case n: Int => s"数値: $n"
-  }
+
+}
   
   println(s"変換結果: $strings")
   
@@ -210,7 +221,8 @@
   byGrade.foreach { case (grade, students) =>
     val avg = students.map(_.score).sum.toDouble / students.length
     println(f"  $grade 年生: ${students.map(_.name).mkString(", ")} (平均: $avg%.1f)")
-  }
+
+}
   
   // groupMapReduce：グループ化して集計
   val gradeAverages = students.groupMapReduce(
@@ -222,7 +234,8 @@
   ).map { case (grade, total) =>
     val count = students.count(_.grade == grade)
     (grade, total.toDouble / count)
-  }
+
+}
   
   println(s"\n学年別平均点: $gradeAverages")
 ```
@@ -231,7 +244,7 @@
 
 ```scala
 // OptimizedFolding.scala
-@main def optimizedFolding(): Unit =
+@main def optimizedFolding(): Unit = {
   // 基本的なfold
   println("=== 基本的なfold ===")
   
@@ -245,7 +258,7 @@
   
   // 複雑な集計
   case class Stats(count: Int, sum: Double, min: Double, max: Double):
-    def mean: Double = if count > 0 then sum / count else 0.0
+    def mean: Double = if (count > 0) { sum / count else 0.0
     def +(value: Double): Stats = Stats(
       count + 1,
       sum + value,
@@ -296,12 +309,14 @@
   val balances = transactions.scanLeft((initialBalance, "初期残高")) {
     case ((balance, _), transaction) =>
       (balance + transaction.amount, transaction.date)
-  }
+
+}
   
   println("\n残高推移:")
   balances.foreach { case (balance, date) =>
     println(f"$date%-12s: ¥$balance%,.0f")
-  }
+
+}
 ```
 
 ## メモリ効率の良い操作
@@ -310,7 +325,7 @@
 
 ```scala
 // IteratorUsage.scala
-@main def iteratorUsage(): Unit =
+@main def iteratorUsage(): Unit = {
   // イテレータの基本
   println("=== イテレータ（一度だけ走査） ===")
   
@@ -350,7 +365,8 @@
     val sum = batch.sum
     val avg = sum.toDouble / batch.length
     List(s"Batch: ${batch.head}-${batch.last}, Sum: $sum, Avg: $avg")
-  }
+
+}
   
   println("バッチ処理結果:")
   batchResults.take(5).foreach(println)
@@ -371,7 +387,7 @@
 
 ```scala
 // BufferingAndStreaming.scala
-@main def bufferingAndStreaming(): Unit =
+@main def bufferingAndStreaming(): Unit = {
   import scala.collection.mutable
   
   // バッファを使った効率的な処理
@@ -383,12 +399,12 @@
     
     def process(item: A)(flush: List[A] => Unit): Unit =
       buffer += item
-      if buffer.size >= bufferSize then
+      if (buffer.size >= bufferSize) {
         flush(buffer.toList)
         buffer.clear()
     
     def flush(flush: List[A] => Unit): Unit =
-      if buffer.nonEmpty then
+      if (buffer.nonEmpty) {
         flush(buffer.toList)
         buffer.clear()
   
@@ -401,14 +417,17 @@
     processor.process(n) { batch =>
       println(s"バッチ処理: ${batch.length}件")
       totalProcessed += batch.length
-    }
-  }
+
+}
+
+}
   
   // 残りをフラッシュ
   processor.flush { batch =>
     println(s"最終バッチ: ${batch.length}件")
     totalProcessed += batch.length
-  }
+
+}
   
   println(s"合計処理数: $totalProcessed")
   
@@ -425,10 +444,10 @@
       sum += value
       sumOfSquares += value * value
     
-    def mean: Double = if count > 0 then sum / count else 0.0
+    def mean: Double = if (count > 0) { sum / count else 0.0
     
     def variance: Double = 
-      if count > 0 then
+      if (count > 0) {
         (sumOfSquares / count) - (mean * mean)
       else 0.0
     
@@ -451,7 +470,7 @@
 
 ```scala
 // ParallelCollections.scala
-@main def parallelCollections(): Unit =
+@main def parallelCollections(): Unit = {
   import scala.collection.parallel.CollectionConverters._
   
   // 並列処理の基本
@@ -460,10 +479,10 @@
   val numbers = (1 to 10000000).toVector
   
   def isPrime(n: Int): Boolean =
-    if n <= 1 then false
-    else if n <= 3 then true
-    else if n % 2 == 0 || n % 3 == 0 then false
-    else
+    if (n <= 1) { false
+    else if (n <= 3) { true
+    else if (n % 2 == 0 || n % 3 == 0) { false
+    } else {
       var i = 5
       while i * i <= n do
         if n % i == 0 || n % (i + 2) == 0 then return false
@@ -491,12 +510,14 @@
   var counter1 = 0
   (1 to 10000).foreach { _ =>
     counter1 += 1  // 順次処理なので正確
-  }
+
+}
   
   var counter2 = 0
   (1 to 10000).par.foreach { _ =>
     counter2 += 1  // 並列処理で競合状態！
-  }
+
+}
   
   println(s"順次カウント: $counter1")
   println(s"並列カウント: $counter2 （不正確！）")
@@ -514,7 +535,8 @@
   val points = Vector.tabulate(1000000) { i =>
     Point(scala.util.Random.nextDouble() * 100, 
           scala.util.Random.nextDouble() * 100)
-  }
+
+}
   
   // 重い計算を並列化
   val start3 = System.currentTimeMillis()
@@ -530,7 +552,7 @@
 
 ```scala
 // DataAnalysisPipeline.scala
-@main def dataAnalysisPipeline(): Unit =
+@main def dataAnalysisPipeline(): Unit = {
   import java.time.LocalDate
   import scala.util.Random
   
@@ -560,7 +582,8 @@
         customerId = f"C${Random.nextInt(1000)}%04d",
         region = regions(Random.nextInt(regions.length))
       )
-    }
+
+}
   
   // 効率的なデータ分析
   println("=== データ分析パイプライン ===")
@@ -572,7 +595,8 @@
     .map { record =>
       val month = record.date.getMonthValue
       ((record.region, month), record.amount)
-    }
+
+}
     .toList
     .groupMapReduce(_._1)(_._2)(_ + _)
   
@@ -583,7 +607,8 @@
     .take(10)
     .foreach { case ((region, month), amount) =>
       println(f"  $region - $month 月: ¥$amount%,.0f")
-    }
+
+}
   
   // 2. 商品別の売上ランキング（並列処理）
   val productRanking = generateSalesData(100000)
@@ -594,14 +619,16 @@
       val total = records.map(_.amount).sum
       val count = records.length
       (total, count)
-    }
+
+}
     .toList
     .sortBy(-_._2._1)
   
   println("\n商品別売上ランキング:")
   productRanking.foreach { case (productId, (total, count)) =>
     println(f"  $productId: ¥$total%,.0f ($count 件)")
-  }
+
+}
   
   // 3. 顧客セグメント分析（効率的なグループ化）
   case class CustomerStats(
@@ -632,7 +659,8 @@
         avgOrderValue,
         favoriteRegion
       )
-    }
+
+}
     .filter(_.orderCount >= 5)  // アクティブな顧客のみ
     .toList
     .sortBy(-_.totalAmount)
@@ -645,7 +673,8 @@
             f"(${stats.orderCount}件, " +
             f"平均 ¥${stats.avgOrderValue}%,.0f, " +
             f"${stats.favoriteRegion})")
-  }
+
+}
 ```
 
 ## 練習してみよう！
@@ -700,19 +729,19 @@
 ### 効率化のコツ
 
 1. **測定してから最適化**
-   - ボトルネックを特定
-   - 実データで検証
-   - 過度な最適化を避ける
+    - ボトルネックを特定
+    - 実データで検証
+    - 過度な最適化を避ける
 
 2. **適切な手法を選ぶ**
-   - データ量に応じて
-   - 処理内容に応じて
-   - メモリ制約を考慮
+    - データ量に応じて
+    - 処理内容に応じて
+    - メモリ制約を考慮
 
 3. **読みやすさとのバランス**
-   - 保守性を維持
-   - コメントで意図を説明
-   - チームで共有可能に
+    - 保守性を維持
+    - コメントで意図を説明
+    - チームで共有可能に
 
 ### 次の章では...
 

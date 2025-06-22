@@ -10,7 +10,7 @@
 
 ```scala
 // TupleBasics.scala
-@main def tupleBasics(): Unit =
+@main def tupleBasics(): Unit = {
   // 2要素のタプル（ペア）
   val person = ("太郎", 25)
   println(s"名前と年齢: ${person}")
@@ -38,7 +38,7 @@
 
 ```scala
 // TupleAccess.scala
-@main def tupleAccess(): Unit =
+@main def tupleAccess(): Unit = {
   val person = ("山田太郎", 30, "エンジニア")
   
   // 位置でアクセス（1から始まる）
@@ -55,11 +55,12 @@
   println(s"$personName の職業は $personJob")
   
   // match式での分解
-  person match
+  person match {
     case (n, a, j) if a >= 20 => 
       println(s"$n は成人です")
     case _ => 
       println("未成年です")
+  }
 }
 ```
 
@@ -69,7 +70,7 @@
 
 ```scala
 // TupleCreation.scala
-@main def tupleCreation(): Unit =
+@main def tupleCreation(): Unit = {
   // 通常の作成方法
   val tuple1 = (1, "one")
   val tuple2 = (1, "one", 1.0)
@@ -88,15 +89,17 @@
   println(s"緯度: $lat, 経度: $lon")
   
   // Option型と組み合わせ
-  def divide(a: Int, b: Int): Option[(Int, Int)] =
-    if b != 0 then Some((a / b, a % b))
+  def divide(a: Int, b: Int): Option[(Int, Int)] = {
+    if (b != 0) Some((a / b, a % b))
     else None
+  }
   
-  divide(10, 3) match
+  divide(10, 3) match {
     case Some((quotient, remainder)) =>
       println(s"10 ÷ 3 = $quotient 余り $remainder")
     case None =>
       println("ゼロ除算エラー")
+  }
 }
 ```
 
@@ -104,7 +107,7 @@
 
 ```scala
 // NestedTuples.scala
-@main def nestedTuples(): Unit =
+@main def nestedTuples(): Unit = {
   // ネストしたタプル
   val nested = ((1, 2), (3, 4))
   println(s"ネストしたタプル: ${nested}")
@@ -134,7 +137,7 @@
 
 ```scala
 // TupleTypeSafety.scala
-@main def tupleTypeSafety(): Unit =
+@main def tupleTypeSafety(): Unit = {
   // 各要素の型が保証される
   val data: (Int, String, Double) = (100, "円", 1.1)
   
@@ -148,9 +151,10 @@
   val bool: Boolean = inferred._3  // OK
   
   // 関数の引数として
-  def processData(data: (String, Int, Boolean)): String =
+  def processData(data: (String, Int, Boolean)): String = {
     val (name, value, active) = data
-    if active then s"$name: $value" else s"$name: 無効"
+    if (active) s"$name: $value" else s"$name: 無効"
+  }
   
   println(processData(("温度", 25, true)))
   println(processData(("湿度", 60, false)))
@@ -168,7 +172,7 @@
 
 ```scala
 // TupleVsCaseClass.scala
-@main def tupleVsCaseClass(): Unit =
+@main def tupleVsCaseClass(): Unit = {
   // タプルを使った場合
   val personTuple = ("田中", 35, "デザイナー")
   println(s"名前: ${personTuple._1}")  // 意味が分かりづらい
@@ -180,12 +184,14 @@
   
   // タプルが適している場合
   // 1. 一時的なデータの組み合わせ
-  def getMinMax(numbers: List[Int]): (Int, Int) =
+  def getMinMax(numbers: List[Int]): (Int, Int) = {
     (numbers.min, numbers.max)
+  }
   
   // 2. 複数の値を返す関数
-  def divmod(a: Int, b: Int): (Int, Int) =
+  def divmod(a: Int, b: Int): (Int, Int) = {
     (a / b, a % b)
+  }
   
   // 3. キーと値のペア
   val entries = List(
@@ -209,7 +215,7 @@
 
 ```scala
 // TupleOperations.scala
-@main def tupleOperations(): Unit =
+@main def tupleOperations(): Unit = {
   // swap（2要素タプルのみ）
   val pair = (1, "one")
   val swapped = pair.swap
@@ -231,8 +237,9 @@
   println(s"2倍: $doubled")
   
   // より汎用的な変換（ただし型情報は失われる）
-  def multiplyTuple3(t: (Int, Int, Int), factor: Int): (Int, Int, Int) =
+  def multiplyTuple3(t: (Int, Int, Int), factor: Int): (Int, Int, Int) = {
     (t._1 * factor, t._2 * factor, t._3 * factor)
+  }
   
   println(s"3倍: ${multiplyTuple3(numbers, 3)}")
 }
@@ -242,7 +249,7 @@
 
 ```scala
 // TupleWithCollections.scala
-@main def tupleWithCollections(): Unit =
+@main def tupleWithCollections(): Unit = {
   // タプルのリスト
   val students = List(
     ("山田", 85),
@@ -278,7 +285,7 @@
 
 ```scala
 // DataAnalysisWithTuples.scala
-@main def dataAnalysisWithTuples(): Unit =
+@main def dataAnalysisWithTuples(): Unit = {
   // 売上データ（日付、商品名、数量、単価）
   val salesData = List(
     ("2024-01-01", "商品A", 5, 1000),
@@ -347,12 +354,13 @@
 
 ```scala
 // TuplePatternMatching.scala
-@main def tuplePatternMatching(): Unit =
+@main def tuplePatternMatching(): Unit = {
   // 基本的なパターンマッチ
   val data = (42, "answer")
   
-  data match
+  data match {
     case (n, s) => println(s"数値: $n, 文字列: $s")
+  }
   
   // 条件付きパターン
   val scores = List(
@@ -376,20 +384,22 @@
   // ネストしたタプルのパターンマッチ
   val nested = ((1, 2), (3, 4))
   
-  nested match
+  nested match {
     case ((a, b), (c, d)) =>
       println(s"合計: ${a + b + c + d}")
+  }
   
   // 部分的なマッチ
   val triple = (100, "test", true)
   
-  triple match
+  triple match {
     case (n, _, true) if n > 50 =>
       println("50より大きく、有効")
     case (n, _, false) =>
       println(s"無効（値: $n）")
     case _ =>
       println("その他")
+  }
 }
 ```
 
@@ -454,7 +464,7 @@ val tuple: (Int, String) = (100, "test")
 ### 問題5：エラーを修正
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val data = (1, "two", 3.0)
   val sum = data._1 + data._2 + data._3
   
@@ -470,28 +480,28 @@ val tuple: (Int, String) = (100, "test")
 この章では以下のことを学びました：
 
 1. **タプルの基本**
-   - 異なる型の要素を固定数まとめる
-   - 最大22要素まで扱える
-   - イミュータブルなデータ構造
+    - 異なる型の要素を固定数まとめる
+    - 最大22要素まで扱える
+    - イミュータブルなデータ構造
 
 2. **要素へのアクセス**
-   - _1, _2などの位置アクセス
-   - パターンマッチによる分解
-   - 型安全なアクセス
+    - _1, _2などの位置アクセス
+    - パターンマッチによる分解
+    - 型安全なアクセス
 
 3. **タプルの作成と操作**
-   - 様々な作成方法
-   - swapやproductIterator
-   - コレクションとの組み合わせ
+    - 様々な作成方法
+    - swapやproductIterator
+    - コレクションとの組み合わせ
 
 4. **型安全性**
-   - 各要素の型が保証される
-   - コンパイル時の型チェック
-   - 型推論の活用
+    - 各要素の型が保証される
+    - コンパイル時の型チェック
+    - 型推論の活用
 
 5. **使いどころ**
-   - 一時的なデータの組み合わせ
-   - 複数値の返却
-   - 軽量なデータ構造として
+    - 一時的なデータの組み合わせ
+    - 複数値の返却
+    - 軽量なデータ構造として
 
 次の章では、タプルを使って異なるデータをまとめる実践的な方法を学んでいきます！

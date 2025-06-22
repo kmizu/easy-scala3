@@ -14,7 +14,7 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
 
 ```scala
 // OptionBasics.scala
-@main def optionBasics(): Unit =
+@main def optionBasics(): Unit = {
   // Optionは「値があるかもしれない」を表す
   val some: Option[Int] = Some(42)      // 値がある
   val none: Option[Int] = None          // 値がない
@@ -36,16 +36,18 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   println(s"grapeの意味: $result2")
   
   // 安全に値を取り出す
-  result1 match
+  result1 match {
     case Some(meaning) => println(s"見つかった: $meaning")
     case None => println("見つかりませんでした")
+  }
+}
 ```
 
 ### Optionの便利なメソッド
 
 ```scala
 // OptionMethods.scala
-@main def optionMethods(): Unit =
+@main def optionMethods(): Unit = {
   val someValue: Option[Int] = Some(10)
   val noneValue: Option[Int] = None
   
@@ -63,7 +65,7 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   // flatMap：Optionを返す関数と組み合わせ
   def half(n: Int): Option[Int] =
-    if n % 2 == 0 then Some(n / 2)
+    if (n % 2 == 0) Some(n / 2)
     else None
   
   val result = someValue.flatMap(half)
@@ -74,13 +76,14 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   val opt2 = Some(20)
   val opt3: Option[Int] = None
   
-  val sum = for
+  val sum = for {
     a <- opt1
     b <- opt2
     c <- opt3
-  yield a + b + c
+  } yield a + b + c
   
   println(s"合計: $sum")  // None（1つでもNoneがあれば結果もNone）
+}
 ```
 
 ### 実践的な使い方
@@ -101,15 +104,17 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
     users.find(_.id == id)
   
   def sendEmail(userId: Int, message: String): String =
-    findUserById(userId) match
+    findUserById(userId) match {
       case Some(user) =>
-        user.email match
+        user.email match {
           case Some(email) =>
             s"${user.name}さん($email)にメールを送信: $message"
           case None =>
             s"${user.name}さんはメールアドレスが未登録です"
+        }
       case None =>
         "ユーザーが見つかりません"
+    }
   
   println(sendEmail(1, "お知らせ"))
   println(sendEmail(2, "お知らせ"))
@@ -117,15 +122,16 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   // より簡潔に書く方法
   def sendEmailV2(userId: Int, message: String): String =
-    (for
+    (for {
       user <- findUserById(userId)
       email <- user.email
-    yield s"${user.name}さん($email)にメールを送信: $message")
+    } yield s"${user.name}さん($email)にメールを送信: $message")
       .getOrElse("送信できません（ユーザー不在またはメールアドレス未登録）")
   
   println("\n=== 簡潔版 ===")
   println(sendEmailV2(1, "お知らせ"))
   println(sendEmailV2(2, "お知らせ"))
+}
 ```
 
 ## Either：成功か失敗か
@@ -134,7 +140,7 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
 
 ```scala
 // EitherBasics.scala
-@main def eitherBasics(): Unit =
+@main def eitherBasics(): Unit = {
   // Eitherは「成功(Right)か失敗(Left)か」を表す
   val success: Either[String, Int] = Right(42)
   val failure: Either[String, Int] = Left("エラーが発生しました")
@@ -144,41 +150,43 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   // 実用例：割り算
   def divide(a: Int, b: Int): Either[String, Double] =
-    if b == 0 then Left("ゼロで割ることはできません")
+    if (b == 0) Left("ゼロで割ることはできません")
     else Right(a.toDouble / b)
   
   println(divide(10, 2))
   println(divide(10, 0))
   
   // パターンマッチで処理
-  divide(20, 4) match
+  divide(20, 4) match {
     case Right(result) => println(s"結果: $result")
     case Left(error) => println(s"エラー: $error")
+  }
+}
 ```
 
 ### Eitherの便利な操作
 
 ```scala
 // EitherOperations.scala
-@main def eitherOperations(): Unit =
+@main def eitherOperations(): Unit = {
   // 年齢検証
   def validateAge(age: Int): Either[String, Int] =
-    if age < 0 then Left("年齢は負の数にできません")
-    else if age > 150 then Left("年齢が大きすぎます")
+    if (age < 0) Left("年齢は負の数にできません")
+    else if (age > 150) Left("年齢が大きすぎます")
     else Right(age)
   
   // 名前検証
   def validateName(name: String): Either[String, String] =
-    if name.trim.isEmpty then Left("名前が空です")
-    else if name.length > 50 then Left("名前が長すぎます")
+    if (name.trim.isEmpty) Left("名前が空です")
+    else if (name.length > 50) Left("名前が長すぎます")
     else Right(name.trim)
   
   // 複数の検証を組み合わせる
   def createUser(name: String, age: Int): Either[String, String] =
-    for
+    for {
       validName <- validateName(name)
       validAge <- validateAge(age)
-    yield s"ユーザー作成: $validName（$validAge歳）"
+    } yield s"ユーザー作成: $validName（$validAge歳）"
   
   println(createUser("太郎", 25))
   println(createUser("", 25))
@@ -190,13 +198,14 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
     .flatMap(validateAge)
   
   println(s"30歳を2倍して検証: $result")
+}
 ```
 
 ## OptionとEitherの変換
 
 ```scala
 // OptionEitherConversion.scala
-@main def optionEitherConversion(): Unit =
+@main def optionEitherConversion(): Unit = {
   // Option → Either
   val opt1: Option[Int] = Some(42)
   val opt2: Option[Int] = None
@@ -233,13 +242,14 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
       .flatMap(parsePort)
   
   println(s"ポート取得: ${getPort()}")
+}
 ```
 
 ## 実践例：フォーム検証
 
 ```scala
 // FormValidation.scala
-@main def formValidation(): Unit =
+@main def formValidation(): Unit = {
   case class RegistrationForm(
     username: String,
     email: String,
@@ -248,37 +258,45 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   )
   
   // 個別の検証関数
-  def validateUsername(username: String): Either[String, String] =
-    if username.length < 3 then
+  def validateUsername(username: String): Either[String, String] = {
+    if (username.length < 3) {
       Left("ユーザー名は3文字以上必要です")
-    else if !username.matches("^[a-zA-Z0-9]+$") then
+    } else if (!username.matches("^[a-zA-Z0-9]+$")) {
       Left("ユーザー名は英数字のみ使用可能です")
-    else
+    } else {
       Right(username)
+    }
+  }
   
-  def validateEmail(email: String): Either[String, String] =
-    if !email.contains("@") then
+  def validateEmail(email: String): Either[String, String] = {
+    if (!email.contains("@")) {
       Left("有効なメールアドレスではありません")
-    else
+    } else {
       Right(email)
+    }
+  }
   
-  def validatePassword(password: String): Either[String, String] =
-    if password.length < 8 then
+  def validatePassword(password: String): Either[String, String] = {
+    if (password.length < 8) {
       Left("パスワードは8文字以上必要です")
-    else if !password.exists(_.isDigit) then
+    } else if (!password.exists(_.isDigit)) {
       Left("パスワードには数字を含める必要があります")
-    else
+    } else {
       Right(password)
+    }
+  }
   
-  def validateAge(ageStr: String): Either[String, Int] =
-    try
+  def validateAge(ageStr: String): Either[String, Int] = {
+    try {
       val age = ageStr.toInt
-      if age < 13 then Left("13歳以上である必要があります")
-      else if age > 120 then Left("年齢が不正です")
+      if (age < 13) Left("13歳以上である必要があります")
+      else if (age > 120) Left("年齢が不正です")
       else Right(age)
-    catch
+    } catch {
       case _: NumberFormatException =>
         Left("年齢は数値で入力してください")
+    }
+  }
   
   // すべての検証を実行
   def validateForm(form: RegistrationForm): Either[List[String], String] =
@@ -293,10 +311,11 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
       case Left(error) => error
     }
     
-    if errors.isEmpty then
+    if (errors.isEmpty) {
       Right(s"登録成功: ${form.username}")
-    else
+    } else {
       Left(errors)
+    }
   
   // テストケース
   val forms = List(
@@ -307,19 +326,21 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   forms.zipWithIndex.foreach { case (form, index) =>
     println(s"\n=== フォーム${index + 1} ===")
-    validateForm(form) match
+    validateForm(form) match {
       case Right(message) => println(s"✓ $message")
       case Left(errors) =>
         println("✗ エラー:")
         errors.foreach(e => println(s"  - $e"))
+    }
   }
+}
 ```
 
 ## Try：例外を安全に扱う
 
 ```scala
 // TryExample.scala
-@main def tryExample(): Unit =
+@main def tryExample(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // Tryは例外を値として扱う
@@ -341,29 +362,32 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   // Try → Either
   def loadConfigFile(filename: String): Either[String, String] =
-    readFile(filename) match
+    readFile(filename) match {
       case Success(content) => Right(content)
       case Failure(e) => Left(s"ファイル読み込みエラー: ${e.getMessage}")
+    }
   
   println(loadConfigFile("config.txt"))
   
   // Tryのチェーン
-  val calculation = for
+  val calculation = for {
     a <- Try("10".toInt)
     b <- Try("20".toInt)
     c <- Try((a + b) / (a - 10))  // ゼロ除算の可能性
-  yield c
+  } yield c
   
-  calculation match
+  calculation match {
     case Success(result) => println(s"計算結果: $result")
     case Failure(e) => println(s"計算エラー: ${e.getMessage}")
+  }
+}
 ```
 
 ## ベストプラクティス
 
 ```scala
 // BestPractices.scala
-@main def bestPractices(): Unit =
+@main def bestPractices(): Unit = {
   // 1. nullの代わりにOptionを使う
   case class Config(
     host: String,
@@ -378,16 +402,16 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   
   // 2. 例外の代わりにEitherを使う
   def findUser(id: Int): Either[String, String] =
-    if id == 1 then Right("太郎")
+    if (id == 1) Right("太郎")
     else Left(s"ユーザーID $id は存在しません")
   
   // 3. for式で複数の操作を組み合わせる
   def processUser(userId: Int): Either[String, String] =
-    for
+    for {
       user <- findUser(userId)
       upper = user.toUpperCase  // 通常の処理も混ぜられる
       result <- Right(s"処理完了: $upper")
-    yield result
+    } yield result
   
   println(processUser(1))
   println(processUser(99))
@@ -401,11 +425,13 @@ Scalaには、こうした「不確実性」を安全に扱うための素晴ら
   def complexOperation(): Either[AppError, String] =
     Left(ValidationError("email", "無効な形式です"))
   
-  complexOperation() match
+  complexOperation() match {
     case Right(result) => println(s"成功: $result")
     case Left(ValidationError(field, msg)) => println(s"検証エラー[$field]: $msg")
     case Left(DatabaseError(cause)) => println(s"DBエラー: $cause")
     case Left(NetworkError) => println("ネットワークエラー")
+  }
+}
 ```
 
 ## 練習してみよう！
@@ -461,19 +487,19 @@ OptionとEitherを適切に使ってください。
 ### 使い分けのコツ
 
 1. **Option**
-   - 値があるかないか
-   - エラーの詳細不要
-   - シンプルな有無
+    - 値があるかないか
+    - エラーの詳細不要
+    - シンプルな有無
 
 2. **Either**
-   - エラー情報が必要
-   - 複数の失敗パターン
-   - 処理の成功/失敗
+    - エラー情報が必要
+    - 複数の失敗パターン
+    - 処理の成功/失敗
 
 3. **Try**
-   - 既存の例外を扱う
-   - 外部ライブラリとの連携
-   - I/O操作
+    - 既存の例外を扱う
+    - 外部ライブラリとの連携
+    - I/O操作
 
 ### 次の部では...
 

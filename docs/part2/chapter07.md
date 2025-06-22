@@ -10,7 +10,7 @@
 
 ```scala
 // StringCreation.scala
-@main def stringCreation(): Unit =
+@main def stringCreation(): Unit = {
   // 文字列の作成
   val greeting = "こんにちは"
   val name = "太郎"
@@ -36,13 +36,14 @@
   // raw補間子（エスケープなし）
   val path = raw"C:\Users\Documents\file.txt"
   println(path)
+}
 ```
 
 ### 文字列の長さと文字へのアクセス
 
 ```scala
 // StringLength.scala
-@main def stringLength(): Unit =
+@main def stringLength(): Unit = {
   val text = "Hello, Scala!"
   
   // 長さの取得
@@ -62,6 +63,7 @@
   // 文字ごとに処理
   println("文字ごとに表示:")
   japanese.foreach(char => println(s"  ${char}"))
+}
 ```
 
 ## 文字列の検索と置換
@@ -70,7 +72,7 @@
 
 ```scala
 // StringSearch.scala
-@main def stringSearch(): Unit =
+@main def stringSearch(): Unit = {
   val text = "Scala is a powerful language. Scala is fun!"
   
   // 含まれているか確認
@@ -92,13 +94,14 @@
   val pattern = "\\b\\w+ful\\b".r  // "ful"で終わる単語
   val matches = pattern.findAllIn(text).toList
   println(s"'ful'で終わる単語: ${matches}")
+}
 ```
 
 ### 文字列の置換
 
 ```scala
 // StringReplace.scala
-@main def stringReplace(): Unit =
+@main def stringReplace(): Unit = {
   val original = "I love Java. Java is great!"
   
   // 単純な置換
@@ -121,6 +124,7 @@
     .replace(";", " ")
     .replace(":", " ")
   println(s"区切り文字を統一: ${multiReplace}")
+}
 ```
 
 ## 文字列の分割と結合
@@ -129,7 +133,7 @@
 
 ```scala
 // StringSplit.scala
-@main def stringSplit(): Unit =
+@main def stringSplit(): Unit = {
   // カンマで分割
   val csv = "りんご,バナナ,オレンジ,ぶどう"
   val fruits = csv.split(",")
@@ -153,13 +157,14 @@
     |第3行""".stripMargin
   val lines = multiline.split("\n")
   println(s"行数: ${lines.length}")
+}
 ```
 
 ### 文字列の結合
 
 ```scala
 // StringJoin.scala
-@main def stringJoin(): Unit =
+@main def stringJoin(): Unit = {
   val words = List("Scala", "is", "awesome")
   
   // mkStringで結合
@@ -183,6 +188,7 @@
   val numbers = (1 to 10000).map(_.toString)
   val efficient = numbers.mkString(",")  // 効率的
   println(s"大量結合の長さ: ${efficient.length}")
+}
 ```
 
 ## 文字列のフォーマット
@@ -191,7 +197,7 @@
 
 ```scala
 // StringFormat.scala
-@main def stringFormat(): Unit =
+@main def stringFormat(): Unit = {
   // f補間子を使ったフォーマット
   val name = "太郎"
   val age = 20
@@ -215,13 +221,14 @@
   println(f"${"数学"}%-10s ${85}%5d ${"B"}%s")
   println(f"${"英語"}%-10s ${92}%5d ${"A"}%s")
   println(f"${"理科"}%-10s ${78}%5d ${"C"}%s")
+}
 ```
 
 ### 数値のフォーマット
 
 ```scala
 // NumberFormat.scala
-@main def numberFormat(): Unit =
+@main def numberFormat(): Unit = {
   val price = 1234567.89
   val percentage = 0.1234
   val scientific = 1234.5678
@@ -246,6 +253,7 @@
   import java.time.LocalDateTime
   val now = LocalDateTime.now()
   println(f"現在時刻: ${now.getYear}%d年${now.getMonthValue}%02d月${now.getDayOfMonth}%02d日")
+}
 ```
 
 ## 文字列の変換
@@ -254,7 +262,7 @@
 
 ```scala
 // CaseConversion.scala
-@main def caseConversion(): Unit =
+@main def caseConversion(): Unit = {
   val text = "Hello, Scala Programming!"
   
   // 大文字・小文字変換
@@ -280,13 +288,14 @@
     .map(_.capitalize)
     .mkString(" ")
   println(s"タイトルケース: ${titleCase}")
+}
 ```
 
 ### 空白の処理
 
 ```scala
 // WhitespaceHandling.scala
-@main def whitespaceHandling(): Unit =
+@main def whitespaceHandling(): Unit = {
   val messy = "  Hello   Scala   World  "
   
   // 前後の空白を削除
@@ -318,6 +327,7 @@
   
   println("整形後:")
   println(trimmedLines)
+}
 ```
 
 ## 正規表現
@@ -326,7 +336,7 @@
 
 ```scala
 // RegexBasics.scala
-@main def regexBasics(): Unit =
+@main def regexBasics(): Unit = {
   // 正規表現パターンの作成
   val emailPattern = "\\w+@\\w+\\.\\w+".r
   val phonePattern = "\\d{3}-\\d{4}-\\d{4}".r
@@ -335,35 +345,39 @@
   val email = "user@example.com"
   val phone = "090-1234-5678"
   
-  emailPattern.findFirstIn(email) match
+  emailPattern.findFirstIn(email) match {
     case Some(found) => println(s"メールアドレス: ${found}")
     case None => println("メールアドレスが見つかりません")
+  }
   
-  phonePattern.findFirstIn(phone) match
+  phonePattern.findFirstIn(phone) match {
     case Some(found) => println(s"電話番号: ${found}")
     case None => println("電話番号が見つかりません")
+  }
   
   // 複数のマッチを検索
   val text = "連絡先: user1@example.com, user2@test.com"
   val emails = emailPattern.findAllIn(text).toList
   println(s"見つかったメール: ${emails}")
+}
 ```
 
 ### パターンマッチングと抽出
 
 ```scala
 // RegexExtraction.scala
-@main def regexExtraction(): Unit =
+@main def regexExtraction(): Unit = {
   // グループを使った抽出
   val datePattern = "(\\d{4})-(\\d{2})-(\\d{2})".r
   val logPattern = "\\[(\\w+)\\] (.+)".r
   
   // 日付の抽出
-  "2024-03-15" match
+  "2024-03-15" match {
     case datePattern(year, month, day) =>
       println(s"年: ${year}, 月: ${month}, 日: ${day}")
     case _ =>
       println("日付形式が正しくありません")
+  }
   
   // ログの解析
   val logs = List(
@@ -373,19 +387,21 @@
   )
   
   logs.foreach { log =>
-    log match
+    log match {
       case logPattern(level, message) =>
         println(s"${level}: ${message}")
       case _ =>
         println(s"不明な形式: ${log}")
+    }
   }
+}
 ```
 
 ## 実践的な例：テキスト処理ツール
 
 ```scala
 // TextProcessor.scala
-@main def textProcessor(): Unit =
+@main def textProcessor(): Unit = {
   // サンプルテキスト
   val article = """
     |Scalaは2003年に登場したプログラミング言語です。
@@ -441,7 +457,7 @@
 
 ```scala
 // StringEncoding.scala
-@main def stringEncoding(): Unit =
+@main def stringEncoding(): Unit = {
   val text = "こんにちは、Scala!"
   
   // バイト配列への変換
@@ -531,28 +547,28 @@ CSV形式の文字列を解析して、List[List[String]]に変換する関数�
 この章では以下のことを学びました：
 
 1. **文字列の基本操作**
-   - 作成、連結、補間
-   - 長さと文字へのアクセス
-   - 様々な文字列補間子
+    - 作成、連結、補間
+    - 長さと文字へのアクセス
+    - 様々な文字列補間子
 
 2. **検索と置換**
-   - contains、indexOf等の検索メソッド
-   - replace系メソッドでの置換
-   - 正規表現を使った高度な検索
+    - contains、indexOf等の検索メソッド
+    - replace系メソッドでの置換
+    - 正規表現を使った高度な検索
 
 3. **分割と結合**
-   - splitでの分割
-   - mkStringでの結合
-   - StringBuilderでの効率的な処理
+    - splitでの分割
+    - mkStringでの結合
+    - StringBuilderでの効率的な処理
 
 4. **フォーマット**
-   - f補間子でのprintf形式
-   - 数値や日付のフォーマット
-   - 表形式での出力
+    - f補間子でのprintf形式
+    - 数値や日付のフォーマット
+    - 表形式での出力
 
 5. **正規表現**
-   - パターンの作成と使用
-   - マッチングと抽出
-   - 実用的なパターン例
+    - パターンの作成と使用
+    - マッチングと抽出
+    - 実用的なパターン例
 
 次の章では、型安全なコレクションについて学んでいきます！

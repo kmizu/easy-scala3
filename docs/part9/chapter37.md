@@ -580,7 +580,7 @@ publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
+  } else {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
@@ -747,19 +747,19 @@ GitHub ActionsでのCI/CDパイプラインを設定してください：
 ### ビルド管理のコツ
 
 1. **整理された構造**
-   - 明確なモジュール分割
-   - 共通設定の抽出
-   - 適切な命名
+    - 明確なモジュール分割
+    - 共通設定の抽出
+    - 適切な命名
 
 2. **再現可能性**
-   - バージョンの固定
-   - 環境の明示
-   - ビルドの自動化
+    - バージョンの固定
+    - 環境の明示
+    - ビルドの自動化
 
 3. **効率的な開発**
-   - インクリメンタルビルド
-   - 並列実行
-   - キャッシュの活用
+    - インクリメンタルビルド
+    - 並列実行
+    - キャッシュの活用
 
 ### 最後に
 

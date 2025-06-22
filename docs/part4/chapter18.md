@@ -12,21 +12,23 @@
 
 ```scala
 // FunctionAsArgument.scala
-@main def functionAsArgument(): Unit =
+@main def functionAsArgument(): Unit = {
   // 高階関数：関数を引数に取る
-  def doTwice(action: () => Unit): Unit =
+  def doTwice(action: () => Unit): Unit = {
     action()
     action()
+  }
   
   // 使ってみる
   doTwice(() => println("Hello!"))
   
   // もっと実用的な例
-  def measureTime(action: () => Unit): Long =
+  def measureTime(action: () => Unit): Long = {
     val start = System.currentTimeMillis()
     action()
     val end = System.currentTimeMillis()
     end - start
+  }
   
   val time = measureTime(() => {
     Thread.sleep(100)  // 100ミリ秒待つ
@@ -34,13 +36,14 @@
   })
   
   println(s"実行時間: ${time}ミリ秒")
+}
 ```
 
 ### 関数を返す関数
 
 ```scala
 // FunctionReturningFunction.scala
-@main def functionReturningFunction(): Unit =
+@main def functionReturningFunction(): Unit = {
   // 関数を返す関数
   def createGreeter(greeting: String): String => String =
     (name: String) => s"$greeting, $name!"
@@ -53,18 +56,20 @@
   
   // 計算関数を作る関数
   def createCalculator(operation: String): (Int, Int) => Int =
-    operation match
+    operation match {
       case "+" => (a, b) => a + b
       case "-" => (a, b) => a - b
       case "*" => (a, b) => a * b
-      case "/" => (a, b) => if b != 0 then a / b else 0
+      case "/" => (a, b) => if (b != 0) a / b else 0
       case _ => (a, b) => 0
+    }
   
   val adder = createCalculator("+")
   val multiplier = createCalculator("*")
   
   println(s"10 + 5 = ${adder(10, 5)}")
   println(s"10 * 5 = ${multiplier(10, 5)}")
+}
 ```
 
 ## よく使う高階関数
@@ -73,7 +78,7 @@
 
 ```scala
 // MapFunction.scala
-@main def mapFunction(): Unit =
+@main def mapFunction(): Unit = {
   val numbers = List(1, 2, 3, 4, 5)
   
   // 各要素を2倍にする
@@ -100,13 +105,14 @@
   withTax.foreach(p => 
     println(s"${p.name}: ${p.price}円（税込）")
   )
+}
 ```
 
 ### filter：選別する
 
 ```scala
 // FilterFunction.scala
-@main def filterFunction(): Unit =
+@main def filterFunction(): Unit = {
   val numbers = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
   
   // 偶数だけ選ぶ
@@ -131,13 +137,14 @@
   
   println("合格者:")
   passed.foreach(s => println(s"  ${s.name}: ${s.score}点"))
+}
 ```
 
 ### reduce/fold：集約する
 
 ```scala
 // ReduceFoldFunction.scala
-@main def reduceFoldFunction(): Unit =
+@main def reduceFoldFunction(): Unit = {
   val numbers = List(1, 2, 3, 4, 5)
   
   // reduce：要素を1つに集約
@@ -154,7 +161,7 @@
   // 文字列の連結
   val words = List("Scala", "is", "awesome")
   val sentence = words.fold("")((acc, word) => 
-    if acc.isEmpty then word else s"$acc $word"
+    if (acc.isEmpty) word else s"$acc $word"
   )
   println(s"文章: $sentence")
   
@@ -169,6 +176,7 @@
   
   val total = cart.map(item => item.price * item.quantity).sum
   println(f"合計金額: $total%,d円")
+}
 ```
 
 ## 関数の組み合わせ
@@ -177,7 +185,7 @@
 
 ```scala
 // MethodChaining.scala
-@main def methodChaining(): Unit =
+@main def methodChaining(): Unit = {
   val numbers = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
   
   // 複数の操作を連鎖
@@ -217,13 +225,14 @@
   topByDate.foreach { case (date, sale) =>
     println(s"$date の最高売上: ${sale.product} (${sale.amount}円)")
   }
+}
 ```
 
 ### 関数合成
 
 ```scala
 // FunctionComposition.scala
-@main def functionComposition(): Unit =
+@main def functionComposition(): Unit = {
   // 関数を定義
   val double = (x: Int) => x * 2
   val addTen = (x: Int) => x + 10
@@ -262,6 +271,7 @@
   inputs.foreach { input =>
     println(s"'$input' → '${normalize(input)}'")
   }
+}
 ```
 
 ## 実践的な高階関数
@@ -270,14 +280,15 @@
 
 ```scala
 // CustomCollectionOps.scala
-@main def customCollectionOps(): Unit =
+@main def customCollectionOps(): Unit = {
   // takeWhile: 条件を満たす間だけ取る
   def takeWhileCustom[A](list: List[A], p: A => Boolean): List[A] =
-    list match
+    list match {
       case Nil => Nil
       case head :: tail =>
-        if p(head) then head :: takeWhileCustom(tail, p)
+        if (p(head)) head :: takeWhileCustom(tail, p)
         else Nil
+    }
   
   val numbers = List(1, 2, 3, 4, 5, 1, 2, 3)
   val result = takeWhileCustom(numbers, _ < 4)
@@ -302,61 +313,71 @@
   val (adults, young) = people.partition(_.age >= 30)
   println(s"30歳以上: ${adults.map(_.name)}")
   println(s"30歳未満: ${young.map(_.name)}")
+}
 ```
 
 ### リトライ機構
 
 ```scala
 // RetryMechanism.scala
-@main def retryMechanism(): Unit =
+@main def retryMechanism(): Unit = {
   import scala.util.{Try, Success, Failure}
   import scala.util.Random
   
   // リトライ機能を持つ高階関数
-  def retry[T](times: Int)(action: () => T): Try[T] =
+  def retry[T](times: Int)(action: () => T): Try[T] = {
     var lastError: Option[Throwable] = None
     
-    for i <- 1 to times do
-      Try(action()) match
+    for (i <- 1 to times) {
+      Try(action()) match {
         case Success(value) =>
           println(s"成功！（${i}回目）")
           return Success(value)
         case Failure(e) =>
           lastError = Some(e)
           println(s"失敗（${i}回目）: ${e.getMessage}")
+      }
+    }
     
     Failure(lastError.getOrElse(new Exception("Unknown error")))
+  }
   
   // 不安定な処理（50%の確率で失敗）
-  def unstableOperation(): String =
-    if Random.nextBoolean() then "成功データ"
+  def unstableOperation(): String = {
+    if (Random.nextBoolean()) "成功データ"
     else throw new Exception("ネットワークエラー")
+  }
   
   // 3回までリトライ
-  retry(3)(() => unstableOperation()) match
+  retry(3)(() => unstableOperation()) match {
     case Success(data) => println(s"最終結果: $data")
     case Failure(e) => println(s"すべて失敗: ${e.getMessage}")
+  }
+}
 ```
 
 ### イベントハンドラー
 
 ```scala
 // EventHandler.scala
-@main def eventHandler(): Unit =
+@main def eventHandler(): Unit = {
   // イベントハンドラーシステム
-  class EventSystem:
+  class EventSystem {
     private var handlers = Map[String, List[() => Unit]]()
     
-    def on(event: String)(handler: () => Unit): Unit =
+    def on(event: String)(handler: () => Unit): Unit = {
       handlers = handlers.updatedWith(event) {
         case Some(list) => Some(handler :: list)
         case None => Some(List(handler))
       }
+    }
     
-    def trigger(event: String): Unit =
+    def trigger(event: String): Unit = {
       handlers.get(event).foreach { handlerList =>
         handlerList.foreach(handler => handler())
       }
+    }
+  }
   
   val events = new EventSystem
   
@@ -379,6 +400,7 @@
   
   println("\n=== ログアウトイベント ===")
   events.trigger("logout")
+}
 ```
 
 ## 高階関数を使った問題解決
@@ -387,7 +409,7 @@
 
 ```scala
 // ValidationSystem.scala
-@main def validationSystem(): Unit =
+@main def validationSystem(): Unit = {
   type Validator[T] = T => Either[String, T]
   
   // バリデーターを組み合わせる高階関数
@@ -400,19 +422,19 @@
   
   // 個別のバリデーター
   val notEmpty: Validator[String] = s =>
-    if s.trim.nonEmpty then Right(s)
+    if (s.trim.nonEmpty) Right(s)
     else Left("空文字は許可されません")
   
   val minLength: Int => Validator[String] = min => s =>
-    if s.length >= min then Right(s)
+    if (s.length >= min) Right(s)
     else Left(s"${min}文字以上必要です")
   
   val maxLength: Int => Validator[String] = max => s =>
-    if s.length <= max then Right(s)
+    if (s.length <= max) Right(s)
     else Left(s"${max}文字以下にしてください")
   
   val alphaNumeric: Validator[String] = s =>
-    if s.matches("^[a-zA-Z0-9]+$") then Right(s)
+    if (s.matches("^[a-zA-Z0-9]+$")) Right(s)
     else Left("英数字のみ使用可能です")
   
   // バリデーターを組み合わせ
@@ -434,10 +456,12 @@
   )
   
   testCases.foreach { username =>
-    usernameValidator(username) match
+    usernameValidator(username) match {
       case Right(valid) => println(s"✓ '$valid' は有効です")
       case Left(error) => println(s"✗ '$username': $error")
+    }
   }
+}
 ```
 
 ## 練習してみよう！
@@ -484,19 +508,19 @@
 ### 高階関数を使うコツ
 
 1. **小さく始める**
-   - 単純な関数から
-   - 徐々に組み合わせる
-   - 読みやすさを重視
+    - 単純な関数から
+    - 徐々に組み合わせる
+    - 読みやすさを重視
 
 2. **既存の関数を活用**
-   - map, filter, foldを使いこなす
-   - 車輪の再発明を避ける
-   - 標準ライブラリを知る
+    - map, filter, foldを使いこなす
+    - 車輪の再発明を避ける
+    - 標準ライブラリを知る
 
 3. **関数の組み合わせ**
-   - 単一責任の原則
-   - 再利用可能な部品
-   - テストしやすい設計
+    - 単一責任の原則
+    - 再利用可能な部品
+    - テストしやすい設計
 
 ### 次の章では...
 

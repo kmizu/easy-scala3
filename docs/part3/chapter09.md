@@ -10,7 +10,7 @@
 
 ```scala
 // ListCreation.scala
-@main def listCreation(): Unit =
+@main def listCreation(): Unit = {
   // リストの作成方法
   val list1 = List(1, 2, 3, 4, 5)
   val list2 = 1 :: 2 :: 3 :: 4 :: 5 :: Nil  // ::演算子を使った方法
@@ -33,13 +33,14 @@
   val stringList: List[String] = List("a", "b", "c")
   // val mixedList: List[Int] = List(1, "2", 3)  // エラー！型が違う
 }
+}
 ```
 
 ### Cons（::）演算子の理解
 
 ```scala
 // ConsOperator.scala
-@main def consOperator(): Unit =
+@main def consOperator(): Unit = {
   // ::（cons）は要素をリストの先頭に追加
   val list = List(2, 3, 4)
   val newList = 1 :: list
@@ -59,11 +60,13 @@
   println(s"Step 4: ${step4}")
   
   // パターンマッチでの分解
-  list match
+  list match {
     case head :: tail =>
       println(s"先頭: ${head}, 残り: ${tail}")
     case Nil =>
       println("空のリスト")
+  }
+}
 }
 ```
 
@@ -73,7 +76,7 @@
 
 ```scala
 // ListAccess.scala
-@main def listAccess(): Unit =
+@main def listAccess(): Unit = {
   val fruits = List("りんご", "バナナ", "オレンジ", "ぶどう", "メロン")
   
   // 基本的なアクセス
@@ -109,7 +112,7 @@
 
 ```scala
 // ListConcatenation.scala
-@main def listConcatenation(): Unit =
+@main def listConcatenation(): Unit = {
   val list1 = List(1, 2, 3)
   val list2 = List(4, 5, 6)
   val list3 = List(7, 8, 9)
@@ -148,7 +151,7 @@
 
 ```scala
 // ListTransformations.scala
-@main def listTransformations(): Unit =
+@main def listTransformations(): Unit = {
   val numbers = List(1, 2, 3, 4, 5)
   
   // map: 各要素を変換
@@ -187,7 +190,7 @@
 
 ```scala
 // ListFoldReduce.scala
-@main def listFoldReduce(): Unit =
+@main def listFoldReduce(): Unit = {
   val numbers = List(1, 2, 3, 4, 5)
   
   // sum は fold の特殊な例
@@ -227,7 +230,7 @@
 
 ```scala
 // ListZip.scala
-@main def listZip(): Unit =
+@main def listZip(): Unit = {
   val names = List("太郎", "花子", "次郎")
   val ages = List(20, 22, 19)
   val cities = List("東京", "大阪", "名古屋", "福岡")  // 長いリスト
@@ -261,37 +264,41 @@
 
 ```scala
 // ListPatternMatching.scala
-@main def listPatternMatching(): Unit =
+@main def listPatternMatching(): Unit = {
   // 基本的なパターンマッチ
-  def describe(list: List[Int]): String = list match
+  def describe(list: List[Int]): String = list match {
     case Nil => "空のリスト"
     case head :: Nil => s"要素が1つ: $head"
     case head :: tail => s"先頭: $head, 残り: $tail"
+  }
   
   println(describe(List()))
   println(describe(List(1)))
   println(describe(List(1, 2, 3)))
   
   // より複雑なパターン
-  def sumFirstTwo(list: List[Int]): Option[Int] = list match
+  def sumFirstTwo(list: List[Int]): Option[Int] = list match {
     case first :: second :: _ => Some(first + second)
     case _ => None
+  }
   
   println(s"最初の2つの和: ${sumFirstTwo(List(10, 20, 30))}")
   println(s"要素不足: ${sumFirstTwo(List(10))}")
   
   // 再帰的な処理
-  def sum(list: List[Int]): Int = list match
+  def sum(list: List[Int]): Int = list match {
     case Nil => 0
     case head :: tail => head + sum(tail)
+  }
   
   println(s"再帰的な合計: ${sum(List(1, 2, 3, 4, 5))}")
   
   // 条件付きパターン
-  def findFirstEven(list: List[Int]): Option[Int] = list match
+  def findFirstEven(list: List[Int]): Option[Int] = list match {
     case Nil => None
     case head :: tail if head % 2 == 0 => Some(head)
     case _ :: tail => findFirstEven(tail)
+  }
   
   println(s"最初の偶数: ${findFirstEven(List(1, 3, 5, 4, 6))}")
 }
@@ -301,7 +308,7 @@
 
 ```scala
 // TodoListManager.scala
-@main def todoListManager(): Unit =
+@main def todoListManager(): Unit = {
   // TODOアイテムの定義
   case class Todo(
     id: Int,
@@ -320,12 +327,13 @@
   )
   
   // TODOの表示
-  def displayTodos(list: List[Todo]): Unit =
+  def displayTodos(list: List[Todo]): Unit = {
     list.foreach { todo =>
-      val status = if todo.completed then "✓" else "○"
+      val status = if (todo.completed) "✓" else "○"
       val priority = "★" * (4 - todo.priority)
       println(f"$status ${todo.id}%2d. ${todo.title}%-20s $priority")
     }
+  }
   
   println("=== 現在のTODO ===")
   displayTodos(todos)
@@ -340,11 +348,12 @@
   displayTodos(sorted)
   
   // TODOを完了にする
-  def completeTodo(id: Int, list: List[Todo]): List[Todo] =
+  def completeTodo(id: Int, list: List[Todo]): List[Todo] = {
     list.map { todo =>
-      if todo.id == id then todo.copy(completed = true)
+      if (todo.id == id) todo.copy(completed = true)
       else todo
     }
+  }
   
   todos = completeTodo(2, todos)
   println("\n=== ID:2を完了 ===")
@@ -361,23 +370,28 @@
 
 ```scala
 // ListPerformance.scala
-@main def listPerformance(): Unit =
+@main def listPerformance(): Unit = {
   // リストの構築：末尾への追加は避ける
-  def buildListBad(n: Int): List[Int] =
+  def buildListBad(n: Int): List[Int] = {
     var list = List[Int]()
-    for i <- 1 to n do
+    for (i <- 1 to n) {
       list = list :+ i  // O(n) - 遅い！
+    }
     list
+  }
   
-  def buildListGood(n: Int): List[Int] =
+  def buildListGood(n: Int): List[Int] = {
     var list = List[Int]()
-    for i <- 1 to n do
+    for (i <- 1 to n) {
       list = i :: list  // O(1) - 速い！
+    }
     list.reverse      // 最後に一度だけ反転
+  }
   
   // さらに良い方法
-  def buildListBest(n: Int): List[Int] =
+  def buildListBest(n: Int): List[Int] = {
     (1 to n).toList
+  }
   
   // 大きなリストでの操作
   val largeList = (1 to 10000).toList
@@ -393,9 +407,10 @@
   
   // tail recursion で stack overflow を防ぐ
   @annotation.tailrec
-  def sumTailRec(list: List[Int], acc: Int = 0): Int = list match
+  def sumTailRec(list: List[Int], acc: Int = 0): Int = list match {
     case Nil => acc
     case head :: tail => sumTailRec(tail, acc + head)
+  }
   
   val sum = sumTailRec((1 to 100000).toList)
   println(s"末尾再帰の合計: ${sum}")
@@ -406,7 +421,7 @@
 
 ```scala
 // CommonListPatterns.scala
-@main def commonListPatterns(): Unit =
+@main def commonListPatterns(): Unit = {
   val data = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
   
   // 存在チェック
@@ -474,7 +489,7 @@ List[List[Int]]を受け取り、以下を計算してください：
 ### 問題5：エラーを修正
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val list = List(1, 2, 3)
   list(0) = 10  // リストを変更しようとしている
   
@@ -482,6 +497,7 @@ List[List[Int]]を受け取り、以下を計算してください：
   val first = empty.head
   
   val result = list.map(_ + 1).filter(_ > 2).sum()
+}
 ```
 
 ## まとめ
@@ -489,28 +505,28 @@ List[List[Int]]を受け取り、以下を計算してください：
 この章では以下のことを学びました：
 
 1. **リストの基本**
-   - イミュータブルな順序付きコレクション
-   - ::演算子による効率的な構築
-   - 型安全性の保証
+    - イミュータブルな順序付きコレクション
+    - ::演算子による効率的な構築
+    - 型安全性の保証
 
 2. **基本的な操作**
-   - 要素へのアクセス（head、tail、apply）
-   - リストの結合と分割
-   - 安全な操作方法
+    - 要素へのアクセス（head、tail、apply）
+    - リストの結合と分割
+    - 安全な操作方法
 
 3. **高度な操作**
-   - map、filter、flatMapによる変換
-   - foldとreduceによる集約
-   - zipによる複数リストの結合
+    - map、filter、flatMapによる変換
+    - foldとreduceによる集約
+    - zipによる複数リストの結合
 
 4. **パターンマッチング**
-   - リストの構造による分岐
-   - 再帰的な処理
-   - 条件付きパターン
+    - リストの構造による分岐
+    - 再帰的な処理
+    - 条件付きパターン
 
 5. **パフォーマンスの考慮**
-   - 先頭への追加の活用
-   - 遅延評価の利用
-   - 末尾再帰の重要性
+    - 先頭への追加の活用
+    - 遅延評価の利用
+    - 末尾再帰の重要性
 
 次の章では、異なる型の要素をまとめられるタプルについて学んでいきます！

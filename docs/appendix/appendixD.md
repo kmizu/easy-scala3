@@ -35,31 +35,31 @@
 ```scala
 // 必須プラグイン
 1. Scala Plugin（公式）
-   - Scalaサポートの基本
+    - Scalaサポートの基本
 
 2. sbt Plugin
-   - sbtプロジェクトの統合
+    - sbtプロジェクトの統合
 
 // 推奨プラグイン
 3. Rainbow Brackets
-   - 括弧の対応を色分け
-   - ネストが深いコードで便利
+    - 括弧の対応を色分け
+    - ネストが深いコードで便利
 
 4. Key Promoter X
-   - ショートカットキーを学習
-   - マウス操作時にキーボードショートカットを表示
+    - ショートカットキーを学習
+    - マウス操作時にキーボードショートカットを表示
 
 5. GitToolBox
-   - Git統合の強化
-   - ブランチ情報、blame表示
+    - Git統合の強化
+    - ブランチ情報、blame表示
 
 6. String Manipulation
-   - 文字列操作の効率化
-   - CamelCase ⇔ snake_case変換
+    - 文字列操作の効率化
+    - CamelCase ⇔ snake_case変換
 
 7. Scalafmt
-   - コードフォーマッター
-   - 保存時に自動フォーマット
+    - コードフォーマッター
+    - 保存時に自動フォーマット
 ```
 
 ### ショートカットキー

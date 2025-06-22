@@ -14,25 +14,28 @@
 
 ```scala
 // BasicMatch.scala
-@main def basicMatch(): Unit =
+@main def basicMatch(): Unit = {
   val day = "月曜日"
   
-  val message = day match
+  val message = day match {
     case "月曜日" => "今週も頑張りましょう！"
     case "金曜日" => "もうすぐ週末ですね！"
     case "土曜日" | "日曜日" => "休日を楽しみましょう！"
     case _ => "今日も一日お疲れさまです"
+  }
   
   println(message)
   
   // 数値のマッチング
   val number = 3
   
-  number match
+  number match {
     case 1 => println("最初の数")
     case 2 => println("2番目")
     case 3 => println("3番目")
     case n => println(s"その他の数: $n")
+  }
+}
 ```
 
 `match`は値を見て、最初にマッチした`case`の処理を実行します。`_`は「その他すべて」を表す特別な記号です。
@@ -41,13 +44,14 @@
 
 ```scala
 // TypeMatching.scala
-@main def typeMatching(): Unit =
-  def describe(x: Any): String = x match
+@main def typeMatching(): Unit = {
+  def describe(x: Any): String = x match {
     case i: Int => s"整数: $i"
     case d: Double => s"小数: $d"
     case s: String => s"文字列: '$s'"
     case b: Boolean => s"真偽値: $b"
     case _ => "その他の型"
+  }
   
   println(describe(42))
   println(describe(3.14))
@@ -62,62 +66,69 @@
 
 ```scala
 // ListPatterns.scala
-@main def listPatterns(): Unit =
-  def describeList(list: List[Int]): String = list match
+@main def listPatterns(): Unit = {
+  def describeList(list: List[Int]): String = list match {
     case Nil => "空のリスト"
     case head :: Nil => s"要素が1つ: $head"
     case head :: tail => s"先頭: $head, 残り: $tail"
+  }
   
   println(describeList(List()))
   println(describeList(List(1)))
   println(describeList(List(1, 2, 3)))
   
   // より複雑なパターン
-  def sumFirstTwo(list: List[Int]): Int = list match
+  def sumFirstTwo(list: List[Int]): Int = list match {
     case first :: second :: _ => first + second
     case first :: Nil => first
     case Nil => 0
+  }
   
   println(s"最初の2つの和: ${sumFirstTwo(List(10, 20, 30))}")
   println(s"要素1つ: ${sumFirstTwo(List(5))}")
   println(s"空リスト: ${sumFirstTwo(List())}")
+}
 ```
 
 ### タプルのパターン
 
 ```scala
 // TuplePatterns.scala
-@main def tuplePatterns(): Unit =
+@main def tuplePatterns(): Unit = {
   val person = ("太郎", 25, "エンジニア")
   
-  person match
+  person match {
     case (name, age, job) =>
       println(s"$name さん（$age歳）は$jobです")
+  }
   
   // 一部だけ使う
   val point = (10, 20)
   
-  point match
+  point match {
     case (0, 0) => println("原点")
     case (x, 0) => println(s"X軸上の点: ($x, 0)")
     case (0, y) => println(s"Y軸上の点: (0, $y)")
     case (x, y) => println(s"一般の点: ($x, $y)")
+  }
   
   // 複数の値を返す関数と組み合わせ
   def divide(a: Int, b: Int): (Boolean, Int, Int) =
-    if b == 0 then (false, 0, 0)
+    if (b == 0) (false, 0, 0)
     else (true, a / b, a % b)
   
-  divide(17, 5) match
+  divide(17, 5) match {
     case (false, _, _) => println("エラー：ゼロ除算")
     case (true, q, r) => println(s"17 ÷ 5 = $q 余り $r")
+  }
+}
 ```
 
 ### ケースクラスのパターン
 
 ```scala
 // CaseClassPatterns.scala
-@main def caseClassPatterns(): Unit =
+@main def caseClassPatterns(): Unit = {
   // ケースクラスの定義
   case class Person(name: String, age: Int)
   case class Book(title: String, author: String, year: Int)
@@ -125,13 +136,14 @@
   val item1: Any = Person("田中太郎", 30)
   val item2: Any = Book("Scala入門", "山田花子", 2024)
   
-  def describe(item: Any): String = item match
+  def describe(item: Any): String = item match {
     case Person(name, age) =>
       s"$name さん、$age 歳"
     case Book(title, author, year) =>
       s"「$title」 著者: $author ($year年)"
     case _ =>
       "不明なアイテム"
+  }
   
   println(describe(item1))
   println(describe(item2))
@@ -151,6 +163,7 @@
     case Student(name, score, false) =>
       println(s"$name: 不合格($score点)")
   }
+}
 ```
 
 ## ガード条件
@@ -159,12 +172,13 @@
 
 ```scala
 // PatternGuards.scala
-@main def patternGuards(): Unit =
-  def categorizeNumber(x: Int): String = x match
+@main def patternGuards(): Unit = {
+  def categorizeNumber(x: Int): String = x match {
     case n if n < 0 => "負の数"
     case 0 => "ゼロ"
     case n if n % 2 == 0 => "正の偶数"
     case n if n % 2 == 1 => "正の奇数"
+  }
   
   List(-5, 0, 4, 7).foreach { n =>
     println(s"$n は ${categorizeNumber(n)}")
@@ -173,12 +187,13 @@
   // 成績評価
   case class Score(subject: String, point: Int)
   
-  def evaluate(score: Score): String = score match
+  def evaluate(score: Score): String = score match {
     case Score(_, p) if p >= 90 => "S"
     case Score(_, p) if p >= 80 => "A"
     case Score(_, p) if p >= 70 => "B"
     case Score(_, p) if p >= 60 => "C"
     case Score(_, _) => "D"
+  }
   
   val scores = List(
     Score("数学", 95),
@@ -189,6 +204,7 @@
   scores.foreach { s =>
     println(s"${s.subject}: ${s.point}点 → ${evaluate(s)}評価")
   }
+}
 ```
 
 ## 実践的な例
@@ -197,19 +213,20 @@
 
 ```scala
 // Calculator.scala
-@main def calculator(): Unit =
+@main def calculator(): Unit = {
   sealed trait Operation
   case class Add(a: Double, b: Double) extends Operation
   case class Subtract(a: Double, b: Double) extends Operation
   case class Multiply(a: Double, b: Double) extends Operation
   case class Divide(a: Double, b: Double) extends Operation
   
-  def calculate(op: Operation): Either[String, Double] = op match
+  def calculate(op: Operation): Either[String, Double] = op match {
     case Add(a, b) => Right(a + b)
     case Subtract(a, b) => Right(a - b)
     case Multiply(a, b) => Right(a * b)
     case Divide(a, b) if b != 0 => Right(a / b)
     case Divide(_, _) => Left("エラー：ゼロで除算はできません")
+  }
   
   val operations = List(
     Add(10, 5),
@@ -220,23 +237,26 @@
   )
   
   operations.foreach { op =>
-    val opStr = op match
+    val opStr = op match {
       case Add(a, b) => s"$a + $b"
       case Subtract(a, b) => s"$a - $b"
       case Multiply(a, b) => s"$a × $b"
       case Divide(a, b) => s"$a ÷ $b"
+    }
     
-    calculate(op) match
+    calculate(op) match {
       case Right(result) => println(s"$opStr = $result")
       case Left(error) => println(s"$opStr → $error")
+    }
   }
+}
 ```
 
 ### JSONライクなデータ処理
 
 ```scala
 // JsonLikeData.scala
-@main def jsonLikeData(): Unit =
+@main def jsonLikeData(): Unit = {
   // シンプルなJSONライクな型
   sealed trait JsonValue
   case class JsonString(value: String) extends JsonValue
@@ -247,7 +267,7 @@
   case class JsonObject(fields: Map[String, JsonValue]) extends JsonValue
   
   // JSONデータを文字列に変換
-  def stringify(json: JsonValue): String = json match
+  def stringify(json: JsonValue): String = json match {
     case JsonString(s) => s""""$s""""
     case JsonNumber(n) => n.toString
     case JsonBoolean(b) => b.toString
@@ -257,6 +277,7 @@
     case JsonObject(fields) =>
       fields.map { case (k, v) => s""""$k": ${stringify(v)}""" }
         .mkString("{", ", ", "}")
+  }
   
   // サンプルデータ
   val person = JsonObject(Map(
@@ -274,41 +295,47 @@
   
   // 特定のフィールドを取得
   def getField(json: JsonValue, path: String): Option[JsonValue] = 
-    (json, path) match
+    (json, path) match {
       case (JsonObject(fields), fieldName) => fields.get(fieldName)
       case _ => None
+    }
   
-  getField(person, "name") match
+  getField(person, "name") match {
     case Some(JsonString(name)) => println(s"名前: $name")
     case _ => println("名前が見つかりません")
+  }
+}
 ```
 
 ### 状態管理
 
 ```scala
 // StateManagement.scala
-@main def stateManagement(): Unit =
+@main def stateManagement(): Unit = {
   // 信号機の状態
   sealed trait TrafficLight
   case object Red extends TrafficLight
   case object Yellow extends TrafficLight
   case object Green extends TrafficLight
   
-  def nextLight(current: TrafficLight): TrafficLight = current match
+  def nextLight(current: TrafficLight): TrafficLight = current match {
     case Red => Green
     case Green => Yellow
     case Yellow => Red
+  }
   
-  def action(light: TrafficLight): String = light match
+  def action(light: TrafficLight): String = light match {
     case Red => "止まれ"
     case Yellow => "注意"
     case Green => "進め"
+  }
   
   // シミュレーション
   var light = Red
-  for i <- 1 to 6 do
+  for (i <- 1 to 6) {
     println(s"${i}. ${action(light)} ($light)")
     light = nextLight(light)
+  }
   
   // 自動販売機の状態
   case class VendingMachine(money: Int, stock: Map[String, Int])
@@ -319,13 +346,13 @@
   case object ReturnMoney extends Command
   
   def processCommand(vm: VendingMachine, cmd: Command): VendingMachine = 
-    cmd match
+    cmd match {
       case InsertMoney(amount) =>
         println(s"${amount}円投入しました")
         vm.copy(money = vm.money + amount)
       
       case SelectItem(name) =>
-        vm.stock.get(name) match
+        vm.stock.get(name) match {
           case Some(count) if count > 0 && vm.money >= 120 =>
             println(s"$name を購入しました")
             vm.copy(
@@ -338,10 +365,12 @@
           case _ =>
             println("お金が足りません")
             vm
+        }
       
       case ReturnMoney =>
         println(s"${vm.money}円返却しました")
         vm.copy(money = 0)
+    }
   
   // 使ってみる
   var machine = VendingMachine(0, Map("コーラ" -> 3, "水" -> 2))
@@ -358,13 +387,14 @@
   commands.foreach { cmd =>
     machine = processCommand(machine, cmd)
   }
+}
 ```
 
 ## 部分関数
 
 ```scala
 // PartialFunctions.scala
-@main def partialFunctions(): Unit =
+@main def partialFunctions(): Unit = {
   // 部分関数の定義
   val doubleEvens: PartialFunction[Int, Int] = {
     case x if x % 2 == 0 => x * 2
@@ -395,10 +425,12 @@
     }
   
   List((10, 2), (10, 0), (20, 4)).foreach { case (a, b) =>
-    safeDivide(a, b) match
+    safeDivide(a, b) match {
       case Right(result) => println(s"$a ÷ $b = $result")
       case Left(error) => println(s"$a ÷ $b → $error")
+    }
   }
+}
 ```
 
 ## パターンマッチングのコツ
@@ -407,26 +439,29 @@
 
 ```scala
 // ExhaustiveMatching.scala
-@main def exhaustiveMatching(): Unit =
+@main def exhaustiveMatching(): Unit = {
   sealed trait Color
   case object Red extends Color
   case object Green extends Color
   case object Blue extends Color
   
   // すべてのケースを網羅
-  def toRGB(color: Color): String = color match
+  def toRGB(color: Color): String = color match {
     case Red => "#FF0000"
     case Green => "#00FF00"
     case Blue => "#0000FF"
     // sealed traitなので、すべてのケースが網羅されているかコンパイラがチェック
+  }
   
   // Option型での網羅
-  def processOption(opt: Option[String]): String = opt match
+  def processOption(opt: Option[String]): String = opt match {
     case Some(value) => s"値あり: $value"
     case None => "値なし"
+  }
   
   println(processOption(Some("Hello")))
   println(processOption(None))
+}
 ```
 
 ## 練習してみよう！
@@ -480,16 +515,16 @@
 ### パターンマッチングを使うべき場面
 
 1. **複雑な条件分岐**
-   - if-elseが複雑になったとき
-   - データの構造で分岐したいとき
+    - if-elseが複雑になったとき
+    - データの構造で分岐したいとき
 
 2. **データの分解**
-   - タプルやケースクラスから値を取り出す
-   - リストの要素にアクセス
+    - タプルやケースクラスから値を取り出す
+    - リストの要素にアクセス
 
 3. **型安全な処理**
-   - sealed traitで網羅性を保証
-   - コンパイル時のチェック
+    - sealed traitで網羅性を保証
+    - コンパイル時のチェック
 
 ### 次の章では...
 

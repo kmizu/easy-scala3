@@ -12,7 +12,7 @@
 
 ```scala
 // GenericBoxBasics.scala
-@main def genericBoxBasics(): Unit =
+@main def genericBoxBasics(): Unit = {
   // 型パラメータを使わない場合（不便...）
   class IntBox(value: Int):
     def getValue: Int = value
@@ -48,7 +48,7 @@
 
 ```scala
 // MultipleTypeParameters.scala
-@main def multipleTypeParameters(): Unit =
+@main def multipleTypeParameters(): Unit = {
   // 2つの型パラメータを持つペア
   class Pair[A, B](val first: A, val second: B):
     def swap: Pair[B, A] = Pair(second, first)
@@ -90,7 +90,7 @@
   
   // 使用例
   def divide(a: Int, b: Int): Result[String, Double] =
-    if b == 0 then Result.error("ゼロ除算エラー")
+    if (b == 0) Result.error("ゼロ除算エラー")
     else Result.success(a.toDouble / b)
   
   val result1 = divide(10, 2)
@@ -106,7 +106,7 @@
 
 ```scala
 // GenericCollections.scala
-@main def genericCollections(): Unit =
+@main def genericCollections(): Unit = {
   // 簡単なスタックの実装
   class Stack[A]:
     private var elements: List[A] = List.empty
@@ -115,12 +115,13 @@
       elements = elem :: elements
     
     def pop(): Option[A] =
-      elements match
+      elements match {
         case head :: tail =>
           elements = tail
           Some(head)
         case Nil =>
           None
+      }
     
     def peek: Option[A] = elements.headOption
     
@@ -168,17 +169,19 @@
       back = elem :: back
     
     def dequeue(): Option[A] =
-      front match
+      front match {
         case head :: tail =>
           front = tail
           Some(head)
         case Nil =>
-          if back.nonEmpty then
+          if (back.nonEmpty) {
             front = back.reverse
             back = List.empty
             dequeue()
-          else
+          } else {
             None
+          }
+      }
     
     def isEmpty: Boolean = front.isEmpty && back.isEmpty
     
@@ -201,7 +204,7 @@
 
 ```scala
 // GenericTree.scala
-@main def genericTree(): Unit =
+@main def genericTree(): Unit = {
   // 二分木の定義
   enum BinaryTree[+A]:
     case Empty
@@ -213,30 +216,35 @@
   object BinaryTree:
     def leaf[A](value: A): BinaryTree[A] = Node(value, Empty, Empty)
     
-    def size[A](tree: BinaryTree[A]): Int = tree match
+    def size[A](tree: BinaryTree[A]): Int = tree match {
       case Empty => 0
       case Node(_, left, right) => 1 + size(left) + size(right)
+    }
     
-    def depth[A](tree: BinaryTree[A]): Int = tree match
+    def depth[A](tree: BinaryTree[A]): Int = tree match {
       case Empty => 0
       case Node(_, left, right) => 1 + math.max(depth(left), depth(right))
+    }
     
     def map[A, B](tree: BinaryTree[A])(f: A => B): BinaryTree[B] = 
-      tree match
+      tree match {
         case Empty => Empty
         case Node(value, left, right) =>
           Node(f(value), map(left)(f), map(right)(f))
+      }
     
     def contains[A](tree: BinaryTree[A])(value: A): Boolean =
-      tree match
+      tree match {
         case Empty => false
         case Node(v, left, right) =>
           v == value || contains(left)(value) || contains(right)(value)
+      }
     
-    def toList[A](tree: BinaryTree[A]): List[A] = tree match
+    def toList[A](tree: BinaryTree[A]): List[A] = tree match {
       case Empty => List.empty
       case Node(value, left, right) =>
         toList(left) ++ List(value) ++ toList(right)
+    }
   
   // サンプルツリー
   val intTree = Node(
@@ -270,7 +278,7 @@
 
 ```scala
 // GenericMethods.scala
-@main def genericMethods(): Unit =
+@main def genericMethods(): Unit = {
   // ジェネリックなメソッド
   def swap[A, B](pair: (A, B)): (B, A) = (pair._2, pair._1)
   
@@ -316,7 +324,7 @@
       }
     
     def evictOldest(keep: Int): Unit =
-      if store.size > keep then
+      if (store.size > keep) {
         val toRemove = accessTime.toList
           .sortBy(_._2)
           .take(store.size - keep)
@@ -326,6 +334,7 @@
           store.remove(key)
           accessTime.remove(key)
         }
+      }
     
     def size: Int = store.size
     
@@ -356,7 +365,7 @@
 
 ```scala
 // GenericParser.scala
-@main def genericParser(): Unit =
+@main def genericParser(): Unit = {
   // パーサーの結果
   case class ParseResult[+A](value: A, remaining: String)
   
@@ -364,80 +373,95 @@
   trait Parser[+A]:
     def parse(input: String): Option[ParseResult[A]]
     
-    def map[B](f: A => B): Parser[B] = new Parser[B]:
+    def map[B](f: A => B): Parser[B] = new Parser[B] {
       def parse(input: String): Option[ParseResult[B]] =
         Parser.this.parse(input).map { result =>
           ParseResult(f(result.value), result.remaining)
         }
+    }
     
-    def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser[B]:
+    def flatMap[B](f: A => Parser[B]): Parser[B] = new Parser[B] {
       def parse(input: String): Option[ParseResult[B]] =
         Parser.this.parse(input).flatMap { result =>
           f(result.value).parse(result.remaining)
         }
+    }
     
     def ~[B](other: Parser[B]): Parser[(A, B)] = 
-      for
+      for {
         a <- this
         b <- other
-      yield (a, b)
+      } yield (a, b)
     
-    def |[B >: A](other: Parser[B]): Parser[B] = new Parser[B]:
+    def |[B >: A](other: Parser[B]): Parser[B] = new Parser[B] {
       def parse(input: String): Option[ParseResult[B]] =
         Parser.this.parse(input).orElse(other.parse(input))
+    }
   
   // 基本的なパーサー
-  object Parser:
-    def char(c: Char): Parser[Char] = new Parser[Char]:
+  object Parser {
+    def char(c: Char): Parser[Char] = new Parser[Char] {
       def parse(input: String): Option[ParseResult[Char]] =
-        if input.nonEmpty && input.head == c then
+        if (input.nonEmpty && input.head == c) {
           Some(ParseResult(c, input.tail))
-        else
+        } else {
           None
+        }
+    }
     
-    def string(s: String): Parser[String] = new Parser[String]:
+    def string(s: String): Parser[String] = new Parser[String] {
       def parse(input: String): Option[ParseResult[String]] =
-        if input.startsWith(s) then
+        if (input.startsWith(s)) {
           Some(ParseResult(s, input.drop(s.length)))
-        else
+        } else {
           None
+        }
+    }
     
-    def digit: Parser[Char] = new Parser[Char]:
+    def digit: Parser[Char] = new Parser[Char] {
       def parse(input: String): Option[ParseResult[Char]] =
-        if input.nonEmpty && input.head.isDigit then
+        if (input.nonEmpty && input.head.isDigit) {
           Some(ParseResult(input.head, input.tail))
-        else
+        } else {
           None
+        }
+    }
     
-    def letter: Parser[Char] = new Parser[Char]:
+    def letter: Parser[Char] = new Parser[Char] {
       def parse(input: String): Option[ParseResult[Char]] =
-        if input.nonEmpty && input.head.isLetter then
+        if (input.nonEmpty && input.head.isLetter) {
           Some(ParseResult(input.head, input.tail))
-        else
+        } else {
           None
+        }
+    }
     
-    def many[A](p: Parser[A]): Parser[List[A]] = new Parser[List[A]]:
-      def parse(input: String): Option[ParseResult[List[A]]] =
+    def many[A](p: Parser[A]): Parser[List[A]] = new Parser[List[A]] {
+      def parse(input: String): Option[ParseResult[List[A]]] = {
         var remaining = input
         val results = scala.collection.mutable.ListBuffer[A]()
         
-        while
-          p.parse(remaining) match
+        while ({
+          p.parse(remaining) match {
             case Some(ParseResult(value, rest)) =>
               results += value
               remaining = rest
               true
             case None =>
               false
-        do ()
+          }
+        }) {}
         
         Some(ParseResult(results.toList, remaining))
+      }
+    }
     
     def many1[A](p: Parser[A]): Parser[List[A]] =
-      for
+      for {
         first <- p
         rest <- many(p)
-      yield first :: rest
+      } yield first :: rest
+  }
   
   import Parser.*
   
@@ -446,46 +470,49 @@
   
   // 識別子パーサー
   val identifier: Parser[String] = 
-    for
+    for {
       first <- letter
       rest <- many(letter | digit)
-    yield (first :: rest).mkString
+    } yield (first :: rest).mkString
   
   // 使用例
   println("=== パーサーの実行 ===")
   
-  number.parse("123abc") match
+  number.parse("123abc") match {
     case Some(ParseResult(value, remaining)) =>
       println(s"数値: $value, 残り: '$remaining'")
     case None =>
       println("パース失敗")
+  }
   
-  identifier.parse("hello123world") match
+  identifier.parse("hello123world") match {
     case Some(ParseResult(value, remaining)) =>
       println(s"識別子: $value, 残り: '$remaining'")
     case None =>
       println("パース失敗")
+  }
   
   // より複雑な例：代入文のパーサー
   val assign = 
-    for
+    for {
       id <- identifier
       _ <- string(" = ")
       num <- number
-    yield (id, num)
+    } yield (id, num)
   
-  assign.parse("count = 42") match
+  assign.parse("count = 42") match {
     case Some(ParseResult((id, value), remaining)) =>
       println(s"代入: $id = $value")
     case None =>
       println("パース失敗")
+  }
 ```
 
 ## 型パラメータの実践活用
 
 ```scala
 // PracticalTypeParameters.scala
-@main def practicalTypeParameters(): Unit =
+@main def practicalTypeParameters(): Unit = {
   // イベントエミッター
   class EventEmitter[E]:
     private var listeners: List[E => Unit] = List.empty
@@ -610,20 +637,20 @@
 ### 型パラメータを使うコツ
 
 1. **意味のある名前**
-   - T: Type（一般的な型）
-   - K, V: Key, Value
-   - E: Element/Event/Error
-   - A, B: 関数の入出力
+    - T: Type（一般的な型）
+    - K, V: Key, Value
+    - E: Element/Event/Error
+    - A, B: 関数の入出力
 
 2. **適切な抽象度**
-   - 必要十分な制約
-   - 過度な一般化を避ける
-   - 使いやすさを重視
+    - 必要十分な制約
+    - 過度な一般化を避ける
+    - 使いやすさを重視
 
 3. **型推論の活用**
-   - 明示的な型指定を最小限に
-   - コンパイラに推論させる
-   - 必要な箇所のみ明示
+    - 明示的な型指定を最小限に
+    - コンパイラに推論させる
+    - 必要な箇所のみ明示
 
 ### 次の章では...
 

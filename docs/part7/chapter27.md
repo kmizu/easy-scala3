@@ -12,7 +12,7 @@
 
 ```scala
 // UpperBounds.scala
-@main def upperBounds(): Unit =
+@main def upperBounds(): Unit = {
   // 動物の階層
   trait Animal:
     def name: String
@@ -57,7 +57,7 @@
 
 ```scala
 // LowerBounds.scala
-@main def lowerBounds(): Unit =
+@main def lowerBounds(): Unit = {
   trait Animal:
     def name: String
   
@@ -87,14 +87,16 @@
   case class NetworkError(message: String) extends Error
   case class ParseError(message: String) extends Error
   
-  def handleError[E <: Error](error: E): String = error match
+  def handleError[E <: Error](error: E): String = error match {
     case NetworkError(msg) => s"ネットワークエラー: $msg"
     case ParseError(msg) => s"パースエラー: $msg"
+  }
   
   // より一般的なエラーハンドラー
-  def handleAnyError[E >: NetworkError](error: E): String = error match
+  def handleAnyError[E >: NetworkError](error: E): String = error match {
     case NetworkError(msg) => s"通信エラー: $msg"
     case other => s"その他のエラー: $other"
+  }
   
   println("\n=== エラーハンドリング ===")
   println(handleError(NetworkError("接続失敗")))
@@ -107,7 +109,7 @@
 
 ```scala
 // Covariance.scala
-@main def covariance(): Unit =
+@main def covariance(): Unit = {
   // 共変的なコンテナ（+A）
   class Box[+A](val content: A):
     def get: A = content
@@ -131,9 +133,10 @@
     
     def ::[B >: A](elem: B): MyList[B] = MyCons(elem, this)
     
-    def map[B](f: A => B): MyList[B] = this match
+    def map[B](f: A => B): MyList[B] = this match {
       case MyNil => MyNil
       case MyCons(h, t) => MyCons(f(h), t.map(f))
+    }
   
   case object MyNil extends MyList[Nothing]:
     def head = throw new NoSuchElementException("empty list")
@@ -155,7 +158,7 @@
 
 ```scala
 // Contravariance.scala
-@main def contravariance(): Unit =
+@main def contravariance(): Unit = {
   // 反変的な関数（-A）
   trait Printer[-A]:
     def print(value: A): String
@@ -201,7 +204,7 @@
 
 ```scala
 // Invariance.scala
-@main def invariance(): Unit =
+@main def invariance(): Unit = {
   // 不変的なコンテナ（変位指定なし）
   class MutableBox[A](var content: A):
     def get: A = content
@@ -230,8 +233,9 @@
     
     def map[B](f: A => B): MyArray[B] =
       val result = MyArray[B](size)
-      for i <- 0 until size do
+      for (i <- 0 until size) {
         result.set(i, f(get(i)))
+      }
       result
   
   val intArray = MyArray[Int](3)
@@ -242,15 +246,16 @@
   val doubled = intArray.map(_ * 2)
   
   println("\n=== 配列操作 ===")
-  for i <- 0 until 3 do
+  for (i <- 0 until 3) {
     println(s"元: ${intArray.get(i)}, 2倍: ${doubled.get(i)}")
+  }
 ```
 
 ## 実践的な例：型安全なイベントシステム
 
 ```scala
 // TypeSafeEventSystem.scala
-@main def typeSafeEventSystem(): Unit =
+@main def typeSafeEventSystem(): Unit = {
   // イベントの階層
   trait Event:
     def timestamp: Long = System.currentTimeMillis()
@@ -314,7 +319,7 @@
     def elements: List[A]
     
     def max[B >: A](implicit ord: Ordering[B]): Option[B] =
-      if elements.isEmpty then None
+      if (elements.isEmpty) None
       else Some(elements.max(ord))
     
     def sorted[B >: A](implicit ord: Ordering[B]): Container[B]
@@ -348,10 +353,11 @@
     def >=(that: A): Boolean = compareTo(that) >= 0
   
   case class Person(name: String, age: Int) extends Comparable[Person]:
-    def compareTo(that: Person): Int = 
+    def compareTo(that: Person): Int = {
       val nameComp = this.name.compareTo(that.name)
-      if nameComp != 0 then nameComp
+      if (nameComp != 0) nameComp
       else this.age.compareTo(that.age)
+    }
   
   val person1 = Person("Alice", 30)
   val person2 = Person("Bob", 25)
@@ -366,7 +372,7 @@
 
 ```scala
 // TypeSafeBuilder.scala
-@main def typeSafeBuilder(): Unit =
+@main def typeSafeBuilder(): Unit = {
   // ビルダーの状態を型で表現
   sealed trait BuilderState
   trait Empty extends BuilderState
@@ -468,19 +474,19 @@
 ### 境界と変位を使うコツ
 
 1. **変位の原則**
-   - 出力は共変（+）
-   - 入力は反変（-）
-   - 入出力両方は不変
+    - 出力は共変（+）
+    - 入力は反変（-）
+    - 入出力両方は不変
 
 2. **境界の使い分け**
-   - 上限：特定の型以下に制限
-   - 下限：特定の型以上を許可
-   - 組み合わせて柔軟に
+    - 上限：特定の型以下に制限
+    - 下限：特定の型以上を許可
+    - 組み合わせて柔軟に
 
 3. **安全性の確保**
-   - コンパイル時チェック
-   - 実行時エラーの防止
-   - 型の健全性
+    - コンパイル時チェック
+    - 実行時エラーの防止
+    - 型の健全性
 
 ### 次の章では...
 

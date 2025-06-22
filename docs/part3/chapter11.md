@@ -14,7 +14,7 @@
 
 ```scala
 // TupleLikeBento.scala
-@main def tupleLikeBento(): Unit =
+@main def tupleLikeBento(): Unit = {
   // お弁当の中身（違うものが入っている）
   val myBento = ("おにぎり", 2, "唐揚げ", true)
   //             ↑文字    ↑数  ↑文字   ↑真偽値
@@ -26,6 +26,7 @@
   println(s"個数: ${myBento._2}")  // 2番目
   println(s"おかず: ${myBento._3}") // 3番目
   println(s"デザート付き？: ${myBento._4}") // 4番目
+}
 ```
 
 タプルは「違う型のデータを、決まった順番で、決まった数だけ」まとめられます！
@@ -34,7 +35,7 @@
 
 ```scala
 // DailyTuples.scala
-@main def dailyTuples(): Unit =
+@main def dailyTuples(): Unit = {
   // 人の情報（名前と年齢）
   val person = ("田中太郎", 25)
   println(s"${person._1}さんは${person._2}歳です")
@@ -49,10 +50,12 @@
   val score = testResult._2
   val passed = testResult._3
   
-  if passed then
+  if (passed) {
     println(s"${subject}は${score}点で合格です！")
-  else
+  } else {
     println(s"${subject}は${score}点で不合格です...")
+  }
+}
 ```
 
 ## タプルの作り方
@@ -61,7 +64,7 @@
 
 ```scala
 // CreatingTuples.scala
-@main def creatingTuples(): Unit =
+@main def creatingTuples(): Unit = {
   // 2つの要素（ペア）
   val pair = ("りんご", 100)
   println(s"$pair")  // (りんご,100)
@@ -77,13 +80,14 @@
   // 型を明示することもできる
   val typed: (String, Int) = ("バナナ", 150)
   println(s"型付き: $typed")
+}
 ```
 
 ### 矢印を使った書き方（ペアのみ）
 
 ```scala
 // ArrowNotation.scala
-@main def arrowNotation(): Unit =
+@main def arrowNotation(): Unit = {
   // 2つの要素の時だけ使える特別な書き方
   val price1 = "コーヒー" -> 300
   val price2 = ("コーヒー", 300)  // 上と同じ意味！
@@ -99,6 +103,7 @@
   )
   
   println(s"メニュー: $menu")
+}
 ```
 
 ## タプルの中身を取り出す
@@ -107,7 +112,7 @@
 
 ```scala
 // AccessingTuples.scala
-@main def accessingTuples(): Unit =
+@main def accessingTuples(): Unit = {
   val studentInfo = ("山田花子", 20, "工学部", 3.5)
   
   // 番号は1から始まる！（0からじゃない）
@@ -120,13 +125,14 @@
   val message = s"${studentInfo._1}さん（${studentInfo._2}歳）は" +
                 s"${studentInfo._3}の学生で、GPAは${studentInfo._4}です"
   println(message)
+}
 ```
 
 ### 分解して取り出す（おすすめ！）
 
 ```scala
 // DestructuringTuples.scala
-@main def destructuringTuples(): Unit =
+@main def destructuringTuples(): Unit = {
   val studentInfo = ("山田花子", 20, "工学部", 3.5)
   
   // 一度に全部取り出す（これが便利！）
@@ -151,6 +157,7 @@
   results.foreach { case (subject, score) =>
     println(s"$subject: $score点")
   }
+}
 ```
 
 ## 実践的な使い方
@@ -159,7 +166,7 @@
 
 ```scala
 // ReturningMultipleValues.scala
-@main def returningMultipleValues(): Unit =
+@main def returningMultipleValues(): Unit = {
   // 割り算の商と余りを同時に返す
   def divideWithRemainder(a: Int, b: Int): (Int, Int) =
     (a / b, a % b)
@@ -168,12 +175,13 @@
   println(s"17 ÷ 5 = $quotient 余り $remainder")
   
   // 統計情報を返す
-  def getStats(numbers: List[Int]): (Int, Double, Int, Int) =
+  def getStats(numbers: List[Int]): (Int, Double, Int, Int) = {
     val sum = numbers.sum
     val avg = sum.toDouble / numbers.length
     val max = numbers.max
     val min = numbers.min
     (sum, avg, max, min)
+  }
   
   val data = List(10, 20, 30, 40, 50)
   val (total, average, maximum, minimum) = getStats(data)
@@ -182,39 +190,44 @@
   println(s"平均: $average")
   println(s"最大: $maximum")
   println(s"最小: $minimum")
+}
 ```
 
 ### エラー処理での活用
 
 ```scala
 // TuplesForErrorHandling.scala
-@main def tuplesForErrorHandling(): Unit =
+@main def tuplesForErrorHandling(): Unit = {
   // 成功・失敗と結果を一緒に返す
   def safeDivide(a: Int, b: Int): (Boolean, Double, String) =
-    if b == 0 then
+    if (b == 0) {
       (false, 0.0, "ゼロで割ることはできません")
-    else
+    } else {
       (true, a.toDouble / b, "計算成功")
+    }
   
   // 使ってみる
   val (success1, result1, message1) = safeDivide(10, 2)
-  if success1 then
+  if (success1) {
     println(s"結果: $result1")
-  else
+  } else {
     println(s"エラー: $message1")
+  }
   
   val (success2, result2, message2) = safeDivide(10, 0)
-  if success2 then
+  if (success2) {
     println(s"結果: $result2")
-  else
+  } else {
     println(s"エラー: $message2")
+  }
+}
 ```
 
 ### データの整理
 
 ```scala
 // OrganizingData.scala
-@main def organizingData(): Unit =
+@main def organizingData(): Unit = {
   // 商品情報（名前、価格、在庫数）
   val products = List(
     ("ノート", 100, 50),
@@ -226,8 +239,9 @@
   // 在庫が少ない商品を探す
   println("=== 在庫が少ない商品（30個以下）===")
   products.foreach { case (name, price, stock) =>
-    if stock <= 30 then
+    if (stock <= 30) {
       println(s"$name: 残り$stock個（${price}円）")
+    }
   }
   
   // 売上計算（商品名、販売数）
@@ -240,13 +254,15 @@
   println("\n=== 売上レポート ===")
   sales.foreach { case (productName, quantity) =>
     // 商品情報から価格を探す
-    products.find(_._1 == productName) match
+    products.find(_._1 == productName) match {
       case Some((_, price, _)) =>
         val total = price * quantity
         println(s"$productName: ${quantity}個 × ${price}円 = ${total}円")
       case None =>
         println(s"$productName: 商品情報が見つかりません")
+    }
   }
+}
 ```
 
 ## タプルの便利な機能
@@ -255,7 +271,7 @@
 
 ```scala
 // TupleSwap.scala
-@main def tupleSwap(): Unit =
+@main def tupleSwap(): Unit = {
   val original = ("先", "後")
   val swapped = original.swap  // 順番を入れ替える
   
@@ -279,13 +295,14 @@
   sortedByScore.foreach { case (name, score) =>
     println(s"  $name: $score点")
   }
+}
 ```
 
 ### リストとタプルの変換
 
 ```scala
 // ListsAndTuples.scala
-@main def listsAndTuples(): Unit =
+@main def listsAndTuples(): Unit = {
   // 2つのリストをタプルのリストに
   val names = List("太郎", "花子", "次郎")
   val ages = List(20, 22, 19)
@@ -306,6 +323,7 @@
   indexed.foreach { case (fruit, index) =>
     println(s"  ${index + 1}. $fruit")
   }
+}
 ```
 
 ## よくある間違いと対処法
@@ -314,7 +332,7 @@
 
 ```scala
 // CommonMistakes1.scala
-@main def commonMistakes1(): Unit =
+@main def commonMistakes1(): Unit = {
   val pair = ("A", "B")
   
   // よくある間違い
@@ -326,13 +344,14 @@
   val second = pair._2  // OK
   
   println(s"1番目: $first, 2番目: $second")
+}
 ```
 
 ### 間違い2：型を間違える
 
 ```scala
 // CommonMistakes2.scala
-@main def commonMistakes2(): Unit =
+@main def commonMistakes2(): Unit = {
   val data: (String, Int) = ("年齢", 25)
   
   // よくある間違い
@@ -343,13 +362,14 @@
   val age: Int = data._2       // OK
   
   println(s"$label: $age")
+}
 ```
 
 ### 間違い3：要素数を間違える
 
 ```scala
 // CommonMistakes3.scala
-@main def commonMistakes3(): Unit =
+@main def commonMistakes3(): Unit = {
   val triple = ("A", "B", "C")
   
   // よくある間違い
@@ -362,6 +382,7 @@
   
   println(s"全部: $a, $b, $c")
   println(s"2つだけ: $x, $y")
+}
 ```
 
 ## 練習してみよう！
@@ -371,12 +392,13 @@
 2次元座標を表すタプル(Double, Double)を使って、2点間の距離を計算するプログラムを作ってください。
 
 ```scala
-@main def practice1(): Unit =
+@main def practice1(): Unit = {
   val point1 = (0.0, 0.0)
   val point2 = (3.0, 4.0)
   
   // ここに距離を計算するコードを書いてください
   // ヒント: 距離 = √((x2-x1)² + (y2-y1)²)
+}
 ```
 
 ### 練習2：成績管理
@@ -384,7 +406,7 @@
 生徒の成績データ（名前、数学、英語、理科）のタプルのリストから、3科目の平均点が最も高い生徒を見つけてください。
 
 ```scala
-@main def practice2(): Unit =
+@main def practice2(): Unit = {
   val students = List(
     ("太郎", 80, 75, 85),
     ("花子", 90, 85, 80),
@@ -393,6 +415,7 @@
   )
   
   // ここにコードを書いてください
+}
 ```
 
 ### 練習3：買い物計算
@@ -400,7 +423,7 @@
 商品名と単価のタプルのリストと、商品名と購入数のタプルのリストから、合計金額を計算してください。
 
 ```scala
-@main def practice3(): Unit =
+@main def practice3(): Unit = {
   val prices = List(
     ("りんご", 100),
     ("バナナ", 80),
@@ -414,6 +437,7 @@
   )
   
   // ここに合計金額を計算するコードを書いてください
+}
 ```
 
 ## この章のまとめ
@@ -444,18 +468,18 @@
 ### タプルを使うべき場面
 
 1. **少数の関連データ**
-   - 名前と年齢
-   - 緯度と経度
-   - 成功/失敗と結果
+    - 名前と年齢
+    - 緯度と経度
+    - 成功/失敗と結果
 
 2. **一時的なデータの組み合わせ**
-   - 計算の中間結果
-   - 関数の戻り値
-   - ループ内での処理
+    - 計算の中間結果
+    - 関数の戻り値
+    - ループ内での処理
 
 3. **型が違うデータを扱う**
-   - 文字列と数値
-   - 複数の異なる型の組み合わせ
+    - 文字列と数値
+    - 複数の異なる型の組み合わせ
 
 ### 次の章では...
 

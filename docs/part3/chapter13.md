@@ -14,7 +14,7 @@
 
 ```scala
 // NestedMaps.scala
-@main def nestedMaps(): Unit =
+@main def nestedMaps(): Unit = {
   // 生徒ごとの科目別成績
   val gradeBook = Map(
     "田中太郎" -> Map(
@@ -39,19 +39,22 @@
   println(s"田中太郎の数学: $taroMath点")
   
   // 安全にアクセス
-  gradeBook.get("山田花子") match
+  gradeBook.get("山田花子") match {
     case Some(subjects) =>
-      subjects.get("英語") match
+      subjects.get("英語") match {
         case Some(score) => println(s"山田花子の英語: $score点")
         case None => println("英語の成績がありません")
+      }
     case None => println("その生徒は見つかりません")
+  }
+}
 ```
 
 ### マップとケースクラス
 
 ```scala
 // MapWithCaseClass.scala
-@main def mapWithCaseClass(): Unit =
+@main def mapWithCaseClass(): Unit = {
   // 商品情報を表すケースクラス
   case class Product(
     name: String,
@@ -81,13 +84,14 @@
   products.filter(_._2.stock <= 10).foreach { case (id, product) =>
     println(s"⚠️ $id: ${product.name} - 残り${product.stock}個")
   }
+}
 ```
 
 ## 実践例：図書館管理システム
 
 ```scala
 // LibrarySystem.scala
-@main def librarySystem(): Unit =
+@main def librarySystem(): Unit = {
   // 本の情報
   case class Book(
     title: String,
@@ -114,8 +118,8 @@
   var rentals = List[Rental]()
   
   // 本を借りる
-  def rentBook(isbn: String, userId: String, date: String): Unit =
-    books.get(isbn) match
+  def rentBook(isbn: String, userId: String, date: String): Unit = {
+    books.get(isbn) match {
       case Some(book) if book.available =>
         books = books + (isbn -> book.copy(available = false))
         rentals = Rental(isbn, userId, date) :: rentals
@@ -124,15 +128,17 @@
         println(s"❌ 「${book.title}」は貸出中です")
       case None =>
         println(s"❌ ISBN: $isbn の本は見つかりません")
+    }
+  }
   
   // 本を返す
-  def returnBook(isbn: String, date: String): Unit =
-    books.get(isbn) match
+  def returnBook(isbn: String, date: String): Unit = {
+    books.get(isbn) match {
       case Some(book) if !book.available =>
         books = books + (isbn -> book.copy(available = true))
         // 貸出記録を更新
         rentals = rentals.map { rental =>
-          if rental.bookIsbn == isbn && rental.returnDate.isEmpty then
+          if (rental.bookIsbn == isbn && rental.returnDate.isEmpty)
             rental.copy(returnDate = Some(date))
           else
             rental
@@ -142,12 +148,14 @@
         println(s"❌ 「${book.title}」は貸出されていません")
       case None =>
         println(s"❌ ISBN: $isbn の本は見つかりません")
+    }
+  }
   
   // 利用状況を表示
-  def showStatus(): Unit =
+  def showStatus(): Unit = {
     println("\n=== 蔵書一覧 ===")
     books.foreach { case (isbn, book) =>
-      val status = if book.available then "貸出可能" else "貸出中"
+      val status = if (book.available) "貸出可能" else "貸出中"
       println(f"${book.title}%-20s by ${book.author}%-10s [$status]")
     }
     
@@ -157,6 +165,7 @@
         println(s"${book.title} -> ${rental.userId} (${rental.rentDate}～)")
       }
     }
+  }
   
   // 使ってみる
   showStatus()
@@ -170,6 +179,7 @@
   returnBook("978-4-123456-78-9", "2024-01-20")
   
   showStatus()
+}
 ```
 
 ## グループ化と集計
@@ -178,7 +188,7 @@
 
 ```scala
 // GroupingData.scala
-@main def groupingData(): Unit =
+@main def groupingData(): Unit = {
   // 従業員データ
   case class Employee(
     name: String,
@@ -228,7 +238,7 @@
 
 ```scala
 // MultiKeyAggregation.scala
-@main def multiKeyAggregation(): Unit =
+@main def multiKeyAggregation(): Unit = {
   // 売上データ
   case class Sale(
     date: String,
@@ -285,7 +295,7 @@
 
 ```scala
 // AdvancedMapOperations.scala
-@main def advancedMapOperations(): Unit =
+@main def advancedMapOperations(): Unit = {
   // 元データ：生徒ID -> (名前, 点数リスト)
   val students = Map(
     "S001" -> ("田中", List(85, 90, 78)),
@@ -324,7 +334,7 @@
 
 ```scala
 // MapMergeStrategies.scala
-@main def mapMergeStrategies(): Unit =
+@main def mapMergeStrategies(): Unit = {
   // 店舗Aの在庫
   val storeA = Map(
     "りんご" -> 50,
@@ -384,7 +394,7 @@
 
 ```scala
 // ShoppingCartSystem.scala
-@main def shoppingCartSystem(): Unit =
+@main def shoppingCartSystem(): Unit = {
   // 商品カタログ
   val catalog = Map(
     "P001" -> ("Tシャツ", 2000),
@@ -468,20 +478,22 @@
 
 ```scala
 // MapPerformance.scala
-@main def mapPerformance(): Unit =
+@main def mapPerformance(): Unit = {
   import scala.collection.mutable
   
   // イミュータブル vs ミュータブル
   
   // イミュータブル（小規模データに最適）
   var immutableMap = Map[String, Int]()
-  for i <- 1 to 100 do
+  for (i <- 1 to 100) {
     immutableMap = immutableMap + (s"key$i" -> i)
+  }
   
   // ミュータブル（大規模データに最適）
   val mutableMap = mutable.Map[String, Int]()
-  for i <- 1 to 10000 do
+  for (i <- 1 to 10000) {
     mutableMap(s"key$i") = i
+  }
   
   println(s"イミュータブル: ${immutableMap.size}要素")
   println(s"ミュータブル: ${mutableMap.size}要素")
@@ -489,8 +501,9 @@
   // 効率的な初期化
   // 悪い例：一つずつ追加
   var slowMap = Map[Int, String]()
-  for i <- 1 to 100 do
+  for (i <- 1 to 100) {
     slowMap = slowMap + (i -> s"value$i")
+  }
   
   // 良い例：一度に作成
   val fastMap = (1 to 100).map(i => i -> s"value$i").toMap
@@ -557,19 +570,19 @@
 ### マップ活用のコツ
 
 1. **適切なキーの選択**
-   - ユニークで変わらない値
-   - 検索しやすい値
-   - 意味のある識別子
+    - ユニークで変わらない値
+    - 検索しやすい値
+    - 意味のある識別子
 
 2. **データ構造の設計**
-   - 単純から始める
-   - 必要に応じて複雑化
-   - 読みやすさを重視
+    - 単純から始める
+    - 必要に応じて複雑化
+    - 読みやすさを重視
 
 3. **安全性の確保**
-   - getOrElseの活用
-   - デフォルト値の設定
-   - エラーハンドリング
+    - getOrElseの活用
+    - デフォルト値の設定
+    - エラーハンドリング
 
 ### 次の部では...
 

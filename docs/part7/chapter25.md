@@ -12,7 +12,7 @@
 
 ```scala
 // FunctionCompositionBasics.scala
-@main def functionCompositionBasics(): Unit =
+@main def functionCompositionBasics(): Unit = {
   // 単純な関数たち
   val double = (x: Int) => x * 2
   val addTen = (x: Int) => x + 10
@@ -49,19 +49,22 @@
   inputs.foreach { input =>
     println(s"'$input' → '${normalize(input)}'")
   }
+}
 ```
 
 ### パイプライン演算子風の実装
 
 ```scala
 // PipelineOperator.scala
-@main def pipelineOperator(): Unit =
+@main def pipelineOperator(): Unit = {
   // パイプライン風の拡張メソッド
-  extension [A](value: A)
+  extension [A](value: A) {
     def |>[B](f: A => B): B = f(value)
-    def tap(f: A => Unit): A = 
+    def tap(f: A => Unit): A = {
       f(value)
       value
+    }
+  }
   
   // 使用例
   val result = 5
@@ -80,11 +83,13 @@
     |> (u => u.copy(name = u.name.trim))
     |> (u => u.copy(email = u.email.toLowerCase))
     .tap(u => println(s"処理中: $u"))
-    |> (u => if u.age >= 18 then Some(u) else None)
+    |> (u => if (u.age >= 18) Some(u) else None)
   
-  processUser match
+  processUser match {
     case Some(user) => println(s"有効なユーザー: $user")
     case None => println("無効なユーザー")
+  }
+}
 ```
 
 ## 実践的な関数合成
@@ -93,7 +98,7 @@
 
 ```scala
 // ValidationPipeline.scala
-@main def validationPipeline(): Unit =
+@main def validationPipeline(): Unit = {
   // 検証結果を表す型
   type Validation[A] = Either[String, A]
   
@@ -102,19 +107,19 @@
   
   // 基本的な検証関数
   val notEmpty: Validator[String] = s =>
-    if s.trim.nonEmpty then Right(s)
+    if (s.trim.nonEmpty) Right(s)
     else Left("空文字列は許可されません")
   
   val minLength: Int => Validator[String] = min => s =>
-    if s.length >= min then Right(s)
+    if (s.length >= min) Right(s)
     else Left(s"${min}文字以上必要です")
   
   val maxLength: Int => Validator[String] = max => s =>
-    if s.length <= max then Right(s)
+    if (s.length <= max) Right(s)
     else Left(s"${max}文字以下にしてください")
   
   val alphanumeric: Validator[String] = s =>
-    if s.matches("^[a-zA-Z0-9]+$") then Right(s)
+    if (s.matches("^[a-zA-Z0-9]+$")) Right(s)
     else Left("英数字のみ使用可能です")
   
   // 検証関数を合成
@@ -144,17 +149,19 @@
   
   println("=== ユーザー名検証 ===")
   testCases.foreach { username =>
-    validateUsername(username) match
+    validateUsername(username) match {
       case Right(valid) => println(s"✓ '$valid'")
       case Left(error) => println(s"✗ '$username': $error")
+    }
   }
+}
 ```
 
 ### 画像処理パイプライン
 
 ```scala
 // ImageProcessingPipeline.scala
-@main def imageProcessingPipeline(): Unit =
+@main def imageProcessingPipeline(): Unit = {
   // 画像を表す簡単なモデル
   case class Image(
     width: Int,
@@ -241,13 +248,14 @@
       println(s"  $k: $v")
     }
   }
+}
 ```
 
 ## 関数の部分適用とカリー化
 
 ```scala
 // PartialApplicationAndCurrying.scala
-@main def partialApplicationAndCurrying(): Unit =
+@main def partialApplicationAndCurrying(): Unit = {
   // カリー化された関数
   def log(level: String)(message: String)(timestamp: Long = System.currentTimeMillis()): String =
     f"[$timestamp%tT] [$level%-5s] $message"
@@ -272,13 +280,14 @@
     value => s"$prefix$value$suffix"
   
   def createCalculator(operation: String): (Double, Double) => Double =
-    operation match
+    operation match {
       case "+" => _ + _
       case "-" => _ - _
       case "*" => _ * _
-      case "/" => (a, b) => if b != 0 then a / b else 0
+      case "/" => (a, b) => if (b != 0) a / b else 0
       case "^" => math.pow
       case _ => (_, _) => 0
+    }
   
   // 使用例
   val isValidAge = createValidator(0, 120)
@@ -303,32 +312,33 @@
   println(s"10 + 5 = ${add(10, 5)}")
   println(s"10 * 5 = ${multiply(10, 5)}")
   println(s"2 ^ 8 = ${power(2, 8)}")
+}
 ```
 
 ## モナディック合成
 
 ```scala
 // MonadicComposition.scala
-@main def monadicComposition(): Unit =
+@main def monadicComposition(): Unit = {
   // Optionのための合成
   def parseInt(s: String): Option[Int] =
     try Some(s.toInt)
-    catch case _: NumberFormatException => None
+    catch { case _: NumberFormatException => None }
   
   def divide(a: Int, b: Int): Option[Double] =
-    if b != 0 then Some(a.toDouble / b) else None
+    if (b != 0) Some(a.toDouble / b) else None
   
   def sqrt(x: Double): Option[Double] =
-    if x >= 0 then Some(math.sqrt(x)) else None
+    if (x >= 0) Some(math.sqrt(x)) else None
   
   // for式で合成
   def calculate(aStr: String, bStr: String): Option[Double] =
-    for
+    for {
       a <- parseInt(aStr)
       b <- parseInt(bStr)
       divided <- divide(a, b)
       result <- sqrt(divided)
-    yield result
+    } yield result
   
   println("=== 計算パイプライン ===")
   val testCases = List(
@@ -340,9 +350,10 @@
   )
   
   testCases.foreach { case (a, b) =>
-    calculate(a, b) match
+    calculate(a, b) match {
       case Some(result) => println(f"√($a/$b) = $result%.2f")
       case None => println(s"計算できません: $a, $b")
+    }
   }
   
   // Eitherのための合成
@@ -352,39 +363,42 @@
   
   def parseIntE(s: String): Either[AppError, Int] =
     try Right(s.toInt)
-    catch case _: NumberFormatException => 
+    catch { case _: NumberFormatException => 
       Left(ParseError(s"'$s'は数値ではありません"))
+    }
   
   def divideE(a: Int, b: Int): Either[AppError, Double] =
-    if b != 0 then Right(a.toDouble / b)
+    if (b != 0) Right(a.toDouble / b)
     else Left(MathError("ゼロで除算はできません"))
   
   def sqrtE(x: Double): Either[AppError, Double] =
-    if x >= 0 then Right(math.sqrt(x))
+    if (x >= 0) Right(math.sqrt(x))
     else Left(MathError(s"負の数の平方根は計算できません: $x"))
   
   def calculateE(aStr: String, bStr: String): Either[AppError, Double] =
-    for
+    for {
       a <- parseIntE(aStr)
       b <- parseIntE(bStr)
       divided <- divideE(a, b)
       result <- sqrtE(divided)
-    yield result
+    } yield result
   
   println("\n=== エラー付き計算パイプライン ===")
   testCases.foreach { case (a, b) =>
-    calculateE(a, b) match
+    calculateE(a, b) match {
       case Right(result) => println(f"√($a/$b) = $result%.2f")
       case Left(ParseError(msg)) => println(s"パースエラー: $msg")
       case Left(MathError(msg)) => println(s"計算エラー: $msg")
+    }
   }
+}
 ```
 
 ## 実践例：ETLパイプライン
 
 ```scala
 // ETLPipeline.scala
-@main def etlPipeline(): Unit =
+@main def etlPipeline(): Unit = {
   import scala.util.Try
   
   // データモデル
@@ -398,54 +412,58 @@
   
   // Extract: 生データの読み込み
   val extract: String => Either[String, RawData] = line =>
-    if line.trim.nonEmpty then Right(RawData(line))
+    if (line.trim.nonEmpty) Right(RawData(line))
     else Left("空行です")
   
   // Parse: CSV形式のパース
   val parse: ETLStep[RawData, ParsedRecord] = raw =>
-    raw.line.split(",") match
+    raw.line.split(",") match {
       case Array(idStr, name, valueStr) =>
-        for
+        for {
           id <- Try(idStr.trim.toInt).toEither.left.map(_ => s"IDが不正: $idStr")
           value <- Try(valueStr.trim.toDouble).toEither.left.map(_ => s"値が不正: $valueStr")
-        yield ParsedRecord(id, name.trim, value)
+        } yield ParsedRecord(id, name.trim, value)
       case _ =>
         Left(s"フォーマットエラー: ${raw.line}")
+    }
   
   // Validate: データの検証
   val validate: ETLStep[ParsedRecord, ValidatedRecord] = record =>
-    if record.id > 0 && record.name.nonEmpty && record.value >= 0 then
+    if (record.id > 0 && record.name.nonEmpty && record.value >= 0) {
       Right(ValidatedRecord(record))
-    else
+    } else {
       Left(s"検証エラー: $record")
+    }
   
   // Transform: データの変換
-  val transform: ETLStep[ValidatedRecord, TransformedRecord] = validated =>
+  val transform: ETLStep[ValidatedRecord, TransformedRecord] = validated => {
     val record = validated.record
-    val category = record.value match
+    val category = record.value match {
       case v if v < 100 => "低"
       case v if v < 1000 => "中"
       case _ => "高"
+    }
     Right(TransformedRecord(record.id, record.name, record.value, category))
+  }
   
   // パイプラインの合成
   def pipeline(line: String): Either[String, TransformedRecord] =
-    for
+    for {
       raw <- extract(line)
       parsed <- parse(raw)
       validated <- validate(parsed)
       transformed <- transform(validated)
-    yield transformed
+    } yield transformed
   
   // バッチ処理
-  class ETLBatch:
+  class ETLBatch {
     private var successCount = 0
     private var errorCount = 0
     private val errors = scala.collection.mutable.ListBuffer[String]()
     
     def process(lines: List[String]): List[TransformedRecord] =
       lines.flatMap { line =>
-        pipeline(line) match
+        pipeline(line) match {
           case Right(record) =>
             successCount += 1
             Some(record)
@@ -453,14 +471,16 @@
             errorCount += 1
             errors += s"行 '$line': $error"
             None
+        }
       }
     
     def report(): String =
       s"""ETL処理結果:
          |  成功: $successCount 件
          |  エラー: $errorCount 件
-         |${if errors.nonEmpty then s"  エラー詳細:\n${errors.map("    - " + _).mkString("\n")}" else ""}
+         |${if (errors.nonEmpty) s"  エラー詳細:\n${errors.map("    - " + _).mkString("\n")}" else ""}
          |""".stripMargin
+  }
   
   // テストデータ
   val csvData = List(
@@ -484,18 +504,19 @@
   }
   
   println(s"\n${batch.report()}")
+}
 ```
 
 ## 関数合成のベストプラクティス
 
 ```scala
 // CompositionBestPractices.scala
-@main def compositionBestPractices(): Unit =
+@main def compositionBestPractices(): Unit = {
   // 1. 小さく、単一責任の関数を作る
   val trim = (s: String) => s.trim
   val nonEmpty = (s: String) => s.nonEmpty
   val capitalize = (s: String) => 
-    if s.nonEmpty then s.head.toUpper + s.tail.toLowerCase
+    if (s.nonEmpty) s.head.toUpper + s.tail.toLowerCase
     else s
   
   // 2. 型を揃えて合成しやすくする
@@ -503,7 +524,7 @@
   
   val processors: List[StringProcessor] = List(
     trim,
-    s => if nonEmpty(s) then s else "デフォルト",
+    s => if (nonEmpty(s)) s else "デフォルト",
     capitalize,
     s => s.replace(" ", "_")
   )
@@ -535,9 +556,10 @@
     f(a).flatMap(g)
   
   // 5. デバッグ可能な合成
-  def debug[A](label: String)(value: A): A =
+  def debug[A](label: String)(value: A): A = {
     println(s"[$label] $value")
     value
+  }
   
   val debuggablePipeline = (x: Int) => x
     |> (_ * 2)
@@ -549,6 +571,7 @@
   
   println("\n=== デバッグ付きパイプライン ===")
   debuggablePipeline(15)
+}
 ```
 
 ## 練習してみよう！
@@ -605,19 +628,19 @@
 ### 関数合成を使うコツ
 
 1. **小さく始める**
-   - 単一責任の関数
-   - 再利用可能な部品
-   - テストしやすい単位
+    - 単一責任の関数
+    - 再利用可能な部品
+    - テストしやすい単位
 
 2. **型を意識する**
-   - 入出力の型を揃える
-   - 型エイリアスの活用
-   - ジェネリックな設計
+    - 入出力の型を揃える
+    - 型エイリアスの活用
+    - ジェネリックな設計
 
 3. **読みやすさ重視**
-   - 意味のある関数名
-   - 適切な抽象度
-   - デバッグのしやすさ
+    - 意味のある関数名
+    - 適切な抽象度
+    - デバッグのしやすさ
 
 ### 次の章では...
 

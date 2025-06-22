@@ -12,19 +12,20 @@
 
 ```scala
 // TraditionalExceptionHandling.scala
-@main def traditionalExceptionHandling(): Unit =
+@main def traditionalExceptionHandling(): Unit = {
   // 危険な割り算（ゼロ除算の可能性）
   def divide(a: Int, b: Int): Int = a / b
   
   // try-catchで例外を捕まえる（従来の方法）
-  try
+  try {
     val result = divide(10, 0)
     println(s"結果: $result")
-  catch
+  } catch {
     case e: ArithmeticException =>
       println(s"算術エラー: ${e.getMessage}")
     case e: Exception =>
       println(s"その他のエラー: ${e.getMessage}")
+  }
   
   // 問題点：
   // 1. エラー処理を忘れやすい
@@ -32,6 +33,7 @@
   // 3. 正常系と異常系のコードが混在
   
   // もっと良い方法があります！
+}
 ```
 
 ## Tryの基本
@@ -40,7 +42,7 @@
 
 ```scala
 // TryBasics.scala
-@main def tryBasics(): Unit =
+@main def tryBasics(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // Tryで安全に割り算
@@ -57,20 +59,23 @@
   println(s"10 ÷ 0 = $result2")  // Failure(java.lang.ArithmeticException: / by zero)
   
   // パターンマッチで処理
-  result1 match
+  result1 match {
     case Success(value) => println(s"成功！答えは $value")
     case Failure(error) => println(s"失敗: ${error.getMessage}")
+  }
   
-  result2 match
+  result2 match {
     case Success(value) => println(s"成功！答えは $value")
     case Failure(error) => println(s"失敗: ${error.getMessage}")
+  }
+}
 ```
 
 ### Tryの作成方法
 
 ```scala
 // CreatingTry.scala
-@main def creatingTry(): Unit =
+@main def creatingTry(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // 方法1：Try { ... } を使う
@@ -88,14 +93,19 @@
   
   def readFile(filename: String): Try[String] = Try {
     val source = Source.fromFile(filename)
-    try source.mkString
-    finally source.close()
+    try {
+      source.mkString
+    } finally {
+      source.close()
+    }
   }
   
   val content = readFile("test.txt")
-  content match
+  content match {
     case Success(text) => println(s"ファイルの内容: ${text.take(50)}...")
     case Failure(error) => println(s"ファイル読み込みエラー: ${error.getMessage}")
+  }
+}
 ```
 
 ## Tryの便利なメソッド
@@ -104,7 +114,7 @@
 
 ```scala
 // TryTransformations.scala
-@main def tryTransformations(): Unit =
+@main def tryTransformations(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // map：成功時に値を変換
@@ -118,14 +128,15 @@
   println(s"失敗の場合: $doubled2")
   
   // flatMap：Tryを返す関数と組み合わせ
-  def sqrt(x: Double): Try[Double] = 
-    if x >= 0 then Success(math.sqrt(x))
+  def sqrt(x: Double): Try[Double] = {
+    if (x >= 0) Success(math.sqrt(x))
     else Failure(new IllegalArgumentException("負の数の平方根は計算できません"))
+  }
   
-  val result = for
+  val result = for {
     num <- Try("16".toDouble)
     root <- sqrt(num)
-  yield root
+  } yield root
   
   println(s"√16 = $result")
   
@@ -135,13 +146,14 @@
   
   val filtered2 = Try(3).filter(_ > 5)
   println(s"3 > 5: $filtered2")
+}
 ```
 
 ### getOrElse、orElse、recover
 
 ```scala
 // TryRecovery.scala
-@main def tryRecovery(): Unit =
+@main def tryRecovery(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   def parseNumber(s: String): Try[Int] = Try(s.toInt)
@@ -169,19 +181,21 @@
   println(s"リカバー: $recovered")
   
   // recoverWith：別のTryで回復
-  def parseWithDefault(s: String, default: String): Try[Int] =
+  def parseWithDefault(s: String, default: String): Try[Int] = {
     parseNumber(s).recoverWith {
       case _: NumberFormatException => parseNumber(default)
     }
+  }
   
   println(s"デフォルト付き: ${parseWithDefault("abc", "100")}")
+}
 ```
 
 ## 実践例：設定ファイルの読み込み
 
 ```scala
 // ConfigLoader.scala
-@main def configLoader(): Unit =
+@main def configLoader(): Unit = {
   import scala.util.{Try, Success, Failure}
   import scala.io.Source
   
@@ -192,18 +206,21 @@
     debug: Boolean
   )
   
-  object ConfigLoader:
+  object ConfigLoader {
     def load(filename: String): Try[Config] =
-      for
+      for {
         content <- readFile(filename)
         parsed <- parseConfig(content)
         validated <- validateConfig(parsed)
-      yield validated
+      } yield validated
     
     private def readFile(filename: String): Try[String] = Try {
       val source = Source.fromFile(filename)
-      try source.mkString
-      finally source.close()
+      try {
+        source.mkString
+      } finally {
+        source.close()
+      }
     }
     
     private def parseConfig(content: String): Try[Map[String, String]] = Try {
@@ -224,22 +241,24 @@
         debug = data.get("debug").map(_.toBoolean).getOrElse(false)
       )
     }
+  }
   
   // テスト用の設定ファイルを作成
   import java.io.PrintWriter
   Try {
     val writer = new PrintWriter("app.conf")
-    try
+    try {
       writer.println("host = example.com")
       writer.println("port = 3000")
       writer.println("timeout = 60")
       writer.println("debug = true")
-    finally
+    } finally {
       writer.close()
+    }
   }
   
   // 設定を読み込む
-  ConfigLoader.load("app.conf") match
+  ConfigLoader.load("app.conf") match {
     case Success(config) =>
       println("設定読み込み成功:")
       println(s"  ホスト: ${config.host}")
@@ -248,18 +267,21 @@
       println(s"  デバッグ: ${config.debug}")
     case Failure(error) =>
       println(s"設定読み込みエラー: ${error.getMessage}")
+  }
   
   // 存在しないファイル
-  ConfigLoader.load("missing.conf") match
+  ConfigLoader.load("missing.conf") match {
     case Success(_) => println("成功（あり得ない）")
     case Failure(error) => println(s"予想通りエラー: ${error.getMessage}")
+  }
+}
 ```
 
 ## TryとOptionの変換
 
 ```scala
 // TryOptionConversion.scala
-@main def tryOptionConversion(): Unit =
+@main def tryOptionConversion(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // Try → Option
@@ -292,13 +314,14 @@
   
   println(s"正常: ${parseAndDouble("5")}")
   println(s"エラー: ${parseAndDouble("abc")}")
+}
 ```
 
 ## TryとFutureの組み合わせ
 
 ```scala
 // TryWithFuture.scala
-@main def tryWithFuture(): Unit =
+@main def tryWithFuture(): Unit = {
   import scala.util.{Try, Success, Failure}
   import scala.concurrent.{Future, Await}
   import scala.concurrent.duration.*
@@ -308,8 +331,11 @@
   def readFileAsync(filename: String): Future[Try[String]] = Future {
     Try {
       val source = scala.io.Source.fromFile(filename)
-      try source.mkString
-      finally source.close()
+      try {
+        source.mkString
+      } finally {
+        source.close()
+      }
     }
   }
   
@@ -323,15 +349,16 @@
   val results = Await.result(futureResults, 5.seconds)
   
   results.zipWithIndex.foreach { case (result, index) =>
-    result match
+    result match {
       case Success(content) =>
         println(s"ファイル${index + 1}: 成功（${content.length}文字）")
       case Failure(error) =>
         println(s"ファイル${index + 1}: 失敗（${error.getMessage}）")
+    }
   }
   
   // Future[Try[T]] を Try[Future[T]] に変換
-  def sequence[T](futures: List[Future[Try[T]]]): Future[Try[List[T]]] =
+  def sequence[T](futures: List[Future[Try[T]]]): Future[Try[List[T]]] = {
     Future.sequence(futures).map { results =>
       results.foldLeft[Try[List[T]]](Success(Nil)) { (acc, result) =>
         acc.flatMap { list =>
@@ -339,13 +366,15 @@
         }
       }
     }
+  }
+}
 ```
 
 ## エラーハンドリングのベストプラクティス
 
 ```scala
 // ErrorHandlingBestPractices.scala
-@main def errorHandlingBestPractices(): Unit =
+@main def errorHandlingBestPractices(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   // カスタムエラー型
@@ -368,54 +397,62 @@
           s"保存エラー: $msg（リトライが必要）"
       }
   
-  def validateInput(input: String): Try[String] =
-    if input.trim.isEmpty then
+  def validateInput(input: String): Try[String] = {
+    if (input.trim.isEmpty) {
       Failure(ValidationError("入力が空です"))
-    else if input.length > 100 then
+    } else if (input.length > 100) {
       Failure(ValidationError("入力が長すぎます"))
-    else
+    } else {
       Success(input)
+    }
+  }
   
-  def fetchFromNetwork(data: String): Try[String] =
-    if scala.util.Random.nextBoolean() then
+  def fetchFromNetwork(data: String): Try[String] = {
+    if (scala.util.Random.nextBoolean()) {
       Success(s"ネットワークから取得: $data")
-    else
+    } else {
       Failure(NetworkError("接続できません"))
+    }
+  }
   
-  def saveToDatabase(data: String): Try[String] =
-    if scala.util.Random.nextBoolean() then
+  def saveToDatabase(data: String): Try[String] = {
+    if (scala.util.Random.nextBoolean()) {
       Success(s"保存完了: $data")
-    else
+    } else {
       Failure(DatabaseError("ディスク容量不足"))
+    }
+  }
   
   // テスト
   val inputs = List("", "正常なデータ", "a" * 150)
   
   inputs.foreach { input =>
     println(s"\n入力: '${input.take(20)}...'")
-    processData(input) match
+    processData(input) match {
       case Success(result) => println(s"成功: $result")
       case Failure(error) => println(s"失敗: ${error.getMessage}")
+    }
   }
+}
 ```
 
 ## 実践例：CSVパーサー
 
 ```scala
 // CsvParser.scala
-@main def csvParser(): Unit =
+@main def csvParser(): Unit = {
   import scala.util.{Try, Success, Failure}
   
   case class Person(name: String, age: Int, email: String)
   
-  object CsvParser:
+  object CsvParser {
     def parseFile(filename: String): Try[List[Person]] =
-      for
+      for {
         content <- readFile(filename)
         lines <- Try(content.split("\n").toList)
         header <- parseHeader(lines.headOption)
         data <- parseData(lines.drop(1), header)
-      yield data
+      } yield data
     
     private def readFile(filename: String): Try[String] = Try {
       val source = scala.io.Source.fromFile(filename)
@@ -424,16 +461,18 @@
     }
     
     private def parseHeader(headerOpt: Option[String]): Try[List[String]] =
-      headerOpt match
+      headerOpt match {
         case Some(header) => Success(header.split(",").map(_.trim).toList)
         case None => Failure(new Exception("ヘッダーがありません"))
+      }
     
     private def parseData(lines: List[String], header: List[String]): Try[List[Person]] =
       Try {
         lines.filter(_.trim.nonEmpty).map { line =>
           val values = line.split(",").map(_.trim)
-          if values.length != header.length then
+          if (values.length != header.length) {
             throw new Exception(s"列数が一致しません: $line")
+          }
           
           val data = header.zip(values).toMap
           Person(
@@ -443,28 +482,32 @@
           )
         }
       }
+  }
   
   // テスト用CSVファイルを作成
   import java.io.PrintWriter
   Try {
     val writer = new PrintWriter("people.csv")
-    try
+    try {
       writer.println("name,age,email")
       writer.println("田中太郎,25,taro@example.com")
       writer.println("山田花子,30,hanako@example.com")
       writer.println("佐藤次郎,invalid,jiro@example.com")  // エラーデータ
-    finally
+    } finally {
       writer.close()
+    }
   }
   
   // パース実行
-  CsvParser.parseFile("people.csv") match
+  CsvParser.parseFile("people.csv") match {
     case Success(people) =>
       println("パース成功:")
       people.foreach(println)
     case Failure(error) =>
       println(s"パースエラー: ${error.getMessage}")
       error.printStackTrace()
+  }
+}
 ```
 
 ## 練習してみよう！
@@ -515,19 +558,19 @@
 ### Try を使うコツ
 
 1. **早期のTry化**
-   - 例外が起きる可能性のある処理は即Try
-   - 境界部分でのエラー処理
-   - 外部リソースへのアクセス
+    - 例外が起きる可能性のある処理は即Try
+    - 境界部分でのエラー処理
+    - 外部リソースへのアクセス
 
 2. **エラーの分類**
-   - カスタムエラー型の定義
-   - recover での適切な処理
-   - ユーザーフレンドリーなメッセージ
+    - カスタムエラー型の定義
+    - recover での適切な処理
+    - ユーザーフレンドリーなメッセージ
 
 3. **関数型スタイル**
-   - for式での組み合わせ
-   - map/flatMapの活用
-   - 例外を投げない設計
+    - for式での組み合わせ
+    - map/flatMapの活用
+    - 例外を投げない設計
 
 ### 次の部では...
 

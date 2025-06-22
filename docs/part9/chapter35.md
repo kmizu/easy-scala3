@@ -12,14 +12,14 @@
 
 ```scala
 // ActorModelBasics.scala
-@main def actorModelBasics(): Unit =
+@main def actorModelBasics(): Unit = {
   import scala.concurrent.{Future, Promise}
   import scala.concurrent.ExecutionContext.Implicits.global
   import java.util.concurrent.{ConcurrentLinkedQueue, CountDownLatch}
   import java.util.concurrent.atomic.AtomicBoolean
   
   // シンプルなアクターの実装
-  abstract class Actor[T]:
+  abstract class Actor[T] {
     private val mailbox = new ConcurrentLinkedQueue[T]()
     private val running = new AtomicBoolean(true)
     
@@ -27,33 +27,43 @@
     def receive(message: T): Unit
     
     // メッセージ送信
-    def !(message: T): Unit = 
-      if running.get() then
+    def !(message: T): Unit = {
+      if (running.get()) {
         mailbox.offer(message)
+      }
+    }
     
     // アクター開始
-    def start(): Unit =
+    def start(): Unit = {
       Future {
-        while running.get() || !mailbox.isEmpty do
-          Option(mailbox.poll()) match
+        while (running.get() || !mailbox.isEmpty) {
+          Option(mailbox.poll()) match {
             case Some(msg) => 
-              try receive(msg)
-              catch case e: Exception =>
+              try { receive(msg) }
+              catch { case e: Exception =>
                 println(s"エラー: ${e.getMessage}")
+              }
             case None => 
               Thread.sleep(10)
+          }
+        }
       }
+    }
     
     // アクター停止
-    def stop(): Unit = 
+    def stop(): Unit = {
       running.set(false)
+    }
+  }
   
   // 挨拶アクター
-  class GreeterActor extends Actor[String]:
-    override def receive(message: String): Unit = message match
+  class GreeterActor extends Actor[String] {
+    override def receive(message: String): Unit = message match {
       case "hello" => println("こんにちは！")
       case "goodbye" => println("さようなら！")
       case name => println(s"はじめまして、$name さん！")
+    }
+  }
   
   println("=== 基本的なアクター ===")
   
@@ -73,10 +83,10 @@
   case object Decrement extends CounterMessage
   case class GetCount(replyTo: Int => Unit) extends CounterMessage
   
-  class CounterActor extends Actor[CounterMessage]:
+  class CounterActor extends Actor[CounterMessage] {
     private var count = 0
     
-    override def receive(message: CounterMessage): Unit = message match
+    override def receive(message: CounterMessage): Unit = message match {
       case Increment =>
         count += 1
         println(s"カウント増加: $count")
@@ -87,6 +97,8 @@
         
       case GetCount(replyTo) =>
         replyTo(count)
+    }
+  }
   
   println("\n=== 状態を持つアクター ===")
   
@@ -114,13 +126,13 @@
 
 ```scala
 // ActorCommunication.scala
-@main def actorCommunication(): Unit =
+@main def actorCommunication(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import java.util.concurrent.ConcurrentLinkedQueue
   import java.util.concurrent.atomic.AtomicBoolean
   
   // 改良版アクターベースクラス
-  abstract class ImprovedActor[T]:
+  abstract class ImprovedActor[T] {
     self =>
     
     private val mailbox = new ConcurrentLinkedQueue[T]()
@@ -129,27 +141,35 @@
     
     def receive: PartialFunction[T, Unit]
     
-    final def !(message: T): Unit = 
+    final def !(message: T): Unit = {
       mailbox.offer(message)
+    }
       
-    def start(): ImprovedActor[T] =
-      if running.compareAndSet(false, true) then
+    def start(): ImprovedActor[T] = {
+      if (running.compareAndSet(false, true)) {
         thread = Some(new Thread(() => {
-          while running.get() || !mailbox.isEmpty do
-            Option(mailbox.poll()) match
+          while (running.get() || !mailbox.isEmpty) {
+            Option(mailbox.poll()) match {
               case Some(msg) if receive.isDefinedAt(msg) =>
-                try receive(msg)
-                catch case e: Exception =>
+                try { receive(msg) }
+                catch { case e: Exception =>
                   println(s"エラー処理: $e")
+                }
               case _ =>
                 Thread.sleep(10)
+            }
+          }
         }))
         thread.foreach(_.start())
+      }
       this
+    }
     
-    def stop(): Unit =
+    def stop(): Unit = {
       running.set(false)
       thread.foreach(_.join(1000))
+    }
+  }
   
   // Ping-Pongアクター
   case class Ping(replyTo: ImprovedActor[Pong])
@@ -157,11 +177,11 @@
   case object Start
   case object Stop
   
-  class PingActor extends ImprovedActor[Ping | Start | Stop]:
+  class PingActor extends ImprovedActor[Ping | Start | Stop] {
     private var pongActor: Option[ImprovedActor[Pong]] = None
     private var count = 0
     
-    def receive: PartialFunction[Ping | Start | Stop, Unit] =
+    def receive: PartialFunction[Ping | Start | Stop, Unit] = {
       case Start =>
         println("Ping: ゲーム開始！")
         pongActor.foreach(_ ! Pong(this))
@@ -169,22 +189,26 @@
       case Ping(replyTo) =>
         count += 1
         println(s"Ping: ピン！ (${count}回目)")
-        if count < 5 then
+        if (count < 5) {
           Thread.sleep(500)
           replyTo ! Pong(this)
-        else
+        } else {
           println("Ping: ゲーム終了！")
           replyTo ! Stop
           self.stop()
+        }
           
       case Stop =>
         self.stop()
+    }
     
-    def setPongActor(pong: ImprovedActor[Pong]): Unit =
+    def setPongActor(pong: ImprovedActor[Pong]): Unit = {
       pongActor = Some(pong)
+    }
+  }
   
-  class PongActor extends ImprovedActor[Pong | Stop]:
-    def receive: PartialFunction[Pong | Stop, Unit] =
+  class PongActor extends ImprovedActor[Pong | Stop] {
+    def receive: PartialFunction[Pong | Stop, Unit] = {
       case Pong(replyTo) =>
         println("Pong: ポン！")
         Thread.sleep(500)
@@ -193,6 +217,8 @@
       case Stop =>
         println("Pong: お疲れ様！")
         self.stop()
+    }
+  }
   
   println("=== Ping-Pong アクター ===")
   
@@ -211,7 +237,7 @@
 
 ```scala
 // ActorWorkerPool.scala
-@main def actorWorkerPool(): Unit =
+@main def actorWorkerPool(): Unit = {
   import scala.concurrent.Promise
   import java.util.concurrent.atomic.AtomicInteger
   import scala.collection.concurrent.TrieMap
@@ -232,9 +258,9 @@
   
   // ワーカーアクター
   class WorkerActor(id: Int, master: ImprovedActor[MasterMessage]) 
-    extends ImprovedActor[WorkerMessage]:
+    extends ImprovedActor[WorkerMessage] {
     
-    def receive: PartialFunction[WorkerMessage, Unit] =
+    def receive: PartialFunction[WorkerMessage, Unit] = {
       case ProcessJob(job) =>
         println(s"Worker-$id: ジョブ ${job.id} を処理中...")
         Thread.sleep(1000) // 処理時間をシミュレート
@@ -245,9 +271,11 @@
       case Shutdown =>
         println(s"Worker-$id: シャットダウン")
         stop()
+    }
+  }
   
   // マスターアクター（ワーカープール管理）
-  class MasterActor(workerCount: Int) extends ImprovedActor[MasterMessage]:
+  class MasterActor(workerCount: Int) extends ImprovedActor[MasterMessage] {
     private val workers = (1 to workerCount).map { i =>
       new WorkerActor(i, this).start()
     }.toVector
@@ -257,17 +285,18 @@
     private val results = TrieMap[Int, String]()
     private var nextWorker = 0
     
-    def receive: PartialFunction[MasterMessage, Unit] =
+    def receive: PartialFunction[MasterMessage, Unit] = {
       case SubmitJob(job) =>
         println(s"Master: ジョブ ${job.id} を受付")
         
         // 空いているワーカーを探す
         val availableWorker = findAvailableWorker()
-        if availableWorker >= 0 then
+        if (availableWorker >= 0) {
           workers(availableWorker) ! ProcessJob(job)
           busyWorkers += availableWorker
-        else
+        } else {
           pendingJobs.enqueue(job)
+        }
           
       case JobCompleted(result) =>
         results.put(result.jobId, result.result)
@@ -278,21 +307,26 @@
         busyWorkers -= workerId
         
         // 待機中のジョブがあれば割り当て
-        if pendingJobs.nonEmpty then
+        if (pendingJobs.nonEmpty) {
           val nextJob = pendingJobs.dequeue()
           workers(workerId) ! ProcessJob(nextJob)
           busyWorkers += workerId
+        }
           
       case GetResults(replyTo) =>
         replyTo(results.toMap)
+    }
     
-    private def findAvailableWorker(): Int =
+    private def findAvailableWorker(): Int = {
       (0 until workerCount).find(!busyWorkers.contains(_)).getOrElse(-1)
+    }
     
-    def shutdown(): Unit =
+    def shutdown(): Unit = {
       workers.foreach(_ ! Shutdown)
       Thread.sleep(100)
       stop()
+    }
+  }
   
   println("=== ワーカープール ===")
   
@@ -331,7 +365,7 @@
 
 ```scala
 // SupervisorActor.scala
-@main def supervisorActor(): Unit =
+@main def supervisorActor(): Unit = {
   import scala.util.{Try, Success, Failure}
   import java.util.concurrent.atomic.AtomicInteger
   
@@ -342,44 +376,48 @@
   case object Escalate extends SupervisorStrategy
   
   // 監督アクター
-  abstract class SupervisedActor[T] extends ImprovedActor[T]:
+  abstract class SupervisedActor[T] extends ImprovedActor[T] {
     private val restartCount = new AtomicInteger(0)
     
     def preRestart(reason: Throwable): Unit = ()
     def postRestart(): Unit = ()
     
-    override def start(): SupervisedActor[T] =
+    override def start(): SupervisedActor[T] = {
       super.start()
       this
+    }
+  }
   
   class Supervisor[T](
     childProps: () => SupervisedActor[T],
     strategy: Throwable => SupervisorStrategy
-  ) extends ImprovedActor[SupervisorMessage[T]]:
+  ) extends ImprovedActor[SupervisorMessage[T]] {
     
     private var child: Option[SupervisedActor[T]] = None
     private val childRestarts = new AtomicInteger(0)
     
-    override def start(): Supervisor[T] =
+    override def start(): Supervisor[T] = {
       super.start()
       createChild()
       this
+    }
     
-    def receive: PartialFunction[SupervisorMessage[T], Unit] =
+    def receive: PartialFunction[SupervisorMessage[T], Unit] = {
       case Forward(msg) =>
         child.foreach(_ ! msg)
         
       case ChildFailed(error) =>
         println(s"Supervisor: 子アクターでエラー発生 - ${error.getMessage}")
         
-        strategy(error) match
+        strategy(error) match {
           case Restart =>
-            if childRestarts.incrementAndGet() <= 3 then
+            if (childRestarts.incrementAndGet() <= 3) {
               println("Supervisor: 子アクターを再起動します")
               restartChild()
-            else
+            } else {
               println("Supervisor: 再起動回数が上限に達しました。停止します。")
               stopChild()
+            }
               
           case Stop =>
             println("Supervisor: 子アクターを停止します")
@@ -388,22 +426,29 @@
           case Escalate =>
             println("Supervisor: エラーを上位にエスカレートします")
             throw error
+        }
+    }
     
-    private def createChild(): Unit =
+    private def createChild(): Unit = {
       child = Some(childProps().start())
       child.foreach(watchChild)
+    }
     
-    private def restartChild(): Unit =
+    private def restartChild(): Unit = {
       stopChild()
       createChild()
+    }
     
-    private def stopChild(): Unit =
+    private def stopChild(): Unit = {
       child.foreach(_.stop())
       child = None
+    }
     
-    private def watchChild(actor: SupervisedActor[T]): Unit =
+    private def watchChild(actor: SupervisedActor[T]): Unit = {
       // 実際の実装では、子アクターの監視メカニズムが必要
       ()
+    }
+  }
   
   // メッセージ定義
   sealed trait SupervisorMessage[T]
@@ -415,38 +460,46 @@
   case class Calculate(expression: String) extends WorkerMessage
   case class Result(value: Double) extends WorkerMessage
   
-  class UnstableWorker extends SupervisedActor[WorkerMessage]:
+  class UnstableWorker extends SupervisedActor[WorkerMessage] {
     private var processedCount = 0
     
-    def receive: PartialFunction[WorkerMessage, Unit] =
+    def receive: PartialFunction[WorkerMessage, Unit] = {
       case Calculate(expr) =>
         processedCount += 1
         println(s"Worker: 計算実行 #$processedCount - $expr")
         
         // 時々エラーを起こす
-        if processedCount % 3 == 0 then
+        if (processedCount % 3 == 0) {
           throw new RuntimeException("計算エラー！")
+        }
         
-        Try(eval(expr)) match
+        Try(eval(expr)) match {
           case Success(result) =>
             println(s"Worker: 結果 = $result")
           case Failure(e) =>
             println(s"Worker: 計算失敗 - ${e.getMessage}")
+        }
+    }
     
-    private def eval(expr: String): Double =
+    private def eval(expr: String): Double = {
       // 簡単な計算式の評価（実際は適切なパーサーを使用）
-      expr match
+      expr match {
         case "1+1" => 2.0
         case "10/2" => 5.0
         case "2*3" => 6.0
         case _ => throw new IllegalArgumentException("不明な式")
+      }
+    }
     
-    override def preRestart(reason: Throwable): Unit =
+    override def preRestart(reason: Throwable): Unit = {
       println(s"Worker: 再起動前処理 - ${reason.getMessage}")
       processedCount = 0
+    }
     
-    override def postRestart(): Unit =
+    override def postRestart(): Unit = {
       println("Worker: 再起動完了")
+    }
+  }
   
   println("=== 監督アクター ===")
   
@@ -476,7 +529,7 @@
 
 ```scala
 // ChatRoomActor.scala
-@main def chatRoomActor(): Unit =
+@main def chatRoomActor(): Unit = {
   import scala.collection.mutable
   import java.time.LocalDateTime
   import java.time.format.DateTimeFormatter
@@ -495,7 +548,7 @@
   case class PrivateReceived(from: String, message: String) extends UserMessage
   
   // チャットルームアクター
-  class ChatRoomActor(roomName: String) extends ImprovedActor[ChatMessage]:
+  class ChatRoomActor(roomName: String) extends ImprovedActor[ChatMessage] {
     private val users = mutable.Map[String, ImprovedActor[UserMessage]]()
     private val history = mutable.ListBuffer[String]()
     private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
@@ -508,7 +561,7 @@
         
         // 既存ユーザーに通知
         users.foreach { case (id, actor) =>
-          if id != userId then
+          if (id != userId) {
             actor ! SystemMessage(message)
         }
         
@@ -533,12 +586,12 @@
         
         // 全ユーザーに配信
         users.foreach { case (id, actor) =>
-          if id != from then
+          if (id != from) {
             actor ! ReceiveMessage(from, message, timestamp)
         }
         
       case PrivateMessage(from, to, message) =>
-        users.get(to) match
+        users.get(to) match {
           case Some(actor) =>
             actor ! PrivateReceived(from, message)
           case None =>
@@ -551,7 +604,7 @@
     
     private def addToHistory(message: String): Unit =
       history += s"[${LocalDateTime.now().format(formatter)}] $message"
-      if history.size > 100 then history.remove(0) // 履歴の上限
+      if (history.size > 100) { history.remove(0) // 履歴の上限
   
   // ユーザーアクター
   class UserActor(userId: String) extends ImprovedActor[UserMessage]:
@@ -566,21 +619,26 @@
         println(s"[$userId] [プライベート] $from: $message")
   
   // 簡単なクライアント
-  class ChatClient(userId: String, room: ImprovedActor[ChatMessage]):
+  class ChatClient(userId: String, room: ImprovedActor[ChatMessage]) {
     private val userActor = new UserActor(userId).start()
     
-    def join(): Unit =
+    def join(): Unit = {
       room ! Join(userId, userActor)
+    }
     
-    def sendMessage(message: String): Unit =
+    def sendMessage(message: String): Unit = {
       room ! Broadcast(userId, message)
+    }
     
-    def sendPrivate(to: String, message: String): Unit =
+    def sendPrivate(to: String, message: String): Unit = {
       room ! PrivateMessage(userId, to, message)
+    }
     
-    def leave(): Unit =
+    def leave(): Unit = {
       room ! Leave(userId)
       userActor.stop()
+    }
+  }
   
   println("=== チャットルーム ===")
   
@@ -642,7 +700,7 @@
 
 ```scala
 // DistributedTaskProcessing.scala
-@main def distributedTaskProcessing(): Unit =
+@main def distributedTaskProcessing(): Unit = {
   import scala.concurrent.duration._
   import scala.util.Random
   import java.util.UUID
@@ -712,7 +770,7 @@
           taskStatus(taskId) = Failed
           
           // リトライ（優先度を下げて）
-          if task.priority > 1 then
+          if (task.priority > 1) {
             val retryTask = task.copy(priority = task.priority - 1)
             pendingTasks.enqueue(retryTask)
             println(s"Coordinator: タスク $taskId をリトライキューに追加")
@@ -744,20 +802,21 @@
   class TaskWorker(
     workerId: String,
     coordinator: ImprovedActor[CoordinatorMessage]
-  ) extends ImprovedActor[WorkerMessage]:
+  ) extends ImprovedActor[WorkerMessage] {
     
-    def receive: PartialFunction[WorkerMessage, Unit] =
+    def receive: PartialFunction[WorkerMessage, Unit] = {
       case ProcessTask(task) =>
         println(s"Worker-$workerId: タスク ${task.id} の処理開始")
         
-        try
+        try {
           // 処理時間をシミュレート
           val processingTime = Random.nextInt(2000) + 1000
           Thread.sleep(processingTime)
           
           // 時々失敗する
-          if Random.nextDouble() < 0.2 then
+          if (Random.nextDouble() < 0.2) {
             throw new RuntimeException("処理エラー")
+          }
           
           val result = TaskResult(
             task.id,
@@ -767,13 +826,16 @@
           
           coordinator ! TaskCompleted(workerId, result)
           
-        catch
+        } catch {
           case e: Exception =>
             coordinator ! TaskFailed(workerId, task.id, e.getMessage)
+        }
         
       case Stop =>
         println(s"Worker-$workerId: 停止")
         stop()
+    }
+  }
   
   println("=== 分散タスク処理 ===")
   
@@ -877,19 +939,19 @@
 ### アクターモデルを使うコツ
 
 1. **メッセージ設計**
-   - イミュータブルに
-   - 明確な意図
-   - 適切な粒度
+    - イミュータブルに
+    - 明確な意図
+    - 適切な粒度
 
 2. **エラー処理**
-   - Let it crash
-   - 監督階層
-   - 適切な再起動戦略
+    - Let it crash
+    - 監督階層
+    - 適切な再起動戦略
 
 3. **パフォーマンス**
-   - メールボックスサイズ
-   - 背圧制御
-   - 適切な並行度
+    - メールボックスサイズ
+    - 背圧制御
+    - 適切な並行度
 
 ### 次の章では...
 

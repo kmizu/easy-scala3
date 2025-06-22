@@ -12,7 +12,7 @@
 
 ```scala
 // FunctionsInLife.scala
-@main def functionsInLife(): Unit =
+@main def functionsInLife(): Unit = {
   // 関数は「入力」を受け取って「出力」を返す機械のようなもの
   
   // 例1：消費税を計算する関数
@@ -28,6 +28,7 @@
   
   println(greet("太郎"))
   println(greet("花子"))
+}
 ```
 
 ## 関数の定義
@@ -36,7 +37,7 @@
 
 ```scala
 // BasicFunctions.scala
-@main def basicFunctions(): Unit =
+@main def basicFunctions(): Unit = {
   // 最もシンプルな関数
   def sayHello(): Unit =
     println("Hello, Scala!")
@@ -62,13 +63,14 @@
     a + b
   
   println(s"3 + 4 = ${add(3, 4)}")
+}
 ```
 
 ### 関数の構成要素
 
 ```scala
 // FunctionComponents.scala
-@main def functionComponents(): Unit =
+@main def functionComponents(): Unit = {
   // 関数の構成要素を詳しく見てみよう
   
   def calculateArea(width: Double, height: Double): Double =
@@ -85,11 +87,12 @@
   
   // 複数行の関数
   def describePerson(name: String, age: Int): String =
-    val category = if age < 20 then "若者" else "大人"
+    val category = if (age < 20) "若者" else "大人"
     val message = s"$name さんは $age 歳の $category です。"
     message  // 最後の式が戻り値
   
   println(describePerson("田中", 25))
+}
 ```
 
 ## いろいろな関数の書き方
@@ -98,42 +101,44 @@
 
 ```scala
 // SingleExpressionFunctions.scala
-@main def singleExpressionFunctions(): Unit =
+@main def singleExpressionFunctions(): Unit = {
   // 1行で書ける関数
   def square(x: Int): Int = x * x
   def isEven(n: Int): Boolean = n % 2 == 0
-  def max(a: Int, b: Int): Int = if a > b then a else b
+  def max(a: Int, b: Int): Int = if (a > b) a else b
   
   println(s"3の2乗: ${square(3)}")
   println(s"4は偶数？: ${isEven(4)}")
   println(s"10と20の大きい方: ${max(10, 20)}")
+}
 ```
 
 ### ブロック式関数
 
 ```scala
 // BlockFunctions.scala
-@main def blockFunctions(): Unit =
+@main def blockFunctions(): Unit = {
   def calculateBMI(weight: Double, height: Double): (Double, String) =
     val heightInMeters = height / 100  // cmをmに変換
     val bmi = weight / (heightInMeters * heightInMeters)
     
-    val category = if bmi < 18.5 then "低体重"
-                   else if bmi < 25 then "標準"
-                   else if bmi < 30 then "肥満1度"
+    val category = if (bmi < 18.5) "低体重"
+                   else if (bmi < 25) "標準"
+                   else if (bmi < 30) "肥満1度"
                    else "肥満2度"
     
     (bmi, category)  // タプルで返す
   
   val (bmi, category) = calculateBMI(65, 170)
   println(f"BMI: $bmi%.1f ($category)")
+}
 ```
 
 ### デフォルト引数
 
 ```scala
 // DefaultArguments.scala
-@main def defaultArguments(): Unit =
+@main def defaultArguments(): Unit = {
   // デフォルト値を持つ引数
   def greet(name: String, greeting: String = "こんにちは"): String =
     s"$greeting、$name さん！"
@@ -152,24 +157,25 @@
   println(createProfile("山田"))
   println(createProfile("田中", 25))
   println(createProfile("佐藤", 30, "大阪"))
+}
 ```
 
 ### 名前付き引数
 
 ```scala
 // NamedArguments.scala
-@main def namedArguments(): Unit =
+@main def namedArguments(): Unit = {
   def orderCoffee(
     size: String = "M",
     sugar: Boolean = false,
     milk: Boolean = false
   ): String =
     val additions = List(
-      if sugar then "砂糖" else "",
-      if milk then "ミルク" else ""
+      if (sugar) "砂糖" else "",
+      if (milk) "ミルク" else ""
     ).filter(_.nonEmpty)
     
-    val addStr = if additions.isEmpty then "" 
+    val addStr = if (additions.isEmpty) "" 
                  else s"（${additions.mkString("、")}入り）"
     
     s"${size}サイズのコーヒー$addStr"
@@ -178,6 +184,7 @@
   println(orderCoffee(milk = true))
   println(orderCoffee(size = "L", sugar = true))
   println(orderCoffee(sugar = true, milk = true, size = "S"))
+}
 ```
 
 ## 実践的な関数の例
@@ -186,7 +193,7 @@
 
 ```scala
 // ValidationFunctions.scala
-@main def validationFunctions(): Unit =
+@main def validationFunctions(): Unit = {
   // メールアドレスの簡易チェック
   def isValidEmail(email: String): Boolean =
     email.contains("@") && email.contains(".")
@@ -199,49 +206,51 @@
     val hasDigit = password.exists(_.isDigit)
     
     val score = List(
-      if length >= 8 then 1 else 0,
-      if hasUpper then 1 else 0,
-      if hasLower then 1 else 0,
-      if hasDigit then 1 else 0
+      if (length >= 8) 1 else 0,
+      if (hasUpper) 1 else 0,
+      if (hasLower) 1 else 0,
+      if (hasDigit) 1 else 0
     ).sum
     
-    score match
+    score match {
       case 4 => "強い"
       case 3 => "普通"
       case 2 => "弱い"
       case _ => "とても弱い"
+    }
   
   // テスト
   val emails = List("test@example.com", "invalid-email", "user@domain")
   emails.foreach { email =>
-    println(s"$email: ${if isValidEmail(email) then "有効" else "無効"}")
+    println(s"$email: ${if (isValidEmail(email)) "有効" else "無効"}")
   }
   
   val passwords = List("abc", "Abc123", "MyP@ssw0rd", "password123")
   passwords.foreach { pwd =>
     println(s"$pwd: ${checkPasswordStrength(pwd)}")
   }
+}
 ```
 
 ### 計算関数
 
 ```scala
 // CalculationFunctions.scala
-@main def calculationFunctions(): Unit =
+@main def calculationFunctions(): Unit = {
   // 階乗を計算
   def factorial(n: Int): Long =
-    if n <= 1 then 1
+    if (n <= 1) 1
     else n * factorial(n - 1)
   
   // 最大公約数
   def gcd(a: Int, b: Int): Int =
-    if b == 0 then a
+    if (b == 0) a
     else gcd(b, a % b)
   
   // 素数判定
   def isPrime(n: Int): Boolean =
-    if n <= 1 then false
-    else if n == 2 then true
+    if (n <= 1) false
+    else if (n == 2) true
     else !(2 to math.sqrt(n).toInt).exists(n % _ == 0)
   
   println(s"5! = ${factorial(5)}")
@@ -260,17 +269,18 @@
   val data = List(10.0, 20.0, 30.0, 40.0, 50.0)
   val (mean, variance, stdDev) = statistics(data)
   println(f"平均: $mean%.2f, 分散: $variance%.2f, 標準偏差: $stdDev%.2f")
+}
 ```
 
 ### 文字列処理関数
 
 ```scala
 // StringFunctions.scala
-@main def stringFunctions(): Unit =
+@main def stringFunctions(): Unit = {
   // 文字列を中央寄せ
   def center(text: String, width: Int, fill: Char = ' '): String =
     val padding = (width - text.length) / 2
-    if padding <= 0 then text
+    if (padding <= 0) text
     else fill.toString * padding + text + fill.toString * padding
   
   // 単語の頻度をカウント
@@ -288,7 +298,7 @@
         .filter(_.nonEmpty)
         .zipWithIndex
         .map { case (word, index) =>
-          if index == 0 then word.toLowerCase
+          if (index == 0) word.toLowerCase
           else word.capitalize
         }
         .mkString
@@ -309,7 +319,7 @@
 
 ```scala
 // CodeReuse.scala
-@main def codeReuse(): Unit =
+@main def codeReuse(): Unit = {
   // 関数を使わない場合（同じコードの繰り返し）
   println("=== 関数なし ===")
   val price1 = 100
@@ -333,13 +343,14 @@
     val (p, t, total) = calculateTotal(price)
     println(s"商品: ${p}円 + 税${t}円 = ${total}円")
   }
+}
 ```
 
 ### テストしやすい
 
 ```scala
 // TestableFunctions.scala
-@main def testableFunctions(): Unit =
+@main def testableFunctions(): Unit = {
   // テストしやすい純粋関数
   def discount(price: Int, rate: Double): Int =
     (price * (1 - rate)).toInt
@@ -354,23 +365,24 @@
   println("=== 割引計算のテスト ===")
   testCases.foreach { case (price, rate, expected) =>
     val result = discount(price, rate)
-    val status = if result == expected then "✓" else "✗"
+    val status = if (result == expected) "✓" else "✗"
     println(f"$status $price円の${(rate*100).toInt}%%オフ = $result円 (期待値: $expected円)")
   }
+}
 ```
 
 ## ローカル関数
 
 ```scala
 // LocalFunctions.scala
-@main def localFunctions(): Unit =
+@main def localFunctions(): Unit = {
   def processOrder(items: List[(String, Int, Int)]): Int =
     // 関数の中で関数を定義
     def calculateSubtotal(quantity: Int, price: Int): Int =
       quantity * price
     
     def applyDiscount(subtotal: Int): Int =
-      if subtotal >= 5000 then (subtotal * 0.9).toInt
+      if (subtotal >= 5000) (subtotal * 0.9).toInt
       else subtotal
     
     // メインの処理
@@ -381,8 +393,9 @@
     val total = applyDiscount(subtotal)
     
     println(s"小計: ${subtotal}円")
-    if subtotal >= 5000 then
+    if (subtotal >= 5000) {
       println("10%割引が適用されました")
+    }
     println(s"合計: ${total}円")
     
     total
@@ -394,30 +407,33 @@
   )
   
   processOrder(order)
+}
 ```
 
 ## 再帰関数
 
 ```scala
 // RecursiveFunctions.scala
-@main def recursiveFunctions(): Unit =
+@main def recursiveFunctions(): Unit = {
   // フィボナッチ数列
   def fibonacci(n: Int): Int =
-    if n <= 1 then n
+    if (n <= 1) n
     else fibonacci(n - 1) + fibonacci(n - 2)
   
   // リストの合計（再帰版）
-  def sumList(list: List[Int]): Int = list match
+  def sumList(list: List[Int]): Int = list match {
     case Nil => 0
     case head :: tail => head + sumList(tail)
+  }
   
   // ツリー構造の探索
   case class TreeNode(value: Int, left: Option[TreeNode], right: Option[TreeNode])
   
-  def treeSum(node: Option[TreeNode]): Int = node match
+  def treeSum(node: Option[TreeNode]): Int = node match {
     case None => 0
     case Some(TreeNode(value, left, right)) =>
       value + treeSum(left) + treeSum(right)
+  }
   
   // 使用例
   println("フィボナッチ数列:")
@@ -434,6 +450,7 @@
     Some(TreeNode(15, None, None))
   ))
   println(s"ツリーの合計: ${treeSum(tree)}")
+}
 ```
 
 ## 練習してみよう！
@@ -488,19 +505,19 @@
 ### 関数を使うコツ
 
 1. **単一責任の原則**
-   - 1つの関数は1つのことをする
-   - 名前から機能が分かるように
-   - 短く、理解しやすく
+    - 1つの関数は1つのことをする
+    - 名前から機能が分かるように
+    - 短く、理解しやすく
 
 2. **適切な抽象化**
-   - 共通部分を関数に
-   - パラメータで柔軟性を
-   - 再利用を意識
+    - 共通部分を関数に
+    - パラメータで柔軟性を
+    - 再利用を意識
 
 3. **テストしやすさ**
-   - 入力と出力が明確
-   - 副作用を避ける
-   - 純粋関数を心がける
+    - 入力と出力が明確
+    - 副作用を避ける
+    - 純粋関数を心がける
 
 ### 次の章では...
 

@@ -12,7 +12,7 @@
 
 ```scala
 // ThreadUnsafeExample.scala
-@main def threadUnsafeExample(): Unit =
+@main def threadUnsafeExample(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import scala.collection.mutable
@@ -20,15 +20,17 @@
   // 危険な例1：可変状態の共有
   println("=== 非スレッドセーフの問題 ===")
   
-  class UnsafeCounter:
+  class UnsafeCounter {
     private var count = 0
     
-    def increment(): Unit = 
+    def increment(): Unit = {
       val current = count  // 読み込み
       Thread.sleep(1)      // 他の処理をシミュレート
       count = current + 1  // 書き込み
+    }
     
     def getCount: Int = count
+  }
   
   val counter = new UnsafeCounter
   
@@ -69,7 +71,7 @@
 
 ```scala
 // ThreadSafeExample.scala
-@main def threadSafeExample(): Unit =
+@main def threadSafeExample(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
@@ -78,7 +80,7 @@
   // 解決策1：synchronizedブロック
   println("=== synchronizedによる解決 ===")
   
-  class SynchronizedCounter:
+  class SynchronizedCounter {
     private var count = 0
     
     def increment(): Unit = this.synchronized {
@@ -88,6 +90,7 @@
     }
     
     def getCount: Int = this.synchronized { count }
+  }
   
   val syncCounter = new SynchronizedCounter
   val syncFutures = (1 to 100).map { _ =>
@@ -103,26 +106,28 @@
   // 解決策2：Atomic変数
   println("\n=== Atomic変数による解決 ===")
   
-  class AtomicCounter:
+  class AtomicCounter {
     private val count = new AtomicInteger(0)
     
     def increment(): Unit = count.incrementAndGet()
     def getCount: Int = count.get()
     
     // より複雑な操作
-    def incrementIfLessThan(limit: Int): Boolean =
+    def incrementIfLessThan(limit: Int): Boolean = {
       count.updateAndGet { current =>
-        if current < limit then current + 1 else current
+        if (current < limit) { current + 1 } else { current }
       } <= limit
+    }
+  }
   
   val atomicCounter = new AtomicCounter
   val atomicFutures = (1 to 150).map { _ =>
     Future {
-      if atomicCounter.incrementIfLessThan(100) then
+      if (atomicCounter.incrementIfLessThan(100)) {
         "成功"
-      else
+      } else {
         "制限到達"
-    }
+      }
   }
   
   Future.sequence(atomicFutures).foreach { results =>
@@ -162,7 +167,7 @@
 
 ```scala
 // ImmutableThreadSafety.scala
-@main def immutableThreadSafety(): Unit =
+@main def immutableThreadSafety(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.atomic.AtomicReference
@@ -174,34 +179,40 @@
     players: Set[String],
     items: Map[String, Int]
   ):
-    def addScore(points: Int): GameState = 
+    def addScore(points: Int): GameState = {
       copy(score = score + points)
+    }
     
-    def levelUp: GameState = 
+    def levelUp: GameState = {
       copy(level = level + 1)
+    }
     
-    def addPlayer(name: String): GameState = 
+    def addPlayer(name: String): GameState = {
       copy(players = players + name)
+    }
     
-    def addItem(item: String, quantity: Int): GameState =
+    def addItem(item: String, quantity: Int): GameState = {
       copy(items = items + (item -> (items.getOrElse(item, 0) + quantity)))
+    }
   
   // スレッドセーフな状態管理
-  class ThreadSafeGameManager:
+  class ThreadSafeGameManager {
     private val state = new AtomicReference(GameState(0, 1, Set.empty, Map.empty))
     
-    def updateState(f: GameState => GameState): GameState =
+    def updateState(f: GameState => GameState): GameState = {
       var oldState: GameState = null
       var newState: GameState = null
       
-      do
+      do {
         oldState = state.get()
         newState = f(oldState)
-      while !state.compareAndSet(oldState, newState)
+      } while (!state.compareAndSet(oldState, newState))
       
       newState
+    }
     
     def getState: GameState = state.get()
+  }
   
   val gameManager = new ThreadSafeGameManager
   
@@ -247,14 +258,14 @@
   case class AddPlayer(name: String) extends GameMessage
   case class GetState(replyTo: GameState => Unit) extends GameMessage
   
-  class MessageBasedGame:
+  class MessageBasedGame {
     private val queue = new LinkedBlockingQueue[GameMessage]()
     @volatile private var running = true
     
     private var state = GameState(0, 1, Set.empty, Map.empty)
     
     private val processor = new Thread(() => {
-      while running do
+      while (running) {
         Option(queue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)).foreach {
           case AddScore(points) =>
             state = state.addScore(points)
@@ -262,18 +273,22 @@
           case AddPlayer(name) =>
             state = state.addPlayer(name)
             
+            
           case GetState(replyTo) =>
             replyTo(state)
         }
+      }
     })
     
     processor.start()
     
     def sendMessage(msg: GameMessage): Unit = queue.offer(msg)
     
-    def stop(): Unit =
+    def stop(): Unit = {
       running = false
       processor.join()
+    }
+  }
   
   val messageGame = new MessageBasedGame
   
@@ -281,8 +296,9 @@
   val messageFutures = (1 to 100).map { i =>
     Future {
       messageGame.sendMessage(AddScore(5))
-      if i % 10 == 0 then
+      if (i % 10 == 0) {
         messageGame.sendMessage(AddPlayer(s"Player$i"))
+      }
     }
   }
   
@@ -308,7 +324,7 @@
 
 ```scala
 // LockFreeAlgorithms.scala
-@main def lockFreeAlgorithms(): Unit =
+@main def lockFreeAlgorithms(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.atomic.{AtomicReference, AtomicInteger}
@@ -317,29 +333,34 @@
   // ロックフリースタック
   println("=== ロックフリースタック ===")
   
-  class LockFreeStack[T]:
+  class LockFreeStack[T] {
     private class Node[T](val value: T, val next: AtomicReference[Node[T]])
     
     private val top = new AtomicReference[Node[T]](null)
     
     @tailrec
-    final def push(value: T): Unit =
+    final def push(value: T): Unit = {
       val newNode = new Node(value, new AtomicReference(top.get()))
-      if !top.compareAndSet(newNode.next.get(), newNode) then
+      if (!top.compareAndSet(newNode.next.get(), newNode)) {
         newNode.next.set(top.get())
         push(value)  // リトライ
+      }
+    }
     
     @tailrec
-    final def pop(): Option[T] =
+    final def pop(): Option[T] = {
       val currentTop = top.get()
-      if currentTop == null then
+      if (currentTop == null) {
         None
-      else if top.compareAndSet(currentTop, currentTop.next.get()) then
+      } else if (top.compareAndSet(currentTop, currentTop.next.get())) {
         Some(currentTop.value)
-      else
+      } else {
         pop()  // リトライ
+      }
+    }
     
     def isEmpty: Boolean = top.get() == null
+  }
   
   val stack = new LockFreeStack[Int]
   
@@ -368,7 +389,7 @@
   // ロックフリーカウンター（ABA問題対策）
   println("\n=== ロックフリーカウンター ===")
   
-  class StampedReference[T](initialRef: T, initialStamp: Int):
+  class StampedReference[T](initialRef: T, initialStamp: Int) {
     private val pair = new AtomicReference((initialRef, initialStamp))
     
     def get: (T, Int) = pair.get()
@@ -378,41 +399,50 @@
       newRef: T,
       expectedStamp: Int,
       newStamp: Int
-    ): Boolean =
+    ): Boolean = {
       val current = pair.get()
       current._1 == expectedRef && 
       current._2 == expectedStamp &&
       pair.compareAndSet(current, (newRef, newStamp))
+    }
+  }
   
   // 使用例：ロックフリーな残高管理
-  class LockFreeAccount(initialBalance: Double):
+  class LockFreeAccount(initialBalance: Double) {
     private val balance = new StampedReference(initialBalance, 0)
     
     @tailrec
-    final def withdraw(amount: Double): Boolean =
+    final def withdraw(amount: Double): Boolean = {
       val (currentBalance, stamp) = balance.get
-      if currentBalance >= amount then
-        if balance.compareAndSet(
+      if (currentBalance >= amount) {
+        if (balance.compareAndSet(
           currentBalance,
           currentBalance - amount,
           stamp,
           stamp + 1
-        ) then true
-        else withdraw(amount)  // リトライ
-      else false
+        )) {
+          true
+        } else {
+          withdraw(amount)  // リトライ
+        }
+      } else {
+        false
+      }
+    }
     
     def getBalance: Double = balance.get._1
+  }
   
   val account = new LockFreeAccount(1000.0)
   
   val withdrawFutures = (1 to 20).map { _ =>
     Future {
       val amount = 50.0
-      if account.withdraw(amount) then
+      if (account.withdraw(amount)) {
         s"出金成功: $amount"
-      else
+      } else {
         s"出金失敗: 残高不足"
-    }
+      }
   }
   
   Future.sequence(withdrawFutures).foreach { results =>
@@ -430,7 +460,7 @@
 
 ```scala
 // ProducerConsumerPattern.scala
-@main def producerConsumerPattern(): Unit =
+@main def producerConsumerPattern(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.{LinkedBlockingQueue, ArrayBlockingQueue}
@@ -439,19 +469,25 @@
   // スレッドセーフなキュー
   println("=== プロデューサー・コンシューマー ===")
   
-  class WorkQueue[T](capacity: Int):
+  class WorkQueue[T](capacity: Int) {
     private val queue = new ArrayBlockingQueue[T](capacity)
     private val isShutdown = new AtomicBoolean(false)
     
-    def produce(item: T): Boolean =
-      if !isShutdown.get() then
+    def produce(item: T): Boolean = {
+      if (!isShutdown.get()) {
         queue.offer(item, 100, java.util.concurrent.TimeUnit.MILLISECONDS)
-      else false
+      } else {
+        false
+      }
+    }
     
-    def consume(): Option[T] =
-      if !isShutdown.get() || !queue.isEmpty then
+    def consume(): Option[T] = {
+      if (!isShutdown.get() || !queue.isEmpty) {
         Option(queue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS))
-      else None
+      } else {
+        None
+      }
+    }
     
     def shutdown(): Unit = isShutdown.set(true)
     
@@ -484,7 +520,7 @@
       var continue = true
       
       while continue do
-        taskQueue.consume() match
+        taskQueue.consume() match {
           case Some(task) =>
             println(s"  処理[$workerId]: ${task.id}")
             Thread.sleep(100)  // 処理時間
@@ -506,7 +542,7 @@
     var continue = true
     
     while continue do
-      resultQueue.consume() match
+      resultQueue.consume() match {
         case Some(result) =>
           println(s"    消費: ${result.taskId} -> ${result.result}")
           consumed += 1
@@ -537,7 +573,7 @@
 
 ```scala
 // ReadWriteLock.scala
-@main def readWriteLock(): Unit =
+@main def readWriteLock(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -567,7 +603,7 @@
       // まず読み取り試行
       readLock.lock()
       try
-        cache.get(key) match
+        cache.get(key) match {
           case Some(value) => return value
           case None => // 続行
       finally
@@ -596,7 +632,7 @@
     // 90% 読み取り
     List.fill(90)(Future {
       val key = s"key${scala.util.Random.nextInt(20)}"
-      cache.get(key) match
+      cache.get(key) match {
         case Some(value) => s"Hit: $key -> $value"
         case None => s"Miss: $key"
     }),
@@ -648,7 +684,7 @@
 
 ```scala
 // ThreadSafeMetrics.scala
-@main def threadSafeMetrics(): Unit =
+@main def threadSafeMetrics(): Unit = {
   import scala.concurrent.ExecutionContext.Implicits.global
   import scala.concurrent.Future
   import java.util.concurrent.ConcurrentHashMap
@@ -723,9 +759,9 @@
       HistogramStats(
         count = c,
         sum = s,
-        min = if c > 0 then min.get() else 0,
-        max = if c > 0 then max.get() else 0,
-        mean = if c > 0 then s.toDouble / c else 0.0
+        min = if (c > 0) { min.get() else 0,
+        max = if (c > 0) { max.get() else 0,
+        mean = if (c > 0) { s.toDouble / c else 0.0
       )
   
   // 使用例：Webアプリケーションのメトリクス
@@ -756,7 +792,7 @@
     val activeConnections = scala.util.Random.nextInt(100)
     metrics.setGauge("connections.active", activeConnections)
     
-    if requestId % 100 == 0 then
+    if (requestId % 100 == 0) {
       println(s"リクエスト $requestId 処理完了")
   }
   
@@ -790,7 +826,7 @@
     // エラー率計算
     val total = snapshot.counters.getOrElse("requests.total", 0L)
     val errors = snapshot.counters.getOrElse("response.status.500", 0L)
-    val errorRate = if total > 0 then errors.toDouble / total * 100 else 0.0
+    val errorRate = if (total > 0) { errors.toDouble / total * 100 else 0.0
     println(f"\nエラー率: $errorRate%.1f%%")
   }
   
@@ -849,19 +885,19 @@ Webサイトのアクセスカウンターを作ってください：
 ### スレッドセーフ設計のコツ
 
 1. **シンプルに保つ**
-   - 共有状態を最小限に
-   - イミュータブル優先
-   - 明確な責任分離
+    - 共有状態を最小限に
+    - イミュータブル優先
+    - 明確な責任分離
 
 2. **適切なツールを選ぶ**
-   - 用途に応じた同期方法
-   - パフォーマンスを考慮
-   - 可読性とのバランス
+    - 用途に応じた同期方法
+    - パフォーマンスを考慮
+    - 可読性とのバランス
 
 3. **テストを忘れずに**
-   - 並行性のテスト
-   - ストレステスト
-   - デッドロックの検出
+    - 並行性のテスト
+    - ストレステスト
+    - デッドロックの検出
 
 ### 次の章では...
 

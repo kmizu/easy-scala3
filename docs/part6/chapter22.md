@@ -12,7 +12,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
 
 ```scala
 // ClassVsCaseClass.scala
-@main def classVsCaseClass(): Unit =
+@main def classVsCaseClass(): Unit = {
   // 通常のクラス（面倒...）
   class PersonClass(val name: String, val age: Int)
   
@@ -33,6 +33,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   println(s"名前: ${person3.name}")
   println(s"年齢: ${person3.age}")
   println(s"同じ？: ${person3 == Person("花子", 30)}")  // true！
+}
 ```
 
 ## ケースクラスの基本機能
@@ -41,7 +42,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
 
 ```scala
 // CaseClassFeatures.scala
-@main def caseClassFeatures(): Unit =
+@main def caseClassFeatures(): Unit = {
   case class Product(
     id: Int,
     name: String,
@@ -68,18 +69,20 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   println(s"割引後: $discounted")
   
   // 6. パターンマッチで分解
-  product1 match
+  product1 match {
     case Product(id, name, price, true) =>
       println(f"$name (ID:$id) は ${price}%.0f円で在庫あり")
     case Product(_, name, _, false) =>
       println(s"$name は在庫切れ")
+  }
+}
 ```
 
 ### unapplyメソッドとパターンマッチ
 
 ```scala
 // PatternMatchingCaseClass.scala
-@main def patternMatchingCaseClass(): Unit =
+@main def patternMatchingCaseClass(): Unit = {
   // 異なる種類の通知
   sealed trait Notification
   case class Email(sender: String, title: String, body: String) extends Notification
@@ -87,7 +90,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   case class Push(app: String, content: String, urgent: Boolean) extends Notification
   
   def handleNotification(notification: Notification): String =
-    notification match
+    notification match {
       case Email(sender, title, _) =>
         s"📧 メール: $sender から「$title」"
       
@@ -102,6 +105,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
       
       case Push(app, content, false) =>
         s"🔵 通知: $app - $content"
+    }
   
   // いろいろな通知を処理
   val notifications = List(
@@ -115,6 +119,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   notifications.foreach { n =>
     println(handleNotification(n))
   }
+}
 ```
 
 ## 実践的な使い方
@@ -123,7 +128,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
 
 ```scala
 // ShoppingCartSystem.scala
-@main def shoppingCartSystem(): Unit =
+@main def shoppingCartSystem(): Unit = {
   // 商品情報
   case class Product(
     id: String,
@@ -146,40 +151,43 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
     def addItem(product: Product, quantity: Int = 1): Cart =
       val existingItem = items.find(_.product.id == product.id)
       
-      existingItem match
+      existingItem match {
         case Some(item) =>
           val updated = item.copy(quantity = item.quantity + quantity)
           val newItems = items.map(i => 
-            if i.product.id == product.id then updated else i
+            if (i.product.id == product.id) updated else i
           )
           copy(items = newItems)
         
         case None =>
           copy(items = items :+ CartItem(product, quantity))
+      }
     
     def removeItem(productId: String): Cart =
       copy(items = items.filterNot(_.product.id == productId))
     
     def updateQuantity(productId: String, newQuantity: Int): Cart =
-      if newQuantity <= 0 then
+      if (newQuantity <= 0) {
         removeItem(productId)
-      else
+      } else {
         val newItems = items.map { item =>
-          if item.product.id == productId then
+          if (item.product.id == productId) {
             item.copy(quantity = newQuantity)
-          else
+          } else {
             item
+          }
         }
         copy(items = newItems)
+      }
     
     def total: Int = items.map(_.subtotal).sum
     
     def itemCount: Int = items.map(_.quantity).sum
     
     def summary: String =
-      if items.isEmpty then
+      if (items.isEmpty) {
         "カートは空です"
-      else
+      } else {
         val itemList = items.map { item =>
           f"${item.product.name}%-15s × ${item.quantity}%2d = ${item.subtotal}%,6d円"
         }.mkString("\n")
@@ -187,6 +195,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
         s"""$itemList
            |${"=" * 40}
            |合計: ${total}%,d円（${itemCount}点）""".stripMargin
+      }
   
   // 商品カタログ
   val products = List(
@@ -219,13 +228,14 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   myCart = myCart.updateQuantity("P001", 1)  // Tシャツを1枚に
   println("Tシャツを1枚に変更")
   println(myCart.summary)
+}
 ```
 
 ### ユーザー管理システム
 
 ```scala
 // UserManagementSystem.scala
-@main def userManagementSystem(): Unit =
+@main def userManagementSystem(): Unit = {
   import java.time.LocalDateTime
   
   // ユーザーの状態
@@ -257,9 +267,9 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
     private var events = List.empty[UserEvent]
     
     def createUser(name: String, email: String): Either[String, User] =
-      if users.values.exists(_.email == email) then
+      if (users.values.exists(_.email == email)) {
         Left(s"メールアドレス $email は既に使用されています")
-      else
+      } else {
         val user = User(
           id = s"U${System.currentTimeMillis()}",
           name = name,
@@ -268,9 +278,10 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
         users += (user.id -> user)
         events ::= UserCreated(user, LocalDateTime.now())
         Right(user)
+      }
     
     def updateUser(userId: String, name: Option[String] = None, email: Option[String] = None): Either[String, User] =
-      users.get(userId) match
+      users.get(userId) match {
         case None => Left(s"ユーザー $userId が見つかりません")
         case Some(oldUser) =>
           val newUser = oldUser.copy(
@@ -280,9 +291,10 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
           users += (userId -> newUser)
           events ::= UserUpdated(oldUser, newUser, LocalDateTime.now())
           Right(newUser)
+      }
     
     def login(userId: String): Either[String, User] =
-      users.get(userId) match
+      users.get(userId) match {
         case None => Left(s"ユーザー $userId が見つかりません")
         case Some(user) if user.status != Active => Left("アカウントが無効です")
         case Some(user) =>
@@ -290,15 +302,17 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
           users += (userId -> updatedUser)
           events ::= UserLoggedIn(userId, LocalDateTime.now())
           Right(updatedUser)
+      }
     
     def changeStatus(userId: String, newStatus: UserStatus): Either[String, User] =
-      users.get(userId) match
+      users.get(userId) match {
         case None => Left(s"ユーザー $userId が見つかりません")
         case Some(user) =>
           val updatedUser = user.copy(status = newStatus)
           users += (userId -> updatedUser)
           events ::= UserStatusChanged(userId, user.status, newStatus, LocalDateTime.now())
           Right(updatedUser)
+      }
     
     def findByEmail(email: String): Option[User] =
       users.values.find(_.email == email)
@@ -315,22 +329,25 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   
   // ユーザー作成
   val result1 = userManager.createUser("田中太郎", "taro@example.com")
-  result1 match
+  result1 match {
     case Right(user) => println(s"ユーザー作成成功: $user")
     case Left(error) => println(s"エラー: $error")
+  }
   
   // 重複メールアドレス
-  userManager.createUser("山田花子", "taro@example.com") match
+  userManager.createUser("山田花子", "taro@example.com") match {
     case Right(user) => println(s"ユーザー作成成功: $user")
     case Left(error) => println(s"エラー: $error")
+  }
   
   // 別のユーザー作成
   val Right(user2) = userManager.createUser("山田花子", "hanako@example.com")
   
   // ログイン
-  userManager.login(user2.id) match
+  userManager.login(user2.id) match {
     case Right(user) => println(s"\nログイン成功: ${user.name}")
     case Left(error) => println(s"ログインエラー: $error")
+  }
   
   // アクティブユーザー一覧
   println("\n=== アクティブユーザー ===")
@@ -338,6 +355,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
     val lastLogin = user.lastLoginAt.map(_.toString).getOrElse("未ログイン")
     println(s"${user.name} (${user.email}) - 最終ログイン: $lastLogin")
   }
+}
 ```
 
 ## ケースクラスの応用
@@ -346,7 +364,7 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
 
 ```scala
 // NestedCaseClasses.scala
-@main def nestedCaseClasses(): Unit =
+@main def nestedCaseClasses(): Unit = {
   // 住所
   case class Address(
     street: String,
@@ -388,9 +406,10 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   )
   
   // 深いネストへのアクセス
-  employee.contact.address match
+  employee.contact.address match {
     case Some(addr) => println(s"${employee.name}の住所: ${addr.city}${addr.street}")
     case None => println(s"${employee.name}の住所は未登録")
+  }
   
   // copyでネストした値を更新
   val relocated = employee.copy(
@@ -404,13 +423,14 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
   )
   
   println(s"転居後: ${relocated.contact.address}")
+}
 ```
 
 ### ジェネリックなケースクラス
 
 ```scala
 // GenericCaseClasses.scala
-@main def genericCaseClasses(): Unit =
+@main def genericCaseClasses(): Unit = {
   // APIレスポンスを表現
   case class ApiResponse[T](
     success: Boolean,
@@ -446,16 +466,18 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
     error = None
   )
   
-  articlesResponse.data match
+  articlesResponse.data match {
     case Some(page) =>
       println(s"${page.currentPage}/${page.totalPages}ページ")
       page.items.foreach { article =>
         println(s"- ${article.title}")
       }
-      if page.hasNext then println("次のページがあります")
+      if (page.hasNext) println("次のページがあります")
       
     case None =>
       println("データがありません")
+  }
+}
 ```
 
 ## 練習してみよう！
@@ -510,19 +532,19 @@ Scalaの「ケースクラス」は、関連するデータをまとめる最高
 ### ケースクラスを使うべき場面
 
 1. **データの入れ物**
-   - 値オブジェクト
-   - DTOパターン
-   - イミュータブルな設定
+    - 値オブジェクト
+    - DTOパターン
+    - イミュータブルな設定
 
 2. **パターンマッチング**
-   - 状態の表現
-   - メッセージパッシング
-   - イベントソーシング
+    - 状態の表現
+    - メッセージパッシング
+    - イベントソーシング
 
 3. **関数型プログラミング**
-   - 純粋関数の引数/戻り値
-   - 不変データ構造
-   - 並行処理での安全性
+    - 純粋関数の引数/戻り値
+    - 不変データ構造
+    - 並行処理での安全性
 
 ### 次の章では...
 

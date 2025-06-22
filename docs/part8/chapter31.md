@@ -12,7 +12,7 @@
 
 ```scala
 // CollectionHierarchy.scala
-@main def collectionHierarchy(): Unit =
+@main def collectionHierarchy(): Unit = {
   // Scalaのコレクション階層
   println("=== コレクション階層 ===")
   println("Iterable")
@@ -57,7 +57,7 @@
 
 ```scala
 // PerformanceCharacteristics.scala
-@main def performanceCharacteristics(): Unit =
+@main def performanceCharacteristics(): Unit = {
   import scala.collection.mutable
   
   // パフォーマンス比較のヘルパー
@@ -75,54 +75,64 @@
   
   val list = measureTime("List") {
     range.toList
-  }
+
+}
   
   val vector = measureTime("Vector") {
     range.toVector
-  }
+
+}
   
   val array = measureTime("Array") {
     range.toArray
-  }
+
+}
   
   val set = measureTime("Set") {
     range.toSet
-  }
+
+}
   
   println("\n=== ランダムアクセス ===")
   val indices = scala.util.Random.shuffle((0 until 1000).toList)
   
   measureTime("List（遅い）") {
     indices.foreach(i => list(i % size))
-  }
+
+}
   
   measureTime("Vector（速い）") {
     indices.foreach(i => vector(i % size))
-  }
+
+}
   
   measureTime("Array（最速）") {
     indices.foreach(i => array(i % size))
-  }
+
+}
   
   println("\n=== 先頭への追加 ===")
   
   measureTime("List（最速）") {
     var l = List.empty[Int]
-    for i <- 0 until 1000 do
+    for (i <- 0 until 1000) {
       l = i :: l
-  }
+
+}
   
   measureTime("Vector（速い）") {
     var v = Vector.empty[Int]
-    for i <- 0 until 1000 do
+    for (i <- 0 until 1000) {
       v = i +: v
-  }
+
+}
   
   measureTime("mutable.ListBuffer") {
     val buffer = mutable.ListBuffer.empty[Int]
-    for i <- 0 until 1000 do
+    for (i <- 0 until 1000) {
       i +=: buffer
-  }
+
+}
 ```
 
 ## 用途別コレクション選択ガイド
@@ -131,7 +141,7 @@
 
 ```scala
 // SequentialCollections.scala
-@main def sequentialCollections(): Unit =
+@main def sequentialCollections(): Unit = {
   // List：関数型スタイル、先頭への追加が高速
   println("=== List（イミュータブル、関数型） ===")
   
@@ -142,7 +152,7 @@
   println(s"新しいリスト: $newTodo")
   
   // 再帰処理に適している
-  def sum(list: List[Int]): Int = list match
+  def sum(list: List[Int]): Int = list match {
     case Nil => 0
     case head :: tail => head + sum(tail)
   
@@ -174,7 +184,8 @@
   // 必要な分だけ計算
   val primes = LazyList.from(2).filter { n =>
     (2 until n).forall(n % _ != 0)
-  }
+
+}
   
   println(s"最初の10個の素数: ${primes.take(10).toList}")
 ```
@@ -183,7 +194,7 @@
 
 ```scala
 // SetCollections.scala
-@main def setCollections(): Unit =
+@main def setCollections(): Unit = {
   // HashSet：高速な要素チェック
   println("=== HashSet（一般的な用途） ===")
   
@@ -223,7 +234,7 @@
 
 ```scala
 // MapCollections.scala
-@main def mapCollections(): Unit =
+@main def mapCollections(): Unit = {
   // HashMap：一般的な用途
   println("=== HashMap（高速アクセス） ===")
   
@@ -253,7 +264,8 @@
   println("名前順のスコア:")
   scores.foreach { case (name, score) =>
     println(s"  $name: $score")
-  }
+
+}
   
   // MultiMap的な使い方
   println("\n=== 複数値のマップ ===")
@@ -271,7 +283,8 @@
     ("doc2", "tutorial")
   ).foldLeft(tags) { case (map, (key, tag)) =>
     addTag(map, key, tag)
-  }
+
+}
   
   println(s"タグ付けされた項目: $taggedItems")
 ```
@@ -282,7 +295,7 @@
 
 ```scala
 // MutableCollections.scala
-@main def mutableCollections(): Unit =
+@main def mutableCollections(): Unit = {
   import scala.collection.mutable
   
   // ArrayBuffer：可変長配列
@@ -299,7 +312,7 @@
   println("\n=== ListBuffer（リスト構築用） ===")
   
   val listBuffer = mutable.ListBuffer[Int]()
-  for i <- 1 to 5 do
+  for (i <- 1 to 5) {
     listBuffer += i * i
   
   val immutableList = listBuffer.toList
@@ -343,7 +356,7 @@
 
 ```scala
 // ConcurrentCollections.scala
-@main def concurrentCollections(): Unit =
+@main def concurrentCollections(): Unit = {
   import scala.collection.parallel.CollectionConverters._
   import scala.collection.concurrent
   
@@ -377,7 +390,8 @@
       Thread.sleep(10)
       trieMap.get(s"key$i")
     }(scala.concurrent.ExecutionContext.global)
-  }
+
+}
   
   // 結果を待つ
   Thread.sleep(200)
@@ -388,7 +402,7 @@
 
 ```scala
 // CollectionBestPractices.scala
-@main def collectionBestPractices(): Unit =
+@main def collectionBestPractices(): Unit = {
   // 1. デフォルトはイミュータブル
   println("=== イミュータブル優先 ===")
   
@@ -406,14 +420,15 @@
   
   // 良い例：Builderを使う
   val efficientVector = Vector.newBuilder[Int]
-  for i <- 1 to 10000 do
+  for (i <- 1 to 10000) {
     efficientVector += i
   val result = efficientVector.result()
   
   // 良い例：unfoldを使う
   val fibonacci = LazyList.unfold((0, 1)) { case (a, b) =>
     Some((a, (b, a + b)))
-  }
+
+}
   
   println(s"フィボナッチ: ${fibonacci.take(10).toList}")
   
@@ -440,19 +455,19 @@
         "Vector"
       else if requirements.contains("先頭追加が多い") then
         "List"
-      else
+      } else {
         "Vector（汎用的）"
     else if requirements.contains("重複なし") then
       if requirements.contains("順序付き") then
         "TreeSet"
-      else
+      } else {
         "HashSet"
     else if requirements.contains("キー値ペア") then
       if requirements.contains("順序付き") then
         "TreeMap"
-      else
+      } else {
         "HashMap"
-    else
+    } else {
       "List（デフォルト）"
   
   val requirements1 = Set("順序保持", "高速ランダムアクセス")
@@ -466,7 +481,7 @@
 
 ```scala
 // RealWorldExample.scala
-@main def realWorldExample(): Unit =
+@main def realWorldExample(): Unit = {
   import scala.collection.mutable
   
   // ユーザー管理システムの例
@@ -493,13 +508,15 @@
       
       user.tags.foreach { tag =>
         usersByTag(tag) = usersByTag(tag) + user.id
-      }
+
+}
     
     def findById(id: Int): Option[User] =
       val result = usersById.get(id)
       result.foreach { _ =>
         updateRecentlyAccessed(id)
-      }
+
+}
       result
     
     def findByEmail(email: String): Option[User] =
@@ -512,16 +529,19 @@
       recentlyAccessed -= id  // 既存のものを削除
       recentlyAccessed += id  // 最後に追加
       
-      if recentlyAccessed.size > maxRecent then
+      if (recentlyAccessed.size > maxRecent) {
         recentlyAccessed -= recentlyAccessed.head
     
     def getRecentlyAccessed: List[User] =
       recentlyAccessed.toList.reverse.flatMap(usersById.get)
     
     def stats(): String =
-      s"""ユーザー数: ${usersById.size}
-         |タグ数: ${usersByTag.size}
-         |最近アクセス: ${recentlyAccessed.size}
+      s"""ユーザー数: ${usersById.size
+}
+         |タグ数: ${usersByTag.size
+}
+         |最近アクセス: ${recentlyAccessed.size
+}
          |""".stripMargin
   
   // 使用例
@@ -601,19 +621,19 @@ LRU（Least Recently Used）キャッシュを実装してください：
 ### コレクション選択のコツ
 
 1. **デフォルトから始める**
-   - List、Vector、Set、Map
-   - イミュータブル優先
-   - 必要に応じて特殊化
+    - List、Vector、Set、Map
+    - イミュータブル優先
+    - 必要に応じて特殊化
 
 2. **パフォーマンスを測定**
-   - 実際のデータで測定
-   - ボトルネックを特定
-   - 適切な最適化
+    - 実際のデータで測定
+    - ボトルネックを特定
+    - 適切な最適化
 
 3. **読みやすさも重要**
-   - 意図が明確なコレクション
-   - 過度な最適化を避ける
-   - チームで共有できる選択
+    - 意図が明確なコレクション
+    - 過度な最適化を避ける
+    - チームで共有できる選択
 
 ### 次の章では...
 

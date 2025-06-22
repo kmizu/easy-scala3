@@ -12,7 +12,7 @@
 
 ```scala
 // TypeClassBasics.scala
-@main def typeClassBasics(): Unit =
+@main def typeClassBasics(): Unit = {
   // 型クラスの定義：「表示できる」という性質
   trait Show[A]:
     def show(value: A): String
@@ -29,7 +29,7 @@
     
     // Booleanの表示方法
     implicit val booleanShow: Show[Boolean] = new Show[Boolean]:
-      def show(value: Boolean): String = if value then "真" else "偽"
+      def show(value: Boolean): String = if (value) "真" else "偽"
   
   // 型クラスを使う関数
   def display[A](value: A)(implicit shower: Show[A]): String =
@@ -62,7 +62,7 @@
 
 ```scala
 // TypeClassComposition.scala
-@main def typeClassComposition(): Unit =
+@main def typeClassComposition(): Unit = {
   // 等価性を判定する型クラス
   trait Eq[A]:
     def equals(a1: A, a2: A): Boolean
@@ -82,10 +82,11 @@
     implicit def optionEq[A](implicit eqA: Eq[A]): Eq[Option[A]] = 
       new Eq[Option[A]]:
         def equals(o1: Option[A], o2: Option[A]): Boolean = 
-          (o1, o2) match
+          (o1, o2) match {
             case (Some(a1), Some(a2)) => eqA.equals(a1, a2)
             case (None, None) => true
             case _ => false
+          }
     
     // リスト型の自動導出
     implicit def listEq[A](implicit eqA: Eq[A]): Eq[List[A]] =
@@ -135,7 +136,7 @@
 
 ```scala
 // JsonTypeClass.scala
-@main def jsonTypeClass(): Unit =
+@main def jsonTypeClass(): Unit = {
   import scala.collection.mutable.StringBuilder
   
   // JSON値の表現
@@ -172,9 +173,10 @@
       (values: List[A]) => JsonArray(values.map(encoder.encode))
     
     implicit def optionEncoder[A](implicit encoder: JsonEncoder[A]): JsonEncoder[Option[A]] =
-      (value: Option[A]) => value match
+      (value: Option[A]) => value match {
         case Some(v) => encoder.encode(v)
         case None => JsonNull
+      }
     
     implicit def mapEncoder[A](implicit encoder: JsonEncoder[A]): JsonEncoder[Map[String, A]] =
       (map: Map[String, A]) => JsonObject(
@@ -186,7 +188,7 @@
     def toJson: Json = encoder.encode(value)
   
   // JSON文字列への変換
-  def jsonToString(json: Json): String = json match
+  def jsonToString(json: Json): String = json match {
     case JsonString(s) => s""""$s""""
     case JsonNumber(n) => n.toString
     case JsonBoolean(b) => b.toString
@@ -197,6 +199,7 @@
         s""""$k": ${jsonToString(v)}"""
       }.mkString("{", ", ", "}")
     case JsonNull => "null"
+  }
   
   // カスタム型
   case class User(
@@ -267,7 +270,7 @@
 
 ```scala
 // OrderingTypeClass.scala
-@main def orderingTypeClass(): Unit =
+@main def orderingTypeClass(): Unit = {
   // 順序付け型クラス
   trait Ordering[A]:
     def compare(a1: A, a2: A): Int
@@ -278,8 +281,8 @@
     def gte(a1: A, a2: A): Boolean = compare(a1, a2) >= 0
     def equiv(a1: A, a2: A): Boolean = compare(a1, a2) == 0
     
-    def max(a1: A, a2: A): A = if gte(a1, a2) then a1 else a2
-    def min(a1: A, a2: A): A = if lte(a1, a2) then a1 else a2
+    def max(a1: A, a2: A): A = if (gte(a1, a2)) a1 else a2
+    def min(a1: A, a2: A): A = if (lte(a1, a2)) a1 else a2
   
   object Ordering:
     // 基本型の順序
@@ -298,18 +301,20 @@
       ordA: Ordering[A], 
       ordB: Ordering[B]
     ): Ordering[(A, B)] = new Ordering[(A, B)]:
-      def compare(t1: (A, B), t2: (A, B)): Int =
+      def compare(t1: (A, B), t2: (A, B)): Int = {
         val cmp1 = ordA.compare(t1._1, t2._1)
-        if cmp1 != 0 then cmp1
+        if (cmp1 != 0) cmp1
         else ordB.compare(t1._2, t2._2)
+      }
   
   // ソート関数
   def quickSort[A](list: List[A])(implicit ord: Ordering[A]): List[A] = 
-    list match
+    list match {
       case Nil => Nil
       case pivot :: tail =>
         val (smaller, larger) = tail.partition(ord.lt(_, pivot))
         quickSort(smaller) ++ List(pivot) ++ quickSort(larger)
+    }
   
   // カスタム型
   case class Person(name: String, age: Int)
@@ -613,19 +618,19 @@
 ### 型クラスを使うコツ
 
 1. **小さく始める**
-   - 単一の責任
-   - 明確な法則
-   - テスト可能
+    - 単一の責任
+    - 明確な法則
+    - テスト可能
 
 2. **合成可能にする**
-   - 自動導出の活用
-   - 既存の型への対応
-   - 新しい型への拡張
+    - 自動導出の活用
+    - 既存の型への対応
+    - 新しい型への拡張
 
 3. **使いやすくする**
-   - 拡張メソッド
-   - 便利な構文
-   - 良いデフォルト
+    - 拡張メソッド
+    - 便利な構文
+    - 良いデフォルト
 
 ### 次の章では...
 

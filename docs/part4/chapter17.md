@@ -12,7 +12,7 @@
 
 ```scala
 // VarArgs.scala
-@main def varArgs(): Unit =
+@main def varArgs(): Unit = {
   // * をつけると、いくつでも引数を受け取れる
   def sum(numbers: Int*): Int =
     numbers.sum
@@ -28,13 +28,14 @@
   
   println(joinWords("Hello", "Scala", "World"))
   println(joinWords("プログラミング", "は", "楽しい"))
+}
 ```
 
 ### 可変長引数の実用例
 
 ```scala
 // VarArgsExamples.scala
-@main def varArgsExamples(): Unit =
+@main def varArgsExamples(): Unit = {
   // ログ出力関数
   def log(level: String, messages: String*): Unit =
     val timestamp = java.time.LocalDateTime.now()
@@ -52,13 +53,14 @@
   println(s"最大値: ${maxOf(5)}")
   println(s"最大値: ${maxOf(3, 7, 2)}")
   println(s"最大値: ${maxOf(10, 20, 15, 25, 8)}")
+}
 ```
 
 ### リストを可変長引数として渡す
 
 ```scala
 // SpreadOperator.scala
-@main def spreadOperator(): Unit =
+@main def spreadOperator(): Unit = {
   def multiply(numbers: Int*): Int =
     numbers.product
   
@@ -82,6 +84,7 @@
   val data = List("太郎", 25, "エンジニア")
   val message = format("{0}さん（{1}歳）は{2}です", data*)
   println(message)
+}
 ```
 
 ## カリー化：関数を分割する
@@ -90,7 +93,7 @@
 
 ```scala
 // Currying.scala
-@main def currying(): Unit =
+@main def currying(): Unit = {
   // 通常の関数
   def add(x: Int, y: Int): Int = x + y
   
@@ -115,13 +118,14 @@
   
   println(s"1000円（10%税）: ${withTax10(1000)}円")
   println(s"1000円（8%税）: ${withTax8(1000)}円")
+}
 ```
 
 ### カリー化の実践例
 
 ```scala
 // CurryingExamples.scala
-@main def curryingExamples(): Unit =
+@main def curryingExamples(): Unit = {
   // ログ出力（レベル固定）
   def log(level: String)(message: String): Unit =
     println(s"[$level] $message")
@@ -155,6 +159,7 @@
   
   println(s"年齢25は有効？: ${isValidAge(25)}")
   println(s"点数150は有効？: ${isValidScore(150)}")
+}
 ```
 
 ## 暗黙の引数（using/given）
@@ -163,7 +168,7 @@
 
 ```scala
 // ImplicitParams.scala
-@main def implicitParams(): Unit =
+@main def implicitParams(): Unit = {
   // 設定を表すケースクラス
   case class Config(language: String, debug: Boolean)
   
@@ -172,10 +177,11 @@
   
   // usingで暗黙の引数を受け取る
   def greet(name: String)(using config: Config): String =
-    config.language match
+    config.language match {
       case "ja" => s"こんにちは、$name さん"
       case "en" => s"Hello, $name"
       case _ => s"Hi, $name"
+    }
   
   // 暗黙の値が自動的に渡される
   println(greet("太郎"))  // 日本語であいさつ
@@ -184,13 +190,14 @@
   given englishConfig: Config = Config("en", true)
   
   println(greet("Taro")(using englishConfig))  // 英語であいさつ
+}
 ```
 
 ### 実践的な暗黙の引数
 
 ```scala
 // PracticalImplicits.scala
-@main def practicalImplicits(): Unit =
+@main def practicalImplicits(): Unit = {
   // 実行コンテキスト
   case class ExecutionContext(user: String, timestamp: Long)
   
@@ -227,13 +234,14 @@
   
   printFormatted(1234567)
   printFormatted(3.14159)
+}
 ```
 
 ## by-name引数：遅延評価
 
 ```scala
 // ByNameParams.scala
-@main def byNameParams(): Unit =
+@main def byNameParams(): Unit = {
   // 通常の引数（即座に評価）
   def normalParam(x: Int): Unit =
     println("関数が呼ばれました")
@@ -258,7 +266,7 @@
   
   // 実用例：条件付き実行
   def whenTrue(condition: Boolean)(action: => Unit): Unit =
-    if condition then action
+    if (condition) action
   
   var count = 0
   
@@ -273,13 +281,14 @@
   }
   
   println(s"最終カウント: $count")  // 1
+}
 ```
 
 ## 関数を引数として受け取る
 
 ```scala
 // FunctionAsParams.scala
-@main def functionAsParams(): Unit =
+@main def functionAsParams(): Unit = {
   // 関数を引数に取る関数
   def applyTwice(f: Int => Int, x: Int): Int =
     f(f(x))
@@ -310,12 +319,13 @@
   
   // カスタム比較関数
   def findBest[T](items: List[T], isBetter: (T, T) => Boolean): Option[T] =
-    items match
+    items match {
       case Nil => None
       case head :: tail =>
         Some(tail.foldLeft(head)((best, item) =>
-          if isBetter(item, best) then item else best
+          if (isBetter(item, best)) item else best
         ))
+    }
   
   case class Product(name: String, price: Int, rating: Double)
   
@@ -330,13 +340,14 @@
   
   println(s"最安: $cheapest")
   println(s"最高評価: $highestRated")
+}
 ```
 
 ## 実践例：DSL（ドメイン特化言語）の作成
 
 ```scala
 // DSLExample.scala
-@main def dslExample(): Unit =
+@main def dslExample(): Unit = {
   // HTMLビルダーDSL
   class HtmlBuilder:
     private val content = scala.collection.mutable.StringBuilder()
@@ -401,6 +412,7 @@
   }
   
   println(s"サーバー設定: $config")
+}
 ```
 
 ## 練習してみよう！
@@ -453,19 +465,19 @@
 ### 賢い引数設計のコツ
 
 1. **使いやすさを重視**
-   - デフォルト値の活用
-   - 必須引数は最小限に
-   - 名前付き引数の活用
+    - デフォルト値の活用
+    - 必須引数は最小限に
+    - 名前付き引数の活用
 
 2. **柔軟性の確保**
-   - 可変長引数で拡張性
-   - カリー化で部分適用
-   - 関数引数でカスタマイズ
+    - 可変長引数で拡張性
+    - カリー化で部分適用
+    - 関数引数でカスタマイズ
 
 3. **型安全性**
-   - 暗黙の引数で文脈を管理
-   - 型パラメータの活用
-   - コンパイル時チェック
+    - 暗黙の引数で文脈を管理
+    - 型パラメータの活用
+    - コンパイル時チェック
 
 ### 次の章では...
 

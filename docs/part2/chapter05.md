@@ -12,7 +12,7 @@
 
 ```scala
 // RealWorldTypes.scala
-@main def realWorldTypes(): Unit =
+@main def realWorldTypes(): Unit = {
   // 現実世界の分類をプログラムで表現
   
   // 数値型：個数や量を表す
@@ -31,13 +31,14 @@
   println(s"${fruitName}が${appleCount}個あります")
   println(s"熟している: ${isRipe}")
   println(s"気温: ${temperature}度")
+}
 ```
 
 ### なぜ型が必要なのか？
 
 ```scala
 // WhyTypesArImportant.scala
-@main def whyTypesAreImportant(): Unit =
+@main def whyTypesAreImportant(): Unit = {
   // 型があることで間違いを防げる
   val price = 100
   val quantity = 3
@@ -54,6 +55,7 @@
   val userHeight: Double = 170.5    // 身長は小数
   
   println(s"${userName}さん（${userAge}歳、${userHeight}cm）")
+}
 ```
 
 ## Scalaの型階層
@@ -62,7 +64,7 @@
 
 ```scala
 // TypeHierarchy.scala
-@main def typeHierarchy(): Unit =
+@main def typeHierarchy(): Unit = {
   // すべての型の親：Any
   val anything: Any = 42
   val anything2: Any = "Hello"
@@ -78,6 +80,7 @@
   // 参照型（AnyRef）の例
   val text: AnyRef = "Scala"
   val list: AnyRef = List(1, 2, 3)
+}
 ```
 
 ### 型の継承関係
@@ -107,7 +110,7 @@ Any（すべての型の親）
 
 ```scala
 // TypeAnnotations.scala
-@main def typeAnnotations(): Unit =
+@main def typeAnnotations(): Unit = {
   // 型を明示的に指定
   val name: String = "Scala"
   val version: Double = 3.3
@@ -131,13 +134,14 @@ Any（すべての型の親）
   
   println(s"半額: ${halfPrice}円")
   println(s"半分: ${halfCount}個")
+}
 ```
 
 ### いつ型を書くべきか
 
 ```scala
 // WhenToUseTypes.scala
-@main def whenToUseTypes(): Unit =
+@main def whenToUseTypes(): Unit = {
   // 1. 公開APIやメソッドの引数・戻り値
   def calculateTax(price: Double, rate: Double): Double =
     price * rate
@@ -155,6 +159,7 @@ Any（すべての型の親）
   println(s"スコア: ${score}")
   println(s"結果: ${result}")
   println(s"アイテム: ${items}")
+}
 ```
 
 ## 型の互換性
@@ -163,7 +168,7 @@ Any（すべての型の親）
 
 ```scala
 // NumericTypeCompatibility.scala
-@main def numericTypeCompatibility(): Unit =
+@main def numericTypeCompatibility(): Unit = {
   // 小さい型から大きい型への自動変換
   val smallInt: Int = 100
   val bigLong: Long = smallInt      // OK: Int → Long
@@ -184,13 +189,14 @@ Any（すべての型の親）
   val bigNumber = 1234567890123456789L
   val smallNumber = bigNumber.toInt
   println(s"Long: ${bigNumber} → Int: ${smallNumber}")  // データが失われる！
+}
 ```
 
 ### 型の昇格
 
 ```scala
 // TypePromotion.scala
-@main def typePromotion(): Unit =
+@main def typePromotion(): Unit = {
   // 異なる数値型の計算では、より大きな型に昇格
   val intNum = 10
   val doubleNum = 3.14
@@ -204,6 +210,7 @@ Any（すべての型の親）
   // 型を維持したい場合
   val intResult = (intNum + doubleNum).toInt
   println(s"Int結果: ${intResult}")
+}
 ```
 
 ## Nothing型とNull型
@@ -212,33 +219,37 @@ Any（すべての型の親）
 
 ```scala
 // NothingType.scala
-@main def nothingType(): Unit =
+@main def nothingType(): Unit = {
   // Nothing型は全ての型のサブタイプ
   def error(message: String): Nothing =
     throw new Exception(message)
   
   // Nothingは決して値を返さない
-  def infiniteLoop(): Nothing =
-    while true do
+  def infiniteLoop(): Nothing = {
+    while (true) {
       println("無限ループ...")
       Thread.sleep(1000)
+    }
+  }
   
   // 条件によってエラーを投げる
   def divide(a: Int, b: Int): Int =
-    if b == 0 then
+    if (b == 0) {
       error("ゼロで除算はできません")  // Nothing型
-    else
+    } else {
       a / b  // Int型
+    }
   
   println(divide(10, 2))
   // println(divide(10, 0))  // エラーが発生
+}
 ```
 
 ### Null型
 
 ```scala
 // NullType.scala
-@main def nullType(): Unit =
+@main def nullType(): Unit = {
   // Scalaではnullの使用は推奨されない
   var name: String = "太郎"
   println(s"名前: ${name}")
@@ -255,9 +266,11 @@ Any（すべての型の親）
   println(s"値なし: ${safeName}")
   
   // 安全にアクセス
-  safeName match
+  safeName match {
     case Some(n) => println(s"名前は${n}です")
     case None => println("名前がありません")
+  }
+}
 ```
 
 ## 型エイリアス
@@ -266,7 +279,7 @@ Any（すべての型の親）
 
 ```scala
 // TypeAlias.scala
-@main def typeAlias(): Unit =
+@main def typeAlias(): Unit = {
   // 型エイリアスの定義
   type UserID = Int
   type UserName = String
@@ -290,6 +303,7 @@ Any（すべての型の親）
   val user: UserData = (id, name, age, email)
   
   println(s"ユーザー情報: ${user}")
+}
 ```
 
 ## 型安全性の利点
@@ -298,7 +312,7 @@ Any（すべての型の親）
 
 ```scala
 // TypeSafety.scala
-@main def typeSafety(): Unit =
+@main def typeSafety(): Unit = {
   // 型があることで間違いを早期発見
   def addNumbers(a: Int, b: Int): Int = a + b
   
@@ -317,13 +331,14 @@ Any（すべての型の親）
   val total = apple.price * apple.quantity
   
   println(s"${apple.name}: ${apple.price}円 × ${apple.quantity}個 = ${total}円")
+}
 ```
 
 ## 実践的な例：図書管理システム
 
 ```scala
 // LibrarySystem.scala
-@main def librarySystem(): Unit =
+@main def librarySystem(): Unit = {
   // 型エイリアスで意味を明確に
   type ISBN = String
   type Title = String
@@ -369,6 +384,7 @@ Any（すべての型の親）
   findByAuthor(books, "山田太郎").foreach { book =>
     println(s"- ${book.title}")
   }
+}
 ```
 
 ## よくあるエラーと対処法
@@ -440,7 +456,7 @@ val length = text.length  // 実行時エラー！
 ### 問題5：エラーを修正
 
 ```scala
-@main def broken(): Unit =
+@main def broken(): Unit = {
   val price: Int = 99.99
   val quantity: String = 3
   val total = price * quantity
@@ -449,6 +465,7 @@ val length = text.length  // 実行時エラー！
   val length = message.length
   
   println(s"${message}: ${total}円")
+}
 ```
 
 ## まとめ
@@ -456,28 +473,28 @@ val length = text.length  // 実行時エラー！
 この章では以下のことを学びました：
 
 1. **型の基本概念**
-   - 型はデータの種類を表す
-   - 型があることで安全なプログラムが書ける
-   - 型によって意図が明確になる
+    - 型はデータの種類を表す
+    - 型があることで安全なプログラムが書ける
+    - 型によって意図が明確になる
 
 2. **Scalaの型階層**
-   - Any型がすべての型の親
-   - AnyVal（値型）とAnyRef（参照型）
-   - Nothing型とNull型
+    - Any型がすべての型の親
+    - AnyVal（値型）とAnyRef（参照型）
+    - Nothing型とNull型
 
 3. **型アノテーション**
-   - 明示的な型指定の方法
-   - いつ型を書くべきか
-   - 型推論との使い分け
+    - 明示的な型指定の方法
+    - いつ型を書くべきか
+    - 型推論との使い分け
 
 4. **型の互換性**
-   - 数値型の自動変換
-   - 明示的な型変換
-   - 型の昇格
+    - 数値型の自動変換
+    - 明示的な型変換
+    - 型の昇格
 
 5. **型安全性**
-   - コンパイル時のエラー検出
-   - 実行時エラーの防止
-   - より良いコード設計
+    - コンパイル時のエラー検出
+    - 実行時エラーの防止
+    - より良いコード設計
 
 次の章では、Scalaの強力な型推論機能について詳しく学んでいきます！
